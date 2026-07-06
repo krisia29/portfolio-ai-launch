@@ -20,6 +20,7 @@ import { Route as AuthenticatedModulesRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedClassesRouteImport } from './routes/_authenticated/classes'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as ApiPublicVerifyGithubRouteImport } from './routes/api/public/verify-github'
 import { Route as AuthenticatedModulesSlugRouteImport } from './routes/_authenticated/modules.$slug'
 import { Route as AuthenticatedAssignmentsIdRouteImport } from './routes/_authenticated/assignments.$id'
 
@@ -77,6 +78,11 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiPublicVerifyGithubRoute = ApiPublicVerifyGithubRouteImport.update({
+  id: '/api/public/verify-github',
+  path: '/api/public/verify-github',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedModulesSlugRoute =
   AuthenticatedModulesSlugRouteImport.update({
     id: '/$slug',
@@ -103,6 +109,7 @@ export interface FileRoutesByFullPath {
   '/u/$username': typeof UUsernameRoute
   '/assignments/$id': typeof AuthenticatedAssignmentsIdRoute
   '/modules/$slug': typeof AuthenticatedModulesSlugRoute
+  '/api/public/verify-github': typeof ApiPublicVerifyGithubRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -117,6 +124,7 @@ export interface FileRoutesByTo {
   '/u/$username': typeof UUsernameRoute
   '/assignments/$id': typeof AuthenticatedAssignmentsIdRoute
   '/modules/$slug': typeof AuthenticatedModulesSlugRoute
+  '/api/public/verify-github': typeof ApiPublicVerifyGithubRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -133,6 +141,7 @@ export interface FileRoutesById {
   '/u/$username': typeof UUsernameRoute
   '/_authenticated/assignments/$id': typeof AuthenticatedAssignmentsIdRoute
   '/_authenticated/modules/$slug': typeof AuthenticatedModulesSlugRoute
+  '/api/public/verify-github': typeof ApiPublicVerifyGithubRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -149,6 +158,7 @@ export interface FileRouteTypes {
     | '/u/$username'
     | '/assignments/$id'
     | '/modules/$slug'
+    | '/api/public/verify-github'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -163,6 +173,7 @@ export interface FileRouteTypes {
     | '/u/$username'
     | '/assignments/$id'
     | '/modules/$slug'
+    | '/api/public/verify-github'
   id:
     | '__root__'
     | '/'
@@ -178,6 +189,7 @@ export interface FileRouteTypes {
     | '/u/$username'
     | '/_authenticated/assignments/$id'
     | '/_authenticated/modules/$slug'
+    | '/api/public/verify-github'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -186,6 +198,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   UUsernameRoute: typeof UUsernameRoute
+  ApiPublicVerifyGithubRoute: typeof ApiPublicVerifyGithubRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -267,6 +280,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/verify-github': {
+      id: '/api/public/verify-github'
+      path: '/api/public/verify-github'
+      fullPath: '/api/public/verify-github'
+      preLoaderRoute: typeof ApiPublicVerifyGithubRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/modules/$slug': {
       id: '/_authenticated/modules/$slug'
       path: '/$slug'
@@ -324,6 +344,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   UUsernameRoute: UUsernameRoute,
+  ApiPublicVerifyGithubRoute: ApiPublicVerifyGithubRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
