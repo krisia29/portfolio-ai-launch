@@ -24,15 +24,22 @@ function AuthPage() {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const routeAfterLogin = async (userId: string) => {
+    const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", userId);
+    const isStaff = (roles ?? []).some((r) => r.role === "teacher" || r.role === "admin");
+    navigate({ to: isStaff ? "/admin" : "/dashboard" });
+  };
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/dashboard" });
+      if (data.session) routeAfterLogin(data.session.user.id);
     });
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
-      if (s) navigate({ to: "/dashboard" });
+      if (s) routeAfterLogin(s.user.id);
     });
     return () => sub.subscription.unsubscribe();
-  }, [navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
