@@ -5,6 +5,7 @@ import { useNavigate } from "@tanstack/react-router";
 
 export function PreviewModeBanner() {
   const { previewAsStudent, setPreviewAsStudent } = useAuth();
+  const navigate = useNavigate();
   if (!previewAsStudent) return null;
   return (
     <div className="border-b border-amber-300/60 bg-amber-100 text-amber-950 dark:bg-amber-500/15 dark:text-amber-100">
