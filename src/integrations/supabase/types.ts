@@ -599,7 +599,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      join_class_by_code: { Args: { p_code: string }; Returns: string }
+      [_ in never]: never
     }
     Enums: {
       app_role: "student" | "teacher" | "admin"
