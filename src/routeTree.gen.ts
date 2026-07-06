@@ -13,6 +13,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedPortfolioRouteImport } from './routes/_authenticated/portfolio'
 import { Route as AuthenticatedModulesRouteImport } from './routes/_authenticated/modules'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedModulesSlugRouteImport } from './routes/_authenticated/modules.$slug'
@@ -36,6 +37,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedPortfolioRoute = AuthenticatedPortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedModulesRoute = AuthenticatedModulesRouteImport.update({
   id: '/modules',
@@ -66,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/modules': typeof AuthenticatedModulesRouteWithChildren
+  '/portfolio': typeof AuthenticatedPortfolioRoute
   '/assignments/$id': typeof AuthenticatedAssignmentsIdRoute
   '/modules/$slug': typeof AuthenticatedModulesSlugRoute
 }
@@ -75,6 +82,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/modules': typeof AuthenticatedModulesRouteWithChildren
+  '/portfolio': typeof AuthenticatedPortfolioRoute
   '/assignments/$id': typeof AuthenticatedAssignmentsIdRoute
   '/modules/$slug': typeof AuthenticatedModulesSlugRoute
 }
@@ -86,6 +94,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/modules': typeof AuthenticatedModulesRouteWithChildren
+  '/_authenticated/portfolio': typeof AuthenticatedPortfolioRoute
   '/_authenticated/assignments/$id': typeof AuthenticatedAssignmentsIdRoute
   '/_authenticated/modules/$slug': typeof AuthenticatedModulesSlugRoute
 }
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/dashboard'
     | '/modules'
+    | '/portfolio'
     | '/assignments/$id'
     | '/modules/$slug'
   fileRoutesByTo: FileRoutesByTo
@@ -106,6 +116,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/dashboard'
     | '/modules'
+    | '/portfolio'
     | '/assignments/$id'
     | '/modules/$slug'
   id:
@@ -116,6 +127,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_authenticated/dashboard'
     | '/_authenticated/modules'
+    | '/_authenticated/portfolio'
     | '/_authenticated/assignments/$id'
     | '/_authenticated/modules/$slug'
   fileRoutesById: FileRoutesById
@@ -156,6 +168,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/portfolio': {
+      id: '/_authenticated/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof AuthenticatedPortfolioRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/modules': {
       id: '/_authenticated/modules'
@@ -202,12 +221,14 @@ const AuthenticatedModulesRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedModulesRoute: typeof AuthenticatedModulesRouteWithChildren
+  AuthenticatedPortfolioRoute: typeof AuthenticatedPortfolioRoute
   AuthenticatedAssignmentsIdRoute: typeof AuthenticatedAssignmentsIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedModulesRoute: AuthenticatedModulesRouteWithChildren,
+  AuthenticatedPortfolioRoute: AuthenticatedPortfolioRoute,
   AuthenticatedAssignmentsIdRoute: AuthenticatedAssignmentsIdRoute,
 }
 
