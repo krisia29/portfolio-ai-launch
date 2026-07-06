@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
+import { joinClassByCode } from "@/lib/classes.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,6 +28,7 @@ function ClassesPage() {
   const [joinCode, setJoinCode] = useState("");
   const [className, setClassName] = useState("");
   const [period, setPeriod] = useState("");
+  const joinFn = useServerFn(joinClassByCode);
 
   const mine = useQuery({
     queryKey: ["myClasses", user?.id],
@@ -45,13 +48,14 @@ function ClassesPage() {
 
   const join = async () => {
     if (!user || !joinCode) return;
-    const { data: cls, error: e1 } = await supabase.from("classes").select("id").eq("join_code", joinCode.trim().toUpperCase()).maybeSingle();
-    if (e1 || !cls) return toast.error("Invalid class code.");
-    const { error } = await supabase.from("class_members").insert({ class_id: cls.id, student_id: user.id });
-    if (error && !error.message.includes("duplicate")) return toast.error(error.message);
-    toast.success("Joined class.");
-    setJoinCode("");
-    qc.invalidateQueries({ queryKey: ["myClasses"] });
+    try {
+      await joinFn({ data: { code: joinCode } });
+      toast.success("Joined class.");
+      setJoinCode("");
+      qc.invalidateQueries({ queryKey: ["myClasses"] });
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Invalid class code.");
+    }
   };
 
   const create = async () => {
