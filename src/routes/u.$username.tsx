@@ -8,7 +8,7 @@ export const Route = createFileRoute("/u/$username")({
   loader: async ({ params }) => {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("*")
+      .select("id, display_name, nickname, avatar_url, github_username, github_profile_url, portfolio_public, school")
       .ilike("github_username", params.username)
       .eq("portfolio_public", true)
       .maybeSingle();
