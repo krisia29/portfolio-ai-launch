@@ -10,12 +10,12 @@ import { toast } from "sonner";
 import { Github, ExternalLink, User } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin")({
-  beforeLoad: async ({ context }) => {
+  beforeLoad: async () => {
     const { data } = await supabase.auth.getUser();
     if (!data.user) throw redirect({ to: "/auth" });
     const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", data.user.id);
     const isStaff = (roles ?? []).some((r) => r.role === "teacher" || r.role === "admin");
-    if (!isStaff) throw redirect({ to: "/dashboard" });
+    if (!isStaff) throw redirect({ to: "/unauthorized" });
   },
   component: AdminPage,
 });
