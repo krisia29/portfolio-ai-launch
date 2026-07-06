@@ -256,7 +256,7 @@ function AssignmentPage() {
               <Textarea id="reflection" rows={5} value={reflection} onChange={(e) => setReflection(e.target.value)} maxLength={3000} placeholder="What did you learn? What would you do differently?" />
               {Array.isArray(assignment.reflection_questions) && assignment.reflection_questions.length > 0 && (
                 <ul className="mt-2 text-xs text-muted-foreground list-disc pl-5">
-                  {assignment.reflection_questions.map((q: string) => <li key={q}>{q}</li>)}
+                  {(assignment.reflection_questions as unknown as string[]).map((q: string) => <li key={q}>{q}</li>)}
                 </ul>
               )}
             </div>
