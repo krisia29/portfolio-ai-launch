@@ -13,6 +13,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as UUsernameRouteImport } from './routes/u.$username'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedPortfolioRouteImport } from './routes/_authenticated/portfolio'
 import { Route as AuthenticatedModulesRouteImport } from './routes/_authenticated/modules'
@@ -39,6 +40,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UUsernameRoute = UUsernameRouteImport.update({
+  id: '/u/$username',
+  path: '/u/$username',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
@@ -94,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/modules': typeof AuthenticatedModulesRouteWithChildren
   '/portfolio': typeof AuthenticatedPortfolioRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/u/$username': typeof UUsernameRoute
   '/assignments/$id': typeof AuthenticatedAssignmentsIdRoute
   '/modules/$slug': typeof AuthenticatedModulesSlugRoute
 }
@@ -107,6 +114,7 @@ export interface FileRoutesByTo {
   '/modules': typeof AuthenticatedModulesRouteWithChildren
   '/portfolio': typeof AuthenticatedPortfolioRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/u/$username': typeof UUsernameRoute
   '/assignments/$id': typeof AuthenticatedAssignmentsIdRoute
   '/modules/$slug': typeof AuthenticatedModulesSlugRoute
 }
@@ -122,6 +130,7 @@ export interface FileRoutesById {
   '/_authenticated/modules': typeof AuthenticatedModulesRouteWithChildren
   '/_authenticated/portfolio': typeof AuthenticatedPortfolioRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/u/$username': typeof UUsernameRoute
   '/_authenticated/assignments/$id': typeof AuthenticatedAssignmentsIdRoute
   '/_authenticated/modules/$slug': typeof AuthenticatedModulesSlugRoute
 }
@@ -137,6 +146,7 @@ export interface FileRouteTypes {
     | '/modules'
     | '/portfolio'
     | '/profile'
+    | '/u/$username'
     | '/assignments/$id'
     | '/modules/$slug'
   fileRoutesByTo: FileRoutesByTo
@@ -150,6 +160,7 @@ export interface FileRouteTypes {
     | '/modules'
     | '/portfolio'
     | '/profile'
+    | '/u/$username'
     | '/assignments/$id'
     | '/modules/$slug'
   id:
@@ -164,6 +175,7 @@ export interface FileRouteTypes {
     | '/_authenticated/modules'
     | '/_authenticated/portfolio'
     | '/_authenticated/profile'
+    | '/u/$username'
     | '/_authenticated/assignments/$id'
     | '/_authenticated/modules/$slug'
   fileRoutesById: FileRoutesById
@@ -173,6 +185,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  UUsernameRoute: typeof UUsernameRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -203,6 +216,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/u/$username': {
+      id: '/u/$username'
+      path: '/u/$username'
+      fullPath: '/u/$username'
+      preLoaderRoute: typeof UUsernameRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/profile': {
@@ -303,6 +323,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  UUsernameRoute: UUsernameRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
