@@ -16,10 +16,10 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as UUsernameRouteImport } from './routes/u.$username'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedPortfolioRouteImport } from './routes/_authenticated/portfolio'
-import { Route as AuthenticatedModulesRouteImport } from './routes/_authenticated/modules'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedClassesRouteImport } from './routes/_authenticated/classes'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedModulesIndexRouteImport } from './routes/_authenticated/modules.index'
 import { Route as ApiPublicVerifyGithubRouteImport } from './routes/api/public/verify-github'
 import { Route as AuthenticatedModulesSlugRouteImport } from './routes/_authenticated/modules.$slug'
 import { Route as AuthenticatedAssignmentsIdRouteImport } from './routes/_authenticated/assignments.$id'
@@ -58,11 +58,6 @@ const AuthenticatedPortfolioRoute = AuthenticatedPortfolioRouteImport.update({
   path: '/portfolio',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedModulesRoute = AuthenticatedModulesRouteImport.update({
-  id: '/modules',
-  path: '/modules',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -78,6 +73,12 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedModulesIndexRoute =
+  AuthenticatedModulesIndexRouteImport.update({
+    id: '/modules/',
+    path: '/modules/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const ApiPublicVerifyGithubRoute = ApiPublicVerifyGithubRouteImport.update({
   id: '/api/public/verify-github',
   path: '/api/public/verify-github',
@@ -85,9 +86,9 @@ const ApiPublicVerifyGithubRoute = ApiPublicVerifyGithubRouteImport.update({
 } as any)
 const AuthenticatedModulesSlugRoute =
   AuthenticatedModulesSlugRouteImport.update({
-    id: '/$slug',
-    path: '/$slug',
-    getParentRoute: () => AuthenticatedModulesRoute,
+    id: '/modules/$slug',
+    path: '/modules/$slug',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedAssignmentsIdRoute =
   AuthenticatedAssignmentsIdRouteImport.update({
@@ -103,13 +104,13 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRoute
   '/classes': typeof AuthenticatedClassesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/modules': typeof AuthenticatedModulesRouteWithChildren
   '/portfolio': typeof AuthenticatedPortfolioRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/u/$username': typeof UUsernameRoute
   '/assignments/$id': typeof AuthenticatedAssignmentsIdRoute
   '/modules/$slug': typeof AuthenticatedModulesSlugRoute
   '/api/public/verify-github': typeof ApiPublicVerifyGithubRoute
+  '/modules/': typeof AuthenticatedModulesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -118,13 +119,13 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminRoute
   '/classes': typeof AuthenticatedClassesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/modules': typeof AuthenticatedModulesRouteWithChildren
   '/portfolio': typeof AuthenticatedPortfolioRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/u/$username': typeof UUsernameRoute
   '/assignments/$id': typeof AuthenticatedAssignmentsIdRoute
   '/modules/$slug': typeof AuthenticatedModulesSlugRoute
   '/api/public/verify-github': typeof ApiPublicVerifyGithubRoute
+  '/modules': typeof AuthenticatedModulesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -135,13 +136,13 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/classes': typeof AuthenticatedClassesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
-  '/_authenticated/modules': typeof AuthenticatedModulesRouteWithChildren
   '/_authenticated/portfolio': typeof AuthenticatedPortfolioRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/u/$username': typeof UUsernameRoute
   '/_authenticated/assignments/$id': typeof AuthenticatedAssignmentsIdRoute
   '/_authenticated/modules/$slug': typeof AuthenticatedModulesSlugRoute
   '/api/public/verify-github': typeof ApiPublicVerifyGithubRoute
+  '/_authenticated/modules/': typeof AuthenticatedModulesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -152,13 +153,13 @@ export interface FileRouteTypes {
     | '/admin'
     | '/classes'
     | '/dashboard'
-    | '/modules'
     | '/portfolio'
     | '/profile'
     | '/u/$username'
     | '/assignments/$id'
     | '/modules/$slug'
     | '/api/public/verify-github'
+    | '/modules/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -167,13 +168,13 @@ export interface FileRouteTypes {
     | '/admin'
     | '/classes'
     | '/dashboard'
-    | '/modules'
     | '/portfolio'
     | '/profile'
     | '/u/$username'
     | '/assignments/$id'
     | '/modules/$slug'
     | '/api/public/verify-github'
+    | '/modules'
   id:
     | '__root__'
     | '/'
@@ -183,13 +184,13 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/classes'
     | '/_authenticated/dashboard'
-    | '/_authenticated/modules'
     | '/_authenticated/portfolio'
     | '/_authenticated/profile'
     | '/u/$username'
     | '/_authenticated/assignments/$id'
     | '/_authenticated/modules/$slug'
     | '/api/public/verify-github'
+    | '/_authenticated/modules/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -252,13 +253,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPortfolioRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/modules': {
-      id: '/_authenticated/modules'
-      path: '/modules'
-      fullPath: '/modules'
-      preLoaderRoute: typeof AuthenticatedModulesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -280,6 +274,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/modules/': {
+      id: '/_authenticated/modules/'
+      path: '/modules'
+      fullPath: '/modules/'
+      preLoaderRoute: typeof AuthenticatedModulesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/api/public/verify-github': {
       id: '/api/public/verify-github'
       path: '/api/public/verify-github'
@@ -289,10 +290,10 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/modules/$slug': {
       id: '/_authenticated/modules/$slug'
-      path: '/$slug'
+      path: '/modules/$slug'
       fullPath: '/modules/$slug'
       preLoaderRoute: typeof AuthenticatedModulesSlugRouteImport
-      parentRoute: typeof AuthenticatedModulesRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/assignments/$id': {
       id: '/_authenticated/assignments/$id'
@@ -304,35 +305,26 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AuthenticatedModulesRouteChildren {
-  AuthenticatedModulesSlugRoute: typeof AuthenticatedModulesSlugRoute
-}
-
-const AuthenticatedModulesRouteChildren: AuthenticatedModulesRouteChildren = {
-  AuthenticatedModulesSlugRoute: AuthenticatedModulesSlugRoute,
-}
-
-const AuthenticatedModulesRouteWithChildren =
-  AuthenticatedModulesRoute._addFileChildren(AuthenticatedModulesRouteChildren)
-
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedClassesRoute: typeof AuthenticatedClassesRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
-  AuthenticatedModulesRoute: typeof AuthenticatedModulesRouteWithChildren
   AuthenticatedPortfolioRoute: typeof AuthenticatedPortfolioRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedAssignmentsIdRoute: typeof AuthenticatedAssignmentsIdRoute
+  AuthenticatedModulesSlugRoute: typeof AuthenticatedModulesSlugRoute
+  AuthenticatedModulesIndexRoute: typeof AuthenticatedModulesIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedClassesRoute: AuthenticatedClassesRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
-  AuthenticatedModulesRoute: AuthenticatedModulesRouteWithChildren,
   AuthenticatedPortfolioRoute: AuthenticatedPortfolioRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedAssignmentsIdRoute: AuthenticatedAssignmentsIdRoute,
+  AuthenticatedModulesSlugRoute: AuthenticatedModulesSlugRoute,
+  AuthenticatedModulesIndexRoute: AuthenticatedModulesIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
