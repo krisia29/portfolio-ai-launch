@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { modulesQO } from "@/lib/queries";
 import { Lock, CheckCircle2 } from "lucide-react";
 
-export const Route = createFileRoute("/_authenticated/modules")({
+export const Route = createFileRoute("/_authenticated/modules/")({
   component: ModulesPage,
 });
 
