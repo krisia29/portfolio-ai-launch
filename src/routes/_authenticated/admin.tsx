@@ -22,7 +22,13 @@ export const Route = createFileRoute("/_authenticated/admin")({
 
 function AdminPage() {
   const qc = useQueryClient();
+  const navigate = useNavigate();
+  const { previewAsStudent } = useAuth();
   const [statusFilter, setStatusFilter] = useState<"submitted" | "approved" | "revision_requested" | "all">("submitted");
+
+  useEffect(() => {
+    if (previewAsStudent) navigate({ to: "/dashboard" });
+  }, [previewAsStudent, navigate]);
 
   const { data: subs = [] } = useQuery({
     queryKey: ["adminSubs", statusFilter],
