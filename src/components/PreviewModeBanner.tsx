@@ -1,6 +1,7 @@
 import { useAuth } from "@/lib/auth";
 import { Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "@tanstack/react-router";
 
 export function PreviewModeBanner() {
   const { previewAsStudent, setPreviewAsStudent } = useAuth();
