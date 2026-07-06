@@ -1,16 +1,18 @@
 import { Link, useRouter } from "@tanstack/react-router";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Eye, LayoutDashboard } from "lucide-react";
 
 export function AppHeader() {
-  const { user, isStaff, signOut } = useAuth();
+  const { user, actualIsStaff, previewAsStudent, setPreviewAsStudent, signOut } = useAuth();
   const router = useRouter();
 
   const handleSignOut = async () => {
     await signOut();
     router.navigate({ to: "/" });
   };
+
+  const showAdminLink = actualIsStaff && !previewAsStudent;
 
   return (
     <header className="border-b bg-background/80 backdrop-blur sticky top-0 z-40">
@@ -28,10 +30,33 @@ export function AppHeader() {
               <Link to="/modules" className="px-3 py-2 rounded-md hover:bg-muted">Modules</Link>
               <Link to="/portfolio" className="px-3 py-2 rounded-md hover:bg-muted">Portfolio</Link>
               <Link to="/classes" className="px-3 py-2 rounded-md hover:bg-muted">Classes</Link>
-              {isStaff && (
+              {showAdminLink && (
                 <Link to="/admin" className="px-3 py-2 rounded-md hover:bg-muted">Admin</Link>
               )}
               <Link to="/profile" className="px-3 py-2 rounded-md hover:bg-muted">Profile</Link>
+              {actualIsStaff && (
+                previewAsStudent ? (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="ml-1"
+                    onClick={() => { setPreviewAsStudent(false); router.navigate({ to: "/admin" }); }}
+                  >
+                    <LayoutDashboard className="w-3.5 h-3.5 mr-1.5" />
+                    Return to Admin
+                  </Button>
+                ) : (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="ml-1"
+                    onClick={() => { setPreviewAsStudent(true); router.navigate({ to: "/dashboard" }); }}
+                  >
+                    <Eye className="w-3.5 h-3.5 mr-1.5" />
+                    Student View
+                  </Button>
+                )
+              )}
               <Button size="sm" variant="ghost" onClick={handleSignOut}>Sign out</Button>
             </>
           ) : (

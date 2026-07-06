@@ -16,7 +16,7 @@ export const Route = createFileRoute("/_authenticated/assignments/$id")({
 
 function AssignmentPage() {
   const { id } = Route.useParams();
-  const { user } = useAuth();
+  const { user, previewAsStudent } = useAuth();
   const qc = useQueryClient();
 
   const { data: assignment } = useQuery({
@@ -76,6 +76,9 @@ function AssignmentPage() {
 
   const submit = async () => {
     if (!user || !assignment) return;
+    if (previewAsStudent) {
+      return toast.error("Preview mode — submissions are disabled while viewing as a student.");
+    }
     if (assignment.requires_github && (!verification || !verification.ok)) {
       return toast.error("Verify your GitHub repo before submitting.");
     }
@@ -261,8 +264,8 @@ function AssignmentPage() {
               )}
             </div>
 
-            <Button className="mt-5" onClick={submit} disabled={submitting}>
-              {submitting ? "Submitting…" : "Submit for review"}
+            <Button className="mt-5" onClick={submit} disabled={submitting || previewAsStudent} title={previewAsStudent ? "Disabled in preview mode" : undefined}>
+              {previewAsStudent ? "Preview mode — submit disabled" : submitting ? "Submitting…" : "Submit for review"}
             </Button>
           </>
         )}

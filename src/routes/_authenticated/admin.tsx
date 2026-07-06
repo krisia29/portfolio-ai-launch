@@ -1,6 +1,6 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
@@ -10,19 +10,25 @@ import { toast } from "sonner";
 import { Github, ExternalLink, User } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin")({
-  beforeLoad: async ({ context }) => {
+  beforeLoad: async () => {
     const { data } = await supabase.auth.getUser();
     if (!data.user) throw redirect({ to: "/auth" });
     const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", data.user.id);
     const isStaff = (roles ?? []).some((r) => r.role === "teacher" || r.role === "admin");
-    if (!isStaff) throw redirect({ to: "/dashboard" });
+    if (!isStaff) throw redirect({ to: "/unauthorized" });
   },
   component: AdminPage,
 });
 
 function AdminPage() {
   const qc = useQueryClient();
+  const navigate = useNavigate();
+  const { previewAsStudent } = useAuth();
   const [statusFilter, setStatusFilter] = useState<"submitted" | "approved" | "revision_requested" | "all">("submitted");
+
+  useEffect(() => {
+    if (previewAsStudent) navigate({ to: "/dashboard" });
+  }, [previewAsStudent, navigate]);
 
   const { data: subs = [] } = useQuery({
     queryKey: ["adminSubs", statusFilter],
