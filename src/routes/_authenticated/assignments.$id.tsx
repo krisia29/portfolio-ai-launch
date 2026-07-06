@@ -76,6 +76,9 @@ function AssignmentPage() {
 
   const submit = async () => {
     if (!user || !assignment) return;
+    if (previewAsStudent) {
+      return toast.error("Preview mode — submissions are disabled while viewing as a student.");
+    }
     if (assignment.requires_github && (!verification || !verification.ok)) {
       return toast.error("Verify your GitHub repo before submitting.");
     }
