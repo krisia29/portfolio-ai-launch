@@ -14,7 +14,7 @@ export function PreviewModeBanner() {
           <Eye className="w-4 h-4" />
           Preview mode — you're viewing the platform as a student. Submissions and edits are disabled.
         </div>
-        <Button size="sm" variant="outline" className="border-amber-400/70 bg-white/70 hover:bg-white" onClick={() => setPreviewAsStudent(false)}>
+        <Button size="sm" variant="outline" className="border-amber-400/70 bg-white/70 hover:bg-white" onClick={() => { setPreviewAsStudent(false); navigate({ to: "/admin" }); }}>
           Return to admin dashboard
         </Button>
       </div>
