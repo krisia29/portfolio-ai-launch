@@ -16,7 +16,7 @@ export const Route = createFileRoute("/_authenticated/assignments/$id")({
 
 function AssignmentPage() {
   const { id } = Route.useParams();
-  const { user } = useAuth();
+  const { user, previewAsStudent } = useAuth();
   const qc = useQueryClient();
 
   const { data: assignment } = useQuery({
