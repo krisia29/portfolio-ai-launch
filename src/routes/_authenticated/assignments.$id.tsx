@@ -264,8 +264,8 @@ function AssignmentPage() {
               )}
             </div>
 
-            <Button className="mt-5" onClick={submit} disabled={submitting}>
-              {submitting ? "Submitting…" : "Submit for review"}
+            <Button className="mt-5" onClick={submit} disabled={submitting || previewAsStudent} title={previewAsStudent ? "Disabled in preview mode" : undefined}>
+              {previewAsStudent ? "Preview mode — submit disabled" : submitting ? "Submitting…" : "Submit for review"}
             </Button>
           </>
         )}
