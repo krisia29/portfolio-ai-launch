@@ -15,6 +15,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedModulesRouteImport } from './routes/_authenticated/modules'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedModulesSlugRouteImport } from './routes/_authenticated/modules.$slug'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
@@ -45,20 +46,28 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedModulesSlugRoute =
+  AuthenticatedModulesSlugRouteImport.update({
+    id: '/$slug',
+    path: '/$slug',
+    getParentRoute: () => AuthenticatedModulesRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/modules': typeof AuthenticatedModulesRoute
+  '/modules': typeof AuthenticatedModulesRouteWithChildren
+  '/modules/$slug': typeof AuthenticatedModulesSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/modules': typeof AuthenticatedModulesRoute
+  '/modules': typeof AuthenticatedModulesRouteWithChildren
+  '/modules/$slug': typeof AuthenticatedModulesSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -67,13 +76,26 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
-  '/_authenticated/modules': typeof AuthenticatedModulesRoute
+  '/_authenticated/modules': typeof AuthenticatedModulesRouteWithChildren
+  '/_authenticated/modules/$slug': typeof AuthenticatedModulesSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/reset-password' | '/dashboard' | '/modules'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/dashboard'
+    | '/modules'
+    | '/modules/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/reset-password' | '/dashboard' | '/modules'
+  to:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/dashboard'
+    | '/modules'
+    | '/modules/$slug'
   id:
     | '__root__'
     | '/'
@@ -82,6 +104,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_authenticated/dashboard'
     | '/_authenticated/modules'
+    | '/_authenticated/modules/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -135,17 +158,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/modules/$slug': {
+      id: '/_authenticated/modules/$slug'
+      path: '/$slug'
+      fullPath: '/modules/$slug'
+      preLoaderRoute: typeof AuthenticatedModulesSlugRouteImport
+      parentRoute: typeof AuthenticatedModulesRoute
+    }
   }
 }
 
+interface AuthenticatedModulesRouteChildren {
+  AuthenticatedModulesSlugRoute: typeof AuthenticatedModulesSlugRoute
+}
+
+const AuthenticatedModulesRouteChildren: AuthenticatedModulesRouteChildren = {
+  AuthenticatedModulesSlugRoute: AuthenticatedModulesSlugRoute,
+}
+
+const AuthenticatedModulesRouteWithChildren =
+  AuthenticatedModulesRoute._addFileChildren(AuthenticatedModulesRouteChildren)
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
-  AuthenticatedModulesRoute: typeof AuthenticatedModulesRoute
+  AuthenticatedModulesRoute: typeof AuthenticatedModulesRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
-  AuthenticatedModulesRoute: AuthenticatedModulesRoute,
+  AuthenticatedModulesRoute: AuthenticatedModulesRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
