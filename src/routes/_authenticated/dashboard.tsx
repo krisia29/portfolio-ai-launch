@@ -11,8 +11,11 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 });
 
 function Dashboard() {
-  const { user, isStaff } = useAuth();
-  return isStaff ? <StaffDash userId={user!.id} /> : <StudentDash userId={user!.id} />;
+  const { user, isStaff, loading } = useAuth();
+  if (loading || !user) {
+    return <div className="mx-auto max-w-6xl px-4 py-8 text-sm text-muted-foreground">Loading…</div>;
+  }
+  return isStaff ? <StaffDash userId={user.id} /> : <StudentDash userId={user.id} />;
 }
 
 function StatCard({ label, value, hint, icon }: { label: string; value: string | number; hint?: string; icon?: React.ReactNode }) {
