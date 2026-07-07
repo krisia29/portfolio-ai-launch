@@ -4,12 +4,13 @@ import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
-import { joinClassByCode } from "@/lib/classes.functions";
+import { importStudentsToClass } from "@/lib/classes.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Copy, Users } from "lucide-react";
+import { Users } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/classes")({
   component: ClassesPage,
@@ -25,10 +26,8 @@ function makeCode() {
 function ClassesPage() {
   const { user, isStaff } = useAuth();
   const qc = useQueryClient();
-  const [joinCode, setJoinCode] = useState("");
   const [className, setClassName] = useState("");
   const [period, setPeriod] = useState("");
-  const joinFn = useServerFn(joinClassByCode);
 
   const mine = useQuery({
     queryKey: ["myClasses", user?.id],
@@ -46,24 +45,12 @@ function ClassesPage() {
     },
   });
 
-  const join = async () => {
-    if (!user || !joinCode) return;
-    try {
-      await joinFn({ data: { code: joinCode } });
-      toast.success("Joined class.");
-      setJoinCode("");
-      qc.invalidateQueries({ queryKey: ["myClasses"] });
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Invalid class code.");
-    }
-  };
-
   const create = async () => {
     if (!user || !className.trim()) return;
     const code = makeCode();
     const { error } = await supabase.from("classes").insert({ teacher_id: user.id, name: className.trim(), period: period.trim() || null, join_code: code });
     if (error) return toast.error(error.message);
-    toast.success(`Class created. Code: ${code}`);
+    toast.success("Class created.");
     setClassName(""); setPeriod("");
     qc.invalidateQueries({ queryKey: ["myClasses"] });
   };
@@ -73,11 +60,10 @@ function ClassesPage() {
       <h1 className="text-3xl font-display font-semibold">Classes</h1>
 
       {!isStaff ? (
-        <div className="mt-6 rounded-2xl border bg-card p-6">
-          <h2 className="font-display font-semibold">Join a class</h2>
-          <div className="flex gap-2 mt-3">
-            <Input placeholder="Class code (e.g. ABC234)" value={joinCode} onChange={(e) => setJoinCode(e.target.value)} maxLength={12} />
-            <Button onClick={join} disabled={!joinCode}>Join</Button>
+        <div className="mt-6 rounded-2xl border bg-card p-6 flex items-start gap-3">
+          <Users className="w-5 h-5 mt-0.5 text-muted-foreground" />
+          <div className="text-sm text-muted-foreground">
+            Your teacher will add you to a class. Once enrolled, it will appear below.
           </div>
         </div>
       ) : (
@@ -100,21 +86,70 @@ function ClassesPage() {
       <h2 className="mt-8 font-display text-xl font-semibold">Your classes</h2>
       <div className="mt-3 grid sm:grid-cols-2 gap-3">
         {(mine.data ?? []).map((c: any) => (
-          <div key={c.id} className="rounded-xl border bg-card p-4">
-            <div className="font-semibold">{c.name}</div>
-            {c.period && <div className="text-xs text-muted-foreground">{c.period}</div>}
-            {isStaff && (
-              <div className="mt-3 flex items-center gap-2 text-sm">
-                <span className="rounded bg-muted px-2 py-0.5 font-mono">{c.join_code}</span>
-                <Button size="sm" variant="ghost" onClick={() => { navigator.clipboard.writeText(c.join_code); toast.success("Copied"); }}>
-                  <Copy className="w-3 h-3" />
-                </Button>
-              </div>
-            )}
-          </div>
+          <ClassCard key={c.id} cls={c} isStaff={isStaff} />
         ))}
         {(!mine.data || mine.data.length === 0) && <div className="text-sm text-muted-foreground">None yet.</div>}
       </div>
+    </div>
+  );
+}
+
+function ClassCard({ cls, isStaff }: { cls: any; isStaff: boolean }) {
+  const qc = useQueryClient();
+  const importFn = useServerFn(importStudentsToClass);
+  const [emails, setEmails] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const doImport = async () => {
+    const list = emails
+      .split(/[\s,;]+/)
+      .map((e) => e.trim())
+      .filter(Boolean);
+    if (list.length === 0) return toast.error("Enter at least one email.");
+    setBusy(true);
+    try {
+      const res = await importFn({ data: { classId: cls.id, emails: list } });
+      toast.success(
+        `Added ${res.added} student${res.added === 1 ? "" : "s"}.` +
+          (res.notFound.length ? ` ${res.notFound.length} not found.` : ""),
+      );
+      if (res.notFound.length) {
+        setEmails(res.notFound.join("\n"));
+      } else {
+        setEmails("");
+      }
+      qc.invalidateQueries({ queryKey: ["myClasses"] });
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Import failed.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="rounded-xl border bg-card p-4">
+      <div className="font-semibold">{cls.name}</div>
+      {cls.period && <div className="text-xs text-muted-foreground">{cls.period}</div>}
+      {isStaff && (
+        <div className="mt-3">
+          <Label className="text-xs">Import students by email</Label>
+          <Textarea
+            className="mt-1 font-mono text-xs"
+            rows={3}
+            placeholder="student1@school.edu, student2@school.edu"
+            value={emails}
+            onChange={(e) => setEmails(e.target.value)}
+          />
+          <div className="mt-2 flex items-center justify-between">
+            <span className="text-[11px] text-muted-foreground">
+              Students must have signed in at least once.
+            </span>
+            <Button size="sm" onClick={doImport} disabled={busy || !emails.trim()}>
+              {busy ? "Adding…" : "Add students"}
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
