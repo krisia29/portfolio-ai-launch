@@ -53,15 +53,14 @@ export const importStudentsToClass = createServerFn({ method: "POST" })
   .inputValidator((data) => importSchema.parse(data))
   .handler(async ({ data, context }) => {
     // Verify caller is staff (teacher/admin).
-    const { data: isStaff } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "teacher",
-    });
-    const { data: isAdmin } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "admin",
-    });
-    if (!isStaff && !isAdmin) throw new Error("Forbidden");
+    const { data: roleRows } = await context.supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", context.userId);
+    const roles = (roleRows ?? []).map((r) => r.role as string);
+    const isStaff = roles.includes("teacher") || roles.includes("admin");
+    const isAdmin = roles.includes("admin");
+    if (!isStaff) throw new Error("Forbidden");
 
     // Verify caller owns the class (or is admin).
     const { data: cls, error: clsErr } = await context.supabase
