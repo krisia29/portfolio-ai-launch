@@ -276,6 +276,5 @@ function AssignmentPage() {
 }
 
 function MarkdownBlock({ text }: { text: string | null | undefined }) {
-  if (!text) return null;
-  return <div className="mt-2 text-sm whitespace-pre-wrap leading-relaxed">{text}</div>;
+  return <Markdown text={text} className="mt-2" />;
 }
