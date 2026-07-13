@@ -1,22 +1,26 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { modulesQO, mySubmissionsQO, myClassesQO, meProfileQO } from "@/lib/queries";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "@tanstack/react-router";
 import { Github, GraduationCap, CheckCircle2, Clock, Sparkles } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
 });
 
 function Dashboard() {
-  const { user, isStaff, loading } = useAuth();
+  const { user, isStaff, isAdmin, loading } = useAuth();
   if (loading || !user) {
     return <div className="mx-auto max-w-6xl px-4 py-8 text-sm text-muted-foreground">Loading…</div>;
   }
-  return isStaff ? <StaffDash userId={user.id} /> : <StudentDash userId={user.id} />;
+  return isStaff ? <StaffDash userId={user.id} isAdmin={isAdmin} /> : <StudentDash userId={user.id} />;
 }
+
 
 function StatCard({ label, value, hint, icon }: { label: string; value: string | number; hint?: string; icon?: React.ReactNode }) {
   return (
