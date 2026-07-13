@@ -27,7 +27,6 @@ function ClassesPage() {
   const { user, isStaff } = useAuth();
   const qc = useQueryClient();
   const [className, setClassName] = useState("");
-  const [period, setPeriod] = useState("");
 
   const mine = useQuery({
     queryKey: ["myClasses", user?.id],
@@ -48,12 +47,13 @@ function ClassesPage() {
   const create = async () => {
     if (!user || !className.trim()) return;
     const code = makeCode();
-    const { error } = await supabase.from("classes").insert({ teacher_id: user.id, name: className.trim(), period: period.trim() || null, join_code: code });
+    const { error } = await supabase.from("classes").insert({ teacher_id: user.id, name: className.trim(), join_code: code });
     if (error) return toast.error(error.message);
     toast.success("Class created.");
-    setClassName(""); setPeriod("");
+    setClassName("");
     qc.invalidateQueries({ queryKey: ["myClasses"] });
   };
+
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
@@ -69,16 +69,11 @@ function ClassesPage() {
       ) : (
         <div className="mt-6 rounded-2xl border bg-card p-6">
           <h2 className="font-display font-semibold">Create a class</h2>
-          <div className="grid sm:grid-cols-2 gap-3 mt-3">
-            <div>
-              <Label>Class name</Label>
-              <Input value={className} onChange={(e) => setClassName(e.target.value)} maxLength={100} />
-            </div>
-            <div>
-              <Label>Period</Label>
-              <Input value={period} onChange={(e) => setPeriod(e.target.value)} maxLength={40} placeholder="e.g. Period 3" />
-            </div>
+          <div className="mt-3">
+            <Label>Class name</Label>
+            <Input value={className} onChange={(e) => setClassName(e.target.value)} maxLength={100} placeholder="e.g. Fall 2026" />
           </div>
+
           <Button className="mt-4" onClick={create} disabled={!className.trim()}>Create class</Button>
         </div>
       )}
@@ -129,7 +124,7 @@ function ClassCard({ cls, isStaff }: { cls: any; isStaff: boolean }) {
   return (
     <div className="rounded-xl border bg-card p-4">
       <div className="font-semibold">{cls.name}</div>
-      {cls.period && <div className="text-xs text-muted-foreground">{cls.period}</div>}
+
       {isStaff && (
         <div className="mt-3">
           <Label className="text-xs">Import students by email</Label>
