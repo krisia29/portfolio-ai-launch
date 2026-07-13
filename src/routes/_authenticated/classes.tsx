@@ -27,7 +27,6 @@ function ClassesPage() {
   const { user, isStaff } = useAuth();
   const qc = useQueryClient();
   const [className, setClassName] = useState("");
-  const [period, setPeriod] = useState("");
 
   const mine = useQuery({
     queryKey: ["myClasses", user?.id],
@@ -48,12 +47,13 @@ function ClassesPage() {
   const create = async () => {
     if (!user || !className.trim()) return;
     const code = makeCode();
-    const { error } = await supabase.from("classes").insert({ teacher_id: user.id, name: className.trim(), period: period.trim() || null, join_code: code });
+    const { error } = await supabase.from("classes").insert({ teacher_id: user.id, name: className.trim(), join_code: code });
     if (error) return toast.error(error.message);
     toast.success("Class created.");
-    setClassName(""); setPeriod("");
+    setClassName("");
     qc.invalidateQueries({ queryKey: ["myClasses"] });
   };
+
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
