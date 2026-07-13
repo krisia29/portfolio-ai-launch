@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Github, ExternalLink, CheckCircle2, XCircle, RefreshCw } from "lucide-react";
+import { Markdown } from "@/components/Markdown";
 
 export const Route = createFileRoute("/_authenticated/assignments/$id")({
   component: AssignmentPage,
@@ -171,6 +172,13 @@ function AssignmentPage() {
         <MarkdownBlock text={assignment.deliverables_md} />
       </section>
 
+      {assignment.github_instructions_md && (
+        <section className="mt-4 rounded-2xl border bg-card p-6">
+          <h2 className="font-display text-lg font-semibold">Publishing to GitHub</h2>
+          <MarkdownBlock text={assignment.github_instructions_md} />
+        </section>
+      )}
+
       {assignment.readme_template_md && (
         <section className="mt-4 rounded-2xl border bg-card p-6">
           <h2 className="font-display text-lg font-semibold">README starter</h2>
@@ -275,6 +283,5 @@ function AssignmentPage() {
 }
 
 function MarkdownBlock({ text }: { text: string | null | undefined }) {
-  if (!text) return null;
-  return <div className="mt-2 text-sm whitespace-pre-wrap leading-relaxed">{text}</div>;
+  return <Markdown text={text} className="mt-2" />;
 }
