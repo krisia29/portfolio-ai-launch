@@ -124,7 +124,7 @@ function ClassCard({ cls, isStaff }: { cls: any; isStaff: boolean }) {
   return (
     <div className="rounded-xl border bg-card p-4">
       <div className="font-semibold">{cls.name}</div>
-      {cls.period && <div className="text-xs text-muted-foreground">{cls.period}</div>}
+
       {isStaff && (
         <div className="mt-3">
           <Label className="text-xs">Import students by email</Label>
