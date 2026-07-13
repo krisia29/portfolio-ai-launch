@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ExternalLink } from "lucide-react";
 import { glossary } from "@/lib/glossary";
+import { PlatformLogo } from "@/components/PlatformLogo";
 
 export const Route = createFileRoute("/_authenticated/modules/$slug")({
   component: ModuleDetail,
