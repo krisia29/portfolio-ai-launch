@@ -69,16 +69,11 @@ function ClassesPage() {
       ) : (
         <div className="mt-6 rounded-2xl border bg-card p-6">
           <h2 className="font-display font-semibold">Create a class</h2>
-          <div className="grid sm:grid-cols-2 gap-3 mt-3">
-            <div>
-              <Label>Class name</Label>
-              <Input value={className} onChange={(e) => setClassName(e.target.value)} maxLength={100} />
-            </div>
-            <div>
-              <Label>Period</Label>
-              <Input value={period} onChange={(e) => setPeriod(e.target.value)} maxLength={40} placeholder="e.g. Period 3" />
-            </div>
+          <div className="mt-3">
+            <Label>Class name</Label>
+            <Input value={className} onChange={(e) => setClassName(e.target.value)} maxLength={100} placeholder="e.g. Fall 2026" />
           </div>
+
           <Button className="mt-4" onClick={create} disabled={!className.trim()}>Create class</Button>
         </div>
       )}
