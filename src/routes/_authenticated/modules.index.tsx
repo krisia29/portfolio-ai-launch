@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { modulesQO } from "@/lib/queries";
+import { PlatformLogo } from "@/components/PlatformLogo";
 
 export const Route = createFileRoute("/_authenticated/modules/")({
   component: ModulesPage,
