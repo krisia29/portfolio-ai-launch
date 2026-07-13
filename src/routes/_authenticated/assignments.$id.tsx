@@ -172,6 +172,13 @@ function AssignmentPage() {
         <MarkdownBlock text={assignment.deliverables_md} />
       </section>
 
+      {assignment.github_instructions_md && (
+        <section className="mt-4 rounded-2xl border bg-card p-6">
+          <h2 className="font-display text-lg font-semibold">Publishing to GitHub</h2>
+          <MarkdownBlock text={assignment.github_instructions_md} />
+        </section>
+      )}
+
       {assignment.readme_template_md && (
         <section className="mt-4 rounded-2xl border bg-card p-6">
           <h2 className="font-display text-lg font-semibold">README starter</h2>
