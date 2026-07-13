@@ -1,22 +1,26 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { modulesQO, mySubmissionsQO, myClassesQO, meProfileQO } from "@/lib/queries";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "@tanstack/react-router";
 import { Github, GraduationCap, CheckCircle2, Clock, Sparkles } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
 });
 
 function Dashboard() {
-  const { user, isStaff, loading } = useAuth();
+  const { user, isStaff, isAdmin, loading } = useAuth();
   if (loading || !user) {
     return <div className="mx-auto max-w-6xl px-4 py-8 text-sm text-muted-foreground">Loading…</div>;
   }
-  return isStaff ? <StaffDash userId={user.id} /> : <StudentDash userId={user.id} />;
+  return isStaff ? <StaffDash userId={user.id} isAdmin={isAdmin} /> : <StudentDash userId={user.id} />;
 }
+
 
 function StatCard({ label, value, hint, icon }: { label: string; value: string | number; hint?: string; icon?: React.ReactNode }) {
   return (
@@ -116,7 +120,8 @@ function StatusPill({ status }: { status: string }) {
   return <span className={`px-2 py-0.5 text-xs rounded-full border ${map[status] ?? map.draft}`}>{status.replace("_", " ")}</span>;
 }
 
-function StaffDash({ userId }: { userId: string }) {
+function StaffDash({ userId: _userId, isAdmin }: { userId: string; isAdmin: boolean }) {
+  const [studentsOpen, setStudentsOpen] = useState(false);
   const stats = useQuery({
     queryKey: ["staffStats"],
     queryFn: async () => {
@@ -130,11 +135,31 @@ function StaffDash({ userId }: { userId: string }) {
     },
   });
 
+  const studentsValue = stats.data?.students ?? "—";
+  const studentsCard = (
+    <StatCard
+      label="Students"
+      value={studentsValue}
+      hint={isAdmin ? "Click to view roster" : undefined}
+    />
+  );
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <h1 className="text-3xl font-display font-semibold">Instructor dashboard</h1>
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-        <StatCard label="Students" value={stats.data?.students ?? "—"} />
+        {isAdmin ? (
+          <button
+            type="button"
+            onClick={() => setStudentsOpen(true)}
+            className="text-left rounded-2xl transition hover:ring-2 hover:ring-primary/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            aria-label="View student roster"
+          >
+            {studentsCard}
+          </button>
+        ) : (
+          studentsCard
+        )}
         <StatCard label="Pending reviews" value={stats.data?.pending ?? "—"} icon={<Clock className="w-4 h-4 text-warning" />} />
         <StatCard label="Approved" value={stats.data?.approved ?? "—"} icon={<CheckCircle2 className="w-4 h-4 text-success" />} />
         <StatCard label="Classes" value={stats.data?.classes ?? "—"} />
@@ -144,6 +169,82 @@ function StaffDash({ userId }: { userId: string }) {
         <Link to="/classes" className="rounded-lg border px-4 py-2 text-sm font-medium">Manage classes</Link>
         <Link to="/modules" className="rounded-lg border px-4 py-2 text-sm font-medium">Course content</Link>
       </div>
+      {isAdmin && <StudentRosterDialog open={studentsOpen} onOpenChange={setStudentsOpen} />}
     </div>
   );
 }
+
+function StudentRosterDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
+  const [q, setQ] = useState("");
+  const roster = useQuery({
+    queryKey: ["adminStudentRoster"],
+    enabled: open,
+    queryFn: async () => {
+      // Only students: exclude anyone with a staff role.
+      const { data: staffRoles, error: rolesErr } = await supabase
+        .from("user_roles")
+        .select("user_id, role")
+        .in("role", ["teacher", "admin"]);
+      if (rolesErr) throw rolesErr;
+      const staffIds = new Set((staffRoles ?? []).map((r: any) => r.user_id));
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, display_name, email")
+        .order("display_name", { ascending: true });
+      if (error) throw error;
+      return (data ?? []).filter((p: any) => !staffIds.has(p.id));
+    },
+  });
+
+  const term = q.trim().toLowerCase();
+  const filtered = (roster.data ?? []).filter((p: any) => {
+    if (!term) return true;
+    return (
+      (p.display_name ?? "").toLowerCase().includes(term) ||
+      (p.email ?? "").toLowerCase().includes(term)
+    );
+  });
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>Student roster</DialogTitle>
+          <DialogDescription>
+            All enrolled students, including those who haven't submitted yet.
+          </DialogDescription>
+        </DialogHeader>
+        <Input
+          placeholder="Search by name or email"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          className="mt-2"
+        />
+        <div className="mt-3 max-h-[60vh] overflow-y-auto rounded-lg border divide-y">
+          {roster.isLoading && (
+            <div className="p-4 text-sm text-muted-foreground">Loading…</div>
+          )}
+          {roster.error && (
+            <div className="p-4 text-sm text-destructive">Failed to load roster.</div>
+          )}
+          {!roster.isLoading && !roster.error && filtered.length === 0 && (
+            <div className="p-4 text-sm text-muted-foreground">No students found.</div>
+          )}
+          {filtered.map((p: any) => (
+            <div key={p.id} className="p-3 flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <div className="font-medium truncate">{p.display_name ?? "Unnamed student"}</div>
+                <div className="text-xs text-muted-foreground truncate">{p.email ?? "—"}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="mt-2 text-xs text-muted-foreground">
+          {filtered.length} student{filtered.length === 1 ? "" : "s"}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
