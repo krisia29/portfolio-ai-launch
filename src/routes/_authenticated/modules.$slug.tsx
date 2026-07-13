@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ExternalLink } from "lucide-react";
 import { glossary } from "@/lib/glossary";
+import { PlatformLogo } from "@/components/PlatformLogo";
 
 export const Route = createFileRoute("/_authenticated/modules/$slug")({
   component: ModuleDetail,
@@ -37,7 +38,10 @@ function ModuleDetail() {
           <span className="text-xs rounded-full bg-primary/10 text-primary px-2 py-0.5">{module.platform}</span>
         )}
       </div>
-      <h1 className="text-3xl font-display font-semibold mt-2">{module.title}</h1>
+      <div className="mt-3 flex items-center gap-4">
+        {!isGlossary && <PlatformLogo platform={module.platform} size={128} className="!w-14 !h-14" />}
+        <h1 className="text-3xl font-display font-semibold">{module.title}</h1>
+      </div>
       {module.description && <p className="text-muted-foreground mt-2">{module.description}</p>}
       {module.official_url && (
         <a href={module.official_url} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center gap-1 text-sm text-primary hover:underline">
