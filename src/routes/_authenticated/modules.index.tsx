@@ -27,13 +27,16 @@ function ModulesPage() {
             params={{ slug: m.slug }}
             className="group rounded-2xl border bg-card p-5 hover:border-primary/40 transition"
           >
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-3">
               <span className="text-xs uppercase tracking-wider text-muted-foreground">
                 Module {m.order_index}
               </span>
-              <span className="text-xs rounded-full bg-primary/10 text-primary px-2 py-0.5">
-                {m.platform}
-              </span>
+              <div className="flex items-center gap-2">
+                <PlatformLogo platform={m.platform} size={64} />
+                <span className="text-xs rounded-full bg-primary/10 text-primary px-2 py-0.5">
+                  {m.platform}
+                </span>
+              </div>
             </div>
             <h2 className="font-display text-xl font-semibold mt-2 group-hover:text-primary">
               {m.title}
