@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState, useCallback } from "react";
-import { Tldraw, getSnapshot, loadSnapshot, exportToBlob, type Editor } from "tldraw";
+import { Tldraw, getSnapshot, loadSnapshot, exportAs, type Editor } from "tldraw";
 import "tldraw/tldraw.css";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
@@ -115,20 +115,13 @@ function WhiteboardCanvas() {
   const exportPNG = async () => {
     const editor = editorRef.current;
     if (!editor) return;
-    const shapeIds = editor.getCurrentPageShapeIds();
-    if (shapeIds.size === 0) return;
-    const blob = await exportToBlob({
-      editor,
-      ids: [...shapeIds],
+    const shapeIds = [...editor.getCurrentPageShapeIds()];
+    if (shapeIds.length === 0) return;
+    await exportAs(editor, shapeIds, {
       format: "png",
-      opts: { background: true },
+      name: board?.title ?? "whiteboard",
+      background: true,
     });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${board?.title ?? "whiteboard"}.png`;
-    a.click();
-    URL.revokeObjectURL(url);
   };
 
   const clearBoard = () => {
