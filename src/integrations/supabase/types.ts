@@ -594,6 +594,72 @@ export type Database = {
         }
         Relationships: []
       }
+      whiteboards: {
+        Row: {
+          assignment_id: string | null
+          class_id: string | null
+          created_at: string
+          folder: string
+          id: string
+          is_archived: boolean
+          is_template: boolean
+          last_edited_at: string
+          last_edited_by: string | null
+          owner_id: string
+          snapshot: Json | null
+          thumbnail: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          assignment_id?: string | null
+          class_id?: string | null
+          created_at?: string
+          folder?: string
+          id?: string
+          is_archived?: boolean
+          is_template?: boolean
+          last_edited_at?: string
+          last_edited_by?: string | null
+          owner_id: string
+          snapshot?: Json | null
+          thumbnail?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          assignment_id?: string | null
+          class_id?: string | null
+          created_at?: string
+          folder?: string
+          id?: string
+          is_archived?: boolean
+          is_template?: boolean
+          last_edited_at?: string
+          last_edited_by?: string | null
+          owner_id?: string
+          snapshot?: Json | null
+          thumbnail?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "whiteboards_assignment_id_fkey"
+            columns: ["assignment_id"]
+            isOneToOne: false
+            referencedRelation: "assignments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "whiteboards_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
