@@ -30,7 +30,7 @@ function WhiteboardCanvas() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("whiteboards")
-        .select("*, owner:profiles!whiteboards_owner_id_fkey(display_name), editor:profiles!whiteboards_last_edited_by_fkey(display_name)")
+        .select("*")
         .eq("id", id)
         .single();
       if (error) throw error;
@@ -148,7 +148,6 @@ function WhiteboardCanvas() {
     );
   }
 
-  const lastEditor = (board as any).editor?.display_name ?? "someone";
   const lastEditedAt = board.last_edited_at ? new Date(board.last_edited_at) : null;
 
   return (
@@ -186,7 +185,7 @@ function WhiteboardCanvas() {
           )}
           {lastEditedAt && (
             <div className="text-[11px] text-muted-foreground">
-              Last edited by {lastEditor} · {lastEditedAt.toLocaleString()}
+              Last edited {lastEditedAt.toLocaleString()}
             </div>
           )}
         </div>
