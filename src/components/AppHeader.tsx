@@ -30,6 +30,7 @@ export function AppHeader() {
               <Link to="/modules" className="px-3 py-2 rounded-md hover:bg-muted">Modules</Link>
               <Link to="/portfolio" className="px-3 py-2 rounded-md hover:bg-muted">Portfolio</Link>
               <Link to="/classes" className="px-3 py-2 rounded-md hover:bg-muted">Classes</Link>
+              <Link to="/whiteboards" className="px-3 py-2 rounded-md hover:bg-muted">Whiteboard</Link>
               {showAdminLink && (
                 <Link to="/admin" className="px-3 py-2 rounded-md hover:bg-muted">Admin</Link>
               )}
