@@ -82,7 +82,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Help high school students build real AI projects, publish them to GitHub, and grow a portfolio ready for college, scholarships, and internships.",
+          "Help students build real AI projects, publish them to GitHub, and grow a portfolio ready for college, scholarships, and internships.",
       },
       { property: "og:title", content: "Tech Pathways Academy — AI Portfolio" },
       {
@@ -93,9 +93,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Tech Pathways Academy — AI Portfolio" },
-      { name: "description", content: "Help high school students build real AI projects, publish them to GitHub, and grow a portfolio ready for college, scholarships, and internships." },
-      { property: "og:description", content: "Help high school students build real AI projects, publish them to GitHub, and grow a portfolio ready for college, scholarships, and internships." },
-      { name: "twitter:description", content: "Help high school students build real AI projects, publish them to GitHub, and grow a portfolio ready for college, scholarships, and internships." },
+      { name: "description", content: "Help students build real AI projects, publish them to GitHub, and grow a portfolio ready for college, scholarships, and internships." },
+      { property: "og:description", content: "Help students build real AI projects, publish them to GitHub, and grow a portfolio ready for college, scholarships, and internships." },
+      { name: "twitter:description", content: "Help students build real AI projects, publish them to GitHub, and grow a portfolio ready for college, scholarships, and internships." },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/9220889d-cf99-4b83-9084-6f58c2a03c92/id-preview-a7d4a901--14cd5c3f-e9e5-433f-8bbe-6287b99a2984.lovable.app-1783369831794.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/9220889d-cf99-4b83-9084-6f58c2a03c92/id-preview-a7d4a901--14cd5c3f-e9e5-433f-8bbe-6287b99a2984.lovable.app-1783369831794.png" },
     ],
