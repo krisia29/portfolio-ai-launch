@@ -166,6 +166,26 @@ function AssignmentPage() {
         )}
       </div>
 
+      <aside className="mt-6 rounded-2xl border border-warning/40 bg-warning/10 p-5">
+        <div className="flex items-start gap-3">
+          <ShieldAlert className="w-5 h-5 mt-0.5 text-warning shrink-0" />
+          <div className="text-sm">
+            <div className="font-display font-semibold text-base">Privacy reminder</div>
+            <p className="mt-1 text-muted-foreground">
+              This portfolio is public. Only include information you would be comfortable
+              sharing with future employers. <strong>Never publish</strong> your school name,
+              school district, school email, graduation year, grade level, age, birth date,
+              home address, phone number, city or neighborhood of residence, class schedule,
+              student ID, parent info, personal social media, or any photo that reveals a
+              school logo, uniform, classroom, or other identifying background. Share only
+              your first and last name, professional personal email, skills, projects,
+              certifications, career interests, portfolio links, GitHub username, and resume.
+            </p>
+          </div>
+        </div>
+      </aside>
+
+
       <section className="mt-8 rounded-2xl border bg-card p-6">
         <h2 className="font-display text-lg font-semibold">Instructions</h2>
         <MarkdownBlock text={assignment.instructions_md} />
