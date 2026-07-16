@@ -131,7 +131,7 @@ function ClassCard({ cls, isStaff }: { cls: any; isStaff: boolean }) {
           <Textarea
             className="mt-1 font-mono text-xs"
             rows={3}
-            placeholder="student1@school.edu, student2@school.edu"
+            placeholder="student1@gmail.com, student2@gmail.com"
             value={emails}
             onChange={(e) => setEmails(e.target.value)}
           />

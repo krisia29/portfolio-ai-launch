@@ -123,7 +123,7 @@ function Landing() {
       <footer className="border-t">
         <div className="mx-auto max-w-6xl px-4 h-16 flex items-center justify-between text-sm text-muted-foreground">
           <span>© Tech Pathways Academy</span>
-          <span>Built for high school AI classrooms.</span>
+          <span>Built for AI classrooms.</span>
         </div>
       </footer>
     </div>
