@@ -27,7 +27,7 @@ function Landing() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,var(--accent)_0%,transparent_45%),radial-gradient(circle_at_80%_60%,color-mix(in_oklab,var(--primary)_15%,transparent)_0%,transparent_50%)] pointer-events-none" />
         <div className="relative mx-auto max-w-6xl px-4 pt-20 pb-24 text-center">
           <span className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
-            <Sparkles className="w-3.5 h-3.5 text-primary" /> High school AI curriculum + portfolio
+            <Sparkles className="w-3.5 h-3.5 text-primary" /> Student AI curriculum + portfolio
           </span>
           <h1 className="mt-6 text-5xl sm:text-6xl font-display font-bold tracking-tight max-w-3xl mx-auto">
             Learn AI by building things you can <span className="text-primary">actually share</span>.
@@ -123,7 +123,7 @@ function Landing() {
       <footer className="border-t">
         <div className="mx-auto max-w-6xl px-4 h-16 flex items-center justify-between text-sm text-muted-foreground">
           <span>© Tech Pathways Academy</span>
-          <span>Built for high school AI classrooms.</span>
+          <span>Built for AI classrooms.</span>
         </div>
       </footer>
     </div>

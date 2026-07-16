@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Github, ExternalLink, CheckCircle2, XCircle, RefreshCw } from "lucide-react";
+import { Github, ExternalLink, CheckCircle2, XCircle, RefreshCw, ShieldAlert } from "lucide-react";
 import { Markdown } from "@/components/Markdown";
 
 export const Route = createFileRoute("/_authenticated/assignments/$id")({
@@ -49,6 +49,7 @@ function AssignmentPage() {
   const [reflection, setReflection] = useState("");
   const [verifying, setVerifying] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [privacyConfirmed, setPrivacyConfirmed] = useState(false);
   const [verification, setVerification] = useState<null | {
     ok: boolean;
     errors: string[];
@@ -82,6 +83,9 @@ function AssignmentPage() {
     }
     if (assignment.requires_github && (!verification || !verification.ok)) {
       return toast.error("Verify your GitHub repo before submitting.");
+    }
+    if (!privacyConfirmed) {
+      return toast.error("Confirm the privacy checklist before submitting.");
     }
     setSubmitting(true);
     try {
@@ -161,6 +165,26 @@ function AssignmentPage() {
           <span className="rounded-full border border-primary/40 text-primary px-2 py-0.5">GitHub required</span>
         )}
       </div>
+
+      <aside className="mt-6 rounded-2xl border border-warning/40 bg-warning/10 p-5">
+        <div className="flex items-start gap-3">
+          <ShieldAlert className="w-5 h-5 mt-0.5 text-warning shrink-0" />
+          <div className="text-sm">
+            <div className="font-display font-semibold text-base">Privacy reminder</div>
+            <p className="mt-1 text-muted-foreground">
+              This portfolio is public. Only include information you would be comfortable
+              sharing with future employers. <strong>Never publish</strong> your school name,
+              school district, school email, graduation year, grade level, age, birth date,
+              home address, phone number, city or neighborhood of residence, class schedule,
+              student ID, parent info, personal social media, or any photo that reveals a
+              school logo, uniform, classroom, or other identifying background. Share only
+              your first and last name, professional personal email, skills, projects,
+              certifications, career interests, portfolio links, GitHub username, and resume.
+            </p>
+          </div>
+        </div>
+      </aside>
+
 
       <section className="mt-8 rounded-2xl border bg-card p-6">
         <h2 className="font-display text-lg font-semibold">Instructions</h2>
@@ -272,7 +296,28 @@ function AssignmentPage() {
               )}
             </div>
 
-            <Button className="mt-5" onClick={submit} disabled={submitting || previewAsStudent} title={previewAsStudent ? "Disabled in preview mode" : undefined}>
+            <div className="mt-5 rounded-lg border border-warning/40 bg-warning/5 p-4">
+              <label className="flex items-start gap-3 cursor-pointer text-sm">
+                <input
+                  type="checkbox"
+                  className="mt-1 h-4 w-4 accent-primary"
+                  checked={privacyConfirmed}
+                  onChange={(e) => setPrivacyConfirmed(e.target.checked)}
+                />
+                <span>
+                  <span className="font-medium">Privacy check.</span> I have reviewed my
+                  GitHub profile, README files, portfolio website, images, PDFs, slides,
+                  videos, resume, and any project documentation, and confirmed that none
+                  of them contain my school name, district, school email, graduation year,
+                  grade level, age, birth date, home address, phone number, city of
+                  residence, class schedule, student ID, parent information, personal
+                  social media, or any photo revealing school logos, uniforms, or
+                  identifying backgrounds.
+                </span>
+              </label>
+            </div>
+
+            <Button className="mt-4" onClick={submit} disabled={submitting || previewAsStudent || !privacyConfirmed} title={previewAsStudent ? "Disabled in preview mode" : !privacyConfirmed ? "Confirm the privacy checklist first" : undefined}>
               {previewAsStudent ? "Preview mode — submit disabled" : submitting ? "Submitting…" : "Submit for review"}
             </Button>
           </>
