@@ -296,7 +296,28 @@ function AssignmentPage() {
               )}
             </div>
 
-            <Button className="mt-5" onClick={submit} disabled={submitting || previewAsStudent} title={previewAsStudent ? "Disabled in preview mode" : undefined}>
+            <div className="mt-5 rounded-lg border border-warning/40 bg-warning/5 p-4">
+              <label className="flex items-start gap-3 cursor-pointer text-sm">
+                <input
+                  type="checkbox"
+                  className="mt-1 h-4 w-4 accent-primary"
+                  checked={privacyConfirmed}
+                  onChange={(e) => setPrivacyConfirmed(e.target.checked)}
+                />
+                <span>
+                  <span className="font-medium">Privacy check.</span> I have reviewed my
+                  GitHub profile, README files, portfolio website, images, PDFs, slides,
+                  videos, resume, and any project documentation, and confirmed that none
+                  of them contain my school name, district, school email, graduation year,
+                  grade level, age, birth date, home address, phone number, city of
+                  residence, class schedule, student ID, parent information, personal
+                  social media, or any photo revealing school logos, uniforms, or
+                  identifying backgrounds.
+                </span>
+              </label>
+            </div>
+
+            <Button className="mt-4" onClick={submit} disabled={submitting || previewAsStudent || !privacyConfirmed} title={previewAsStudent ? "Disabled in preview mode" : !privacyConfirmed ? "Confirm the privacy checklist first" : undefined}>
               {previewAsStudent ? "Preview mode — submit disabled" : submitting ? "Submitting…" : "Submit for review"}
             </Button>
           </>
