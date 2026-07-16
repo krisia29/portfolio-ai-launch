@@ -84,6 +84,9 @@ function AssignmentPage() {
     if (assignment.requires_github && (!verification || !verification.ok)) {
       return toast.error("Verify your GitHub repo before submitting.");
     }
+    if (!privacyConfirmed) {
+      return toast.error("Confirm the privacy checklist before submitting.");
+    }
     setSubmitting(true);
     try {
       const { data: sub, error } = await supabase
