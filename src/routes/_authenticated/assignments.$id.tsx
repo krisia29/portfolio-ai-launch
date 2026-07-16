@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Github, ExternalLink, CheckCircle2, XCircle, RefreshCw } from "lucide-react";
+import { Github, ExternalLink, CheckCircle2, XCircle, RefreshCw, ShieldAlert } from "lucide-react";
 import { Markdown } from "@/components/Markdown";
 
 export const Route = createFileRoute("/_authenticated/assignments/$id")({
