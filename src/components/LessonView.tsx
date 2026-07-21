@@ -1,9 +1,9 @@
-import { useMemo, useState, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Markdown } from "@/components/Markdown";
-import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import {
   CheckCircle2,
@@ -15,8 +15,15 @@ import {
   ListChecks,
   BookOpen,
   Trophy,
+  Paperclip,
 } from "lucide-react";
-import type { Lesson } from "@/lib/lesson";
+import type {
+  Lesson,
+  EvidenceState,
+  EvidenceConfig,
+  EvidenceStatus,
+} from "@/lib/lesson";
+import { EvidenceCheckpoint, StatusPill } from "@/components/EvidenceCheckpoint";
 
 type Props = {
   lesson: Lesson;
@@ -31,9 +38,14 @@ type ProgressRow = {
   assignment_id: string;
   completed_steps: string[];
   screenshots: Record<string, { path: string }>;
+  evidence: Record<string, EvidenceState>;
 };
 
 const BUCKET = "submission-screenshots";
+
+function emptyEvidence(): EvidenceState {
+  return { files: [], status: "not_started" };
+}
 
 export function LessonView({ lesson, assignmentId, userId, readOnly }: Props) {
   const qc = useQueryClient();
@@ -59,32 +71,73 @@ export function LessonView({ lesson, assignmentId, userId, readOnly }: Props) {
     [progress],
   );
   const screenshots = progress?.screenshots ?? {};
+  const serverEvidence = progress?.evidence ?? {};
+
+  // Local overlay so users see instant feedback while we debounce-save.
+  const [evidenceOverlay, setEvidenceOverlay] = useState<
+    Record<string, EvidenceState>
+  >({});
+  useEffect(() => {
+    // when server catches up, drop overlay entries that match
+    setEvidenceOverlay((prev) => {
+      const next: typeof prev = {};
+      for (const [k, v] of Object.entries(prev)) {
+        if (JSON.stringify(serverEvidence[k]) !== JSON.stringify(v)) next[k] = v;
+      }
+      return next;
+    });
+  }, [serverEvidence]);
+
+  const getEvidence = (stepId: string): EvidenceState =>
+    evidenceOverlay[stepId] ?? serverEvidence[stepId] ?? emptyEvidence();
 
   const totalSteps = lesson.steps.length;
   const doneSteps = lesson.steps.filter((s) => completedSet.has(s.id)).length;
   const pct = totalSteps ? Math.round((doneSteps / totalSteps) * 100) : 0;
 
+  const evidenceSteps = lesson.steps.filter((s) => s.evidence);
+
   const upsertProgress = useMutation({
     mutationFn: async (patch: {
       completed_steps?: string[];
       screenshots?: Record<string, { path: string }>;
+      evidence?: Record<string, EvidenceState>;
     }) => {
       if (!userId) throw new Error("Sign in required");
       const next = {
         student_id: userId,
         assignment_id: assignmentId,
-        completed_steps: patch.completed_steps ?? progress?.completed_steps ?? [],
+        completed_steps:
+          patch.completed_steps ?? progress?.completed_steps ?? [],
         screenshots: patch.screenshots ?? progress?.screenshots ?? {},
+        evidence: patch.evidence ?? progress?.evidence ?? {},
       };
       const { error } = await supabase
         .from("assignment_progress")
-        .upsert(next, { onConflict: "student_id,assignment_id" });
+        .upsert(next as any, { onConflict: "student_id,assignment_id" });
       if (error) throw error;
     },
     onSuccess: () =>
-      qc.invalidateQueries({ queryKey: ["assignmentProgress", assignmentId, userId] }),
+      qc.invalidateQueries({
+        queryKey: ["assignmentProgress", assignmentId, userId],
+      }),
     onError: (e: any) => toast.error(e?.message ?? "Failed to save progress"),
   });
+
+  // Debounced evidence save
+  const saveTimer = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
+  const handleEvidenceChange = (stepId: string, next: EvidenceState) => {
+    setEvidenceOverlay((prev) => ({ ...prev, [stepId]: next }));
+    if (saveTimer.current[stepId]) clearTimeout(saveTimer.current[stepId]);
+    saveTimer.current[stepId] = setTimeout(() => {
+      const merged = {
+        ...serverEvidence,
+        ...evidenceOverlay,
+        [stepId]: next,
+      };
+      upsertProgress.mutate({ evidence: merged });
+    }, 500);
+  };
 
   const toggleStep = (stepId: string, checked: boolean) => {
     if (readOnly || !userId) return;
@@ -151,6 +204,32 @@ export function LessonView({ lesson, assignmentId, userId, readOnly }: Props) {
         </div>
       )}
 
+      {/* Evidence Checkpoints summary */}
+      {evidenceSteps.length > 0 && (
+        <div className="rounded-2xl border bg-card p-5">
+          <div className="flex items-center gap-2 text-sm font-display font-semibold">
+            <Paperclip className="w-4 h-4 text-primary" /> Evidence Checkpoints
+          </div>
+          <ul className="mt-3 grid sm:grid-cols-2 gap-2">
+            {evidenceSteps.map((s) => {
+              const idx = lesson.steps.findIndex((x) => x.id === s.id);
+              const state = getEvidence(s.id);
+              return (
+                <li
+                  key={s.id}
+                  className="flex items-center justify-between gap-2 rounded-lg border bg-background p-2"
+                >
+                  <span className="text-sm truncate">
+                    Step {idx + 1}. {s.title}
+                  </span>
+                  <StatusPill status={state.status} />
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+
       {/* Steps */}
       <div className="rounded-2xl border bg-card p-6">
         <div className="font-display text-lg font-semibold">Instructions</div>
@@ -164,7 +243,7 @@ export function LessonView({ lesson, assignmentId, userId, readOnly }: Props) {
                   done ? "border-success/40 bg-success/5" : "bg-background"
                 }`}
               >
-                <label className="flex items-start gap-3 cursor-pointer">
+                <div className="flex items-start gap-3">
                   <button
                     type="button"
                     onClick={() => toggleStep(step.id, !done)}
@@ -185,9 +264,30 @@ export function LessonView({ lesson, assignmentId, userId, readOnly }: Props) {
                       </span>
                       <span className="font-medium">{step.title}</span>
                     </div>
-                    {step.body && <Markdown text={step.body} className="mt-1" />}
-                    {step.screenshot && userId && (
-                      <ScreenshotSlot
+                    {step.body && (
+                      <Markdown
+                        text={step.body.replace(/\/evidence\b/gi, "")}
+                        className="mt-1"
+                      />
+                    )}
+
+                    {/* Evidence Checkpoint */}
+                    {step.evidence && userId && (
+                      <EvidenceCheckpoint
+                        assignmentId={assignmentId}
+                        userId={userId}
+                        stepId={step.id}
+                        stepIndex={idx}
+                        config={step.evidence}
+                        value={getEvidence(step.id)}
+                        readOnly={readOnly}
+                        onChange={(next) => handleEvidenceChange(step.id, next)}
+                      />
+                    )}
+
+                    {/* Legacy single-screenshot slot */}
+                    {step.screenshot && !step.evidence && userId && (
+                      <LegacyScreenshotSlot
                         assignmentId={assignmentId}
                         userId={userId}
                         stepId={step.id}
@@ -204,7 +304,7 @@ export function LessonView({ lesson, assignmentId, userId, readOnly }: Props) {
                       />
                     )}
                   </div>
-                </label>
+                </div>
               </li>
             );
           })}
@@ -250,7 +350,7 @@ export function LessonView({ lesson, assignmentId, userId, readOnly }: Props) {
   );
 }
 
-function ScreenshotSlot(props: {
+function LegacyScreenshotSlot(props: {
   assignmentId: string;
   userId: string;
   stepId: string;
@@ -296,7 +396,7 @@ function ScreenshotSlot(props: {
   };
 
   return (
-    <div className="mt-3 rounded-lg border border-dashed p-3 bg-muted/40" onClick={(e) => e.preventDefault()}>
+    <div className="mt-3 rounded-lg border border-dashed p-3 bg-muted/40">
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <div className="flex items-center gap-2 text-sm">
           <ImageIcon className="w-4 h-4 text-muted-foreground" />
