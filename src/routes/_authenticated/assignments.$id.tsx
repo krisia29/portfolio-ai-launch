@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Github, ExternalLink, CheckCircle2, XCircle, RefreshCw, ShieldAlert } from "lucide-react";
 import { Markdown } from "@/components/Markdown";
+import { MarkdownWithEvidence } from "@/components/MarkdownWithEvidence";
 import { LessonView } from "@/components/LessonView";
 import { isLesson } from "@/lib/lesson";
 
@@ -199,18 +200,39 @@ function AssignmentPage() {
         <>
           <section className="mt-8 rounded-2xl border bg-card p-6">
             <h2 className="font-display text-lg font-semibold">Instructions</h2>
-            <MarkdownBlock text={assignment.instructions_md} />
+            <MarkdownWithEvidence
+              assignmentId={assignment.id}
+              userId={user?.id ?? null}
+              sectionKey="instructions"
+              text={assignment.instructions_md}
+              readOnly={previewAsStudent}
+              className="mt-2"
+            />
           </section>
 
           <section className="mt-4 rounded-2xl border bg-card p-6">
             <h2 className="font-display text-lg font-semibold">Deliverables</h2>
-            <MarkdownBlock text={assignment.deliverables_md} />
+            <MarkdownWithEvidence
+              assignmentId={assignment.id}
+              userId={user?.id ?? null}
+              sectionKey="deliverables"
+              text={assignment.deliverables_md}
+              readOnly={previewAsStudent}
+              className="mt-2"
+            />
           </section>
 
           {assignment.github_instructions_md && (
             <section className="mt-4 rounded-2xl border bg-card p-6">
               <h2 className="font-display text-lg font-semibold">Publishing to GitHub</h2>
-              <MarkdownBlock text={assignment.github_instructions_md} />
+              <MarkdownWithEvidence
+                assignmentId={assignment.id}
+                userId={user?.id ?? null}
+                sectionKey="github"
+                text={assignment.github_instructions_md}
+                readOnly={previewAsStudent}
+                className="mt-2"
+              />
             </section>
           )}
 
