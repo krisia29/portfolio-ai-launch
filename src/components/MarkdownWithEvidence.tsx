@@ -25,17 +25,22 @@ function emptyEvidence(): EvidenceState {
   return { files: [], status: "not_started" };
 }
 
-// Split markdown by "**Screenshot placeholder:** ..." lines or a bare "/evidence" token.
-// Returns alternating text/evidence segments.
+const EVIDENCE_TOKEN = "__EVIDENCE__";
+
+// Split markdown by placeholder lines or a "/evidence" token.
+// Handles plain text, bold labels, and markdown list items like:
+// - **Screenshot placeholder:** capture your screen...
+// Returns alternating text/evidence segments while removing the placeholder text.
 function splitByEvidence(md: string): string[] {
-  const pattern = /(^|\n)[ \t]*(?:\*\*\s*)?Screenshot placeholder[^\n]*|\/evidence\b/gi;
+  const pattern =
+    /(^|\n)[ \t]*(?:>+[ \t]*)?(?:(?:[-*+]|\d+[.)])\s+)?(?:\*\*\s*)?Screenshot\s+placeholder(?:\s*\*\*)?\s*:?[^\n]*(?=\n|$)|\/evidence\b/gi;
   const parts: string[] = [];
   let last = 0;
   let m: RegExpExecArray | null;
   while ((m = pattern.exec(md)) !== null) {
     const start = m.index + (m[1]?.length ?? 0);
     parts.push(md.slice(last, start));
-    parts.push("__EVIDENCE__");
+    parts.push(EVIDENCE_TOKEN);
     last = m.index + m[0].length;
   }
   parts.push(md.slice(last));
@@ -120,7 +125,7 @@ export function MarkdownWithEvidence({
   return (
     <div className={className}>
       {segments.map((seg, i) => {
-        if (seg === "__EVIDENCE__") {
+        if (seg === EVIDENCE_TOKEN) {
           const stepId = `${sectionKey}-ev-${evidenceIdx}`;
           const idx = evidenceIdx;
           evidenceIdx += 1;
