@@ -54,6 +54,7 @@ export type Database = {
           assignment_id: string
           completed_steps: string[]
           created_at: string
+          evidence: Json
           id: string
           screenshots: Json
           student_id: string
@@ -63,6 +64,7 @@ export type Database = {
           assignment_id: string
           completed_steps?: string[]
           created_at?: string
+          evidence?: Json
           id?: string
           screenshots?: Json
           student_id: string
@@ -72,6 +74,7 @@ export type Database = {
           assignment_id?: string
           completed_steps?: string[]
           created_at?: string
+          evidence?: Json
           id?: string
           screenshots?: Json
           student_id?: string
