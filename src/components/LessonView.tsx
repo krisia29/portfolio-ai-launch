@@ -50,7 +50,7 @@ export function LessonView({ lesson, assignmentId, userId, readOnly }: Props) {
         .eq("assignment_id", assignmentId)
         .maybeSingle();
       if (error) throw error;
-      return (data as ProgressRow) ?? null;
+      return (data as unknown as ProgressRow) ?? null;
     },
   });
 
