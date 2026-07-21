@@ -49,6 +49,44 @@ export type Database = {
           },
         ]
       }
+      assignment_progress: {
+        Row: {
+          assignment_id: string
+          completed_steps: string[]
+          created_at: string
+          id: string
+          screenshots: Json
+          student_id: string
+          updated_at: string
+        }
+        Insert: {
+          assignment_id: string
+          completed_steps?: string[]
+          created_at?: string
+          id?: string
+          screenshots?: Json
+          student_id: string
+          updated_at?: string
+        }
+        Update: {
+          assignment_id?: string
+          completed_steps?: string[]
+          created_at?: string
+          id?: string
+          screenshots?: Json
+          student_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assignment_progress_assignment_id_fkey"
+            columns: ["assignment_id"]
+            isOneToOne: false
+            referencedRelation: "assignments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       assignments: {
         Row: {
           created_at: string
@@ -59,6 +97,7 @@ export type Database = {
           github_instructions_md: string | null
           id: string
           instructions_md: string | null
+          lesson: Json | null
           module_id: string
           objectives: string | null
           platform: string | null
@@ -81,6 +120,7 @@ export type Database = {
           github_instructions_md?: string | null
           id?: string
           instructions_md?: string | null
+          lesson?: Json | null
           module_id: string
           objectives?: string | null
           platform?: string | null
@@ -103,6 +143,7 @@ export type Database = {
           github_instructions_md?: string | null
           id?: string
           instructions_md?: string | null
+          lesson?: Json | null
           module_id?: string
           objectives?: string | null
           platform?: string | null

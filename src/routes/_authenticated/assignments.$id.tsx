@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Github, ExternalLink, CheckCircle2, XCircle, RefreshCw, ShieldAlert } from "lucide-react";
 import { Markdown } from "@/components/Markdown";
+import { LessonView } from "@/components/LessonView";
+import { isLesson } from "@/lib/lesson";
 
 export const Route = createFileRoute("/_authenticated/assignments/$id")({
   component: AssignmentPage,
@@ -186,41 +188,52 @@ function AssignmentPage() {
       </aside>
 
 
-      <section className="mt-8 rounded-2xl border bg-card p-6">
-        <h2 className="font-display text-lg font-semibold">Instructions</h2>
-        <MarkdownBlock text={assignment.instructions_md} />
-      </section>
+      {isLesson((assignment as any).lesson) ? (
+        <LessonView
+          lesson={(assignment as any).lesson}
+          assignmentId={assignment.id}
+          userId={user?.id ?? null}
+          readOnly={previewAsStudent}
+        />
+      ) : (
+        <>
+          <section className="mt-8 rounded-2xl border bg-card p-6">
+            <h2 className="font-display text-lg font-semibold">Instructions</h2>
+            <MarkdownBlock text={assignment.instructions_md} />
+          </section>
 
-      <section className="mt-4 rounded-2xl border bg-card p-6">
-        <h2 className="font-display text-lg font-semibold">Deliverables</h2>
-        <MarkdownBlock text={assignment.deliverables_md} />
-      </section>
+          <section className="mt-4 rounded-2xl border bg-card p-6">
+            <h2 className="font-display text-lg font-semibold">Deliverables</h2>
+            <MarkdownBlock text={assignment.deliverables_md} />
+          </section>
 
-      {assignment.github_instructions_md && (
-        <section className="mt-4 rounded-2xl border bg-card p-6">
-          <h2 className="font-display text-lg font-semibold">Publishing to GitHub</h2>
-          <MarkdownBlock text={assignment.github_instructions_md} />
-        </section>
-      )}
-
-      {assignment.readme_template_md && (
-        <section className="mt-4 rounded-2xl border bg-card p-6">
-          <h2 className="font-display text-lg font-semibold">README starter</h2>
-          <p className="text-sm text-muted-foreground mt-1">Copy this into your repo's README.md.</p>
-          <pre className="mt-3 bg-muted p-4 rounded-lg text-xs overflow-x-auto whitespace-pre-wrap">{assignment.readme_template_md}</pre>
-        </section>
-      )}
-
-      <section className="mt-4 rounded-2xl border bg-card p-6">
-        <h2 className="font-display text-lg font-semibold">README checklist</h2>
-        <ul className="mt-2 text-sm text-muted-foreground grid sm:grid-cols-2 gap-y-1">
-          {["Project title", "Project description", "AI tools used", "Skills learned", "Screenshots", "Installation / usage", "Reflection"].map(
-            (i) => (
-              <li key={i}>• {i}</li>
-            ),
+          {assignment.github_instructions_md && (
+            <section className="mt-4 rounded-2xl border bg-card p-6">
+              <h2 className="font-display text-lg font-semibold">Publishing to GitHub</h2>
+              <MarkdownBlock text={assignment.github_instructions_md} />
+            </section>
           )}
-        </ul>
-      </section>
+
+          {assignment.readme_template_md && (
+            <section className="mt-4 rounded-2xl border bg-card p-6">
+              <h2 className="font-display text-lg font-semibold">README starter</h2>
+              <p className="text-sm text-muted-foreground mt-1">Copy this into your repo's README.md.</p>
+              <pre className="mt-3 bg-muted p-4 rounded-lg text-xs overflow-x-auto whitespace-pre-wrap">{assignment.readme_template_md}</pre>
+            </section>
+          )}
+
+          <section className="mt-4 rounded-2xl border bg-card p-6">
+            <h2 className="font-display text-lg font-semibold">README checklist</h2>
+            <ul className="mt-2 text-sm text-muted-foreground grid sm:grid-cols-2 gap-y-1">
+              {["Project title", "Project description", "AI tools used", "Skills learned", "Screenshots", "Installation / usage", "Reflection"].map(
+                (i) => (
+                  <li key={i}>• {i}</li>
+                ),
+              )}
+            </ul>
+          </section>
+        </>
+      )}
 
       <section className="mt-6 rounded-2xl border bg-card p-6">
         <h2 className="font-display text-lg font-semibold">Your submission</h2>
