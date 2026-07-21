@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Github, ExternalLink, CheckCircle2, XCircle, RefreshCw, ShieldAlert } from "lucide-react";
 import { Markdown } from "@/components/Markdown";
+import { MarkdownWithEvidence } from "@/components/MarkdownWithEvidence";
 import { LessonView } from "@/components/LessonView";
 import { isLesson } from "@/lib/lesson";
 
