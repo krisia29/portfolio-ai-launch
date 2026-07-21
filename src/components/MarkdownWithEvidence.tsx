@@ -33,7 +33,7 @@ const EVIDENCE_TOKEN = "__EVIDENCE__";
 // Returns alternating text/evidence segments while removing the placeholder text.
 function splitByEvidence(md: string): string[] {
   const pattern =
-    /(^|\n)[ \t]*(?:(?:[-*+]|\d+[.)])\s+)?(?:\*\*\s*)?Screenshot\s+placeholder(?:\s*\*\*)?\s*:?[^\n]*(?=\n|$)|\/evidence\b/gi;
+    /(^|\n)[ \t]*(?:>+[ \t]*)?(?:(?:[-*+]|\d+[.)])\s+)?(?:\*\*\s*)?Screenshot\s+placeholder(?:\s*\*\*)?\s*:?[^\n]*(?=\n|$)|\/evidence\b/gi;
   const parts: string[] = [];
   let last = 0;
   let m: RegExpExecArray | null;
