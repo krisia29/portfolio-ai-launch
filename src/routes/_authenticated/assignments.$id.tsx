@@ -244,16 +244,6 @@ function AssignmentPage() {
             </section>
           )}
 
-          <section className="mt-4 rounded-2xl border bg-card p-6">
-            <h2 className="font-display text-lg font-semibold">README checklist</h2>
-            <ul className="mt-2 text-sm text-muted-foreground grid sm:grid-cols-2 gap-y-1">
-              {["Project title", "Project description", "AI tools used", "Skills learned", "Screenshots", "Installation / usage", "Reflection"].map(
-                (i) => (
-                  <li key={i}>• {i}</li>
-                ),
-              )}
-            </ul>
-          </section>
         </>
       )}
 
