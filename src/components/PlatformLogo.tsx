@@ -6,11 +6,13 @@ const PLATFORM_DOMAIN: Record<string, string> = {
   Claude: "claude.ai",
   "Canva AI": "canva.com",
   NotebookLM: "notebooklm.google.com",
+  "Gemini Notebook": "gemini.google.com",
   NapkinAI: "napkin.ai",
   "Napkin AI": "napkin.ai",
   Gamma: "gamma.app",
   "Adobe Firefly": "adobe.com",
   Replit: "replit.com",
+  Lovable: "lovable.dev",
 };
 
 export function platformLogoUrl(platform: string | null | undefined, size: 32 | 64 | 128 = 64) {
