@@ -174,25 +174,14 @@ export function LessonView({ lesson, assignmentId, userId, readOnly }: Props) {
         <Progress value={pct} className="mt-3 h-2" />
       </div>
 
-      {/* Objective + success criteria */}
-      <div className="grid md:grid-cols-2 gap-4">
-        <div className="rounded-2xl border bg-card p-5">
-          <div className="flex items-center gap-2 text-sm font-display font-semibold">
-            <Target className="w-4 h-4 text-primary" /> Learning objective
-          </div>
-          <p className="mt-2 text-sm text-muted-foreground">{lesson.objective}</p>
+      {/* Objective */}
+      <div className="rounded-2xl border bg-card p-5">
+        <div className="flex items-center gap-2 text-sm font-display font-semibold">
+          <Target className="w-4 h-4 text-primary" /> Learning objective
         </div>
-        <div className="rounded-2xl border bg-card p-5">
-          <div className="flex items-center gap-2 text-sm font-display font-semibold">
-            <ListChecks className="w-4 h-4 text-primary" /> Success criteria
-          </div>
-          <ul className="mt-2 space-y-1 text-sm text-muted-foreground list-disc pl-5">
-            {lesson.successCriteria.map((c, i) => (
-              <li key={i}>{c}</li>
-            ))}
-          </ul>
-        </div>
+        <p className="mt-2 text-sm text-muted-foreground">{lesson.objective}</p>
       </div>
+
 
       {/* Overview */}
       {lesson.overview && (

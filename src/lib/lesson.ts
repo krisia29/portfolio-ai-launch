@@ -33,7 +33,7 @@ export type LessonResource = { label: string; url: string };
 export type Lesson = {
   version?: 1;
   objective: string;
-  successCriteria: string[];
+  successCriteria?: string[];
   overview?: string;
   estimatedMinutes?: number;
   difficulty?: "beginner" | "intermediate" | "advanced" | string;
@@ -47,8 +47,8 @@ export function isLesson(value: unknown): value is Lesson {
   const v = value as Record<string, unknown>;
   return (
     typeof v.objective === "string" &&
-    Array.isArray(v.successCriteria) &&
     Array.isArray(v.steps)
+
   );
 }
 
