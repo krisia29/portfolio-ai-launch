@@ -47,8 +47,8 @@ export function isLesson(value: unknown): value is Lesson {
   const v = value as Record<string, unknown>;
   return (
     typeof v.objective === "string" &&
-    Array.isArray(v.successCriteria) &&
     Array.isArray(v.steps)
+
   );
 }
 
