@@ -11,6 +11,7 @@ const PLATFORM_DOMAIN: Record<string, string> = {
   "Napkin AI": "napkin.ai",
   Gamma: "gamma.app",
   "Adobe Firefly": "adobe.com",
+  "Adobe Firefly & Canva AI": "adobe.com",
   Replit: "replit.com",
   Lovable: "lovable.dev",
 };
