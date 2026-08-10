@@ -1,0 +1,1 @@
+UPDATE public.assignments SET created_at = '2026-07-06 20:09:09+00' WHERE id = '813ec9d3-2290-44e8-acee-41a67d953f84';
