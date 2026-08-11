@@ -151,6 +151,7 @@ function AssignmentPage() {
   if (!assignment) return <div className="mx-auto max-w-4xl px-4 py-10 text-muted-foreground">Loading…</div>;
 
   const alreadyApproved = submission?.status === "approved";
+  const showUrlFields = [1, 7, 8].includes(assignment.modules?.order_index as number);
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
