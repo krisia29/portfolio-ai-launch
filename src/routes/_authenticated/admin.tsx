@@ -35,15 +35,24 @@ function AdminPage() {
     queryFn: async () => {
       let q = supabase
         .from("submissions")
-        .select("*, assignments(title,points,platform,modules(title)), profiles!submissions_student_id_fkey(display_name,github_username,email), submission_artifacts(*), github_repo_snapshots(*)")
+        .select("*, assignments(title,points,platform,modules(title)), submission_artifacts(*), github_repo_snapshots(*)")
         .order("submitted_at", { ascending: false })
         .limit(100);
       if (statusFilter !== "all") q = q.eq("status", statusFilter);
       const { data, error } = await q;
       if (error) throw error;
-      return data ?? [];
+      const rows = data ?? [];
+      const ids = [...new Set(rows.map((r: any) => r.student_id))];
+      if (ids.length === 0) return rows;
+      const { data: people } = await supabase
+        .from("profiles")
+        .select("id, display_name, github_username, email")
+        .in("id", ids);
+      const byId = new Map((people ?? []).map((p: any) => [p.id, p]));
+      return rows.map((r: any) => ({ ...r, profiles: byId.get(r.student_id) ?? null }));
     },
   });
+
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
