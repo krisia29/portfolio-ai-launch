@@ -369,11 +369,16 @@ export function EvidenceCheckpoint({
         </div>
       )}
 
-      {/* Optional link */}
+      {/* Project link */}
       {allowLinks && (
         <div className="mt-3">
           <label className="text-xs font-medium text-muted-foreground flex items-center gap-1">
-            <LinkIcon className="w-3 h-3" /> Project URL (optional)
+            <LinkIcon className="w-3 h-3" /> Project URL{" "}
+            {linkRequired ? (
+              <span className="text-destructive">(required)</span>
+            ) : (
+              "(optional)"
+            )}
           </label>
           <Input
             type="url"
