@@ -288,7 +288,15 @@ function AssignmentPage() {
       )}
 
       <section className="mt-6 rounded-2xl border bg-card p-6">
-        <h2 className="font-display text-lg font-semibold">Your submission</h2>
+        <h2 className="font-display text-lg font-semibold">
+          {hasEvidenceCheckpoints && !showUrlFields ? "Finish & submit" : "Your submission"}
+        </h2>
+        {hasEvidenceCheckpoints && !showUrlFields && !alreadyApproved && (
+          <p className="mt-1 text-sm text-muted-foreground">
+            Your links, files, and reflections are saved in the steps above. When every
+            checkpoint is done, confirm the privacy check and submit for review.
+          </p>
+        )}
         {alreadyApproved ? (
           <div className="mt-3 rounded-lg border border-success/40 bg-success/10 p-4 text-sm">
             <div className="font-medium text-success flex items-center gap-2"><CheckCircle2 className="w-4 h-4" /> Approved</div>
