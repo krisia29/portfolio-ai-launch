@@ -85,7 +85,12 @@ function AssignmentPage() {
     if (previewAsStudent) {
       return toast.error("Preview mode — submissions are disabled while viewing as a student.");
     }
-    const urlFieldsShown = [1, 7, 8].includes(assignment.modules?.order_index as number);
+    const lessonData = (assignment as any).lesson;
+    const evidenceHasLink =
+      isLesson(lessonData) &&
+      lessonData.steps.some((s: any) => s.evidence && (s.evidence.allowLinks !== false || s.evidence.linkRequired));
+    const urlFieldsShown =
+      [1, 7, 8].includes(assignment.modules?.order_index as number) && !evidenceHasLink;
     if (urlFieldsShown && assignment.requires_github && (!verification || !verification.ok)) {
       return toast.error("Verify your GitHub repo before submitting.");
     }
@@ -152,7 +157,14 @@ function AssignmentPage() {
   if (!assignment) return <div className="mx-auto max-w-4xl px-4 py-10 text-muted-foreground">Loading…</div>;
 
   const alreadyApproved = submission?.status === "approved";
-  const showUrlFields = [1, 7, 8].includes(assignment.modules?.order_index as number);
+  const lesson = (assignment as any).lesson;
+  const hasEvidenceCheckpoints =
+    isLesson(lesson) && lesson.steps.some((s: any) => !!s.evidence);
+  const evidenceCollectsLink =
+    isLesson(lesson) &&
+    lesson.steps.some((s: any) => s.evidence && (s.evidence.allowLinks !== false || s.evidence.linkRequired));
+  const showUrlFields =
+    [1, 7, 8].includes(assignment.modules?.order_index as number) && !evidenceCollectsLink;
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
@@ -276,7 +288,15 @@ function AssignmentPage() {
       )}
 
       <section className="mt-6 rounded-2xl border bg-card p-6">
-        <h2 className="font-display text-lg font-semibold">Your submission</h2>
+        <h2 className="font-display text-lg font-semibold">
+          {hasEvidenceCheckpoints && !showUrlFields ? "Finish & submit" : "Your submission"}
+        </h2>
+        {hasEvidenceCheckpoints && !showUrlFields && !alreadyApproved && (
+          <p className="mt-1 text-sm text-muted-foreground">
+            Your links, files, and reflections are saved in the steps above. When every
+            checkpoint is done, confirm the privacy check and submit for review.
+          </p>
+        )}
         {alreadyApproved ? (
           <div className="mt-3 rounded-lg border border-success/40 bg-success/10 p-4 text-sm">
             <div className="font-medium text-success flex items-center gap-2"><CheckCircle2 className="w-4 h-4" /> Approved</div>
@@ -342,15 +362,18 @@ function AssignmentPage() {
             )}
 
 
-            <div className="mt-4">
-              <Label htmlFor="reflection">Reflection</Label>
-              <Textarea id="reflection" rows={5} value={reflection} onChange={(e) => setReflection(e.target.value)} maxLength={3000} placeholder="What did you learn? What would you do differently?" />
-              {Array.isArray(assignment.reflection_questions) && assignment.reflection_questions.length > 0 && (
-                <ul className="mt-2 text-xs text-muted-foreground list-disc pl-5">
-                  {(assignment.reflection_questions as unknown as string[]).map((q: string) => <li key={q}>{q}</li>)}
-                </ul>
-              )}
-            </div>
+            {!hasEvidenceCheckpoints && (
+              <div className="mt-4">
+                <Label htmlFor="reflection">Reflection</Label>
+                <Textarea id="reflection" rows={5} value={reflection} onChange={(e) => setReflection(e.target.value)} maxLength={3000} placeholder="What did you learn? What would you do differently?" />
+                {Array.isArray(assignment.reflection_questions) && assignment.reflection_questions.length > 0 && (
+                  <ul className="mt-2 text-xs text-muted-foreground list-disc pl-5">
+                    {(assignment.reflection_questions as unknown as string[]).map((q: string) => <li key={q}>{q}</li>)}
+                  </ul>
+                )}
+              </div>
+            )}
+
 
             <div className="mt-5 rounded-lg border border-warning/40 bg-warning/5 p-4">
               <label className="flex items-start gap-3 cursor-pointer text-sm">
