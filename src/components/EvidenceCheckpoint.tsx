@@ -130,8 +130,14 @@ export function EvidenceCheckpoint({
   const maxFiles = config.maxFiles ?? DEFAULT_MAX_FILES;
   const maxSizeMb = config.maxSizeMb ?? DEFAULT_MAX_SIZE_MB;
   const allowLinks = config.allowLinks ?? true;
+  const allowFiles = config.allowFiles !== false;
+  const linkRequired = !!config.linkRequired;
   const allowComments = config.allowComments ?? true;
-  const title = config.title ?? `Upload Evidence for Step ${stepIndex + 1}`;
+  const title =
+    config.title ??
+    (allowFiles
+      ? `Upload Evidence for Step ${stepIndex + 1}`
+      : `Submit Your Link for Step ${stepIndex + 1}`);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
