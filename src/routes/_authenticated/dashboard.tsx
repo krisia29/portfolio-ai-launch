@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
-import { modulesQO, mySubmissionsQO, myClassesQO, meProfileQO } from "@/lib/queries";
+import { modulesQO, mySubmissionsQO, meProfileQO } from "@/lib/queries";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "@tanstack/react-router";
 import { Github, GraduationCap, CheckCircle2, Clock, Sparkles } from "lucide-react";
@@ -38,7 +38,7 @@ function StatCard({ label, value, hint, icon }: { label: string; value: string |
 function StudentDash({ userId }: { userId: string }) {
   const modules = useQuery(modulesQO);
   const subs = useQuery(mySubmissionsQO(userId));
-  const classes = useQuery(myClassesQO(userId));
+  
   const profile = useQuery(meProfileQO(userId));
 
   const totalAssignments = (modules.data ?? []).reduce((n, m: any) => n + (m.assignments?.filter((a: any) => a.status === "published").length ?? 0), 0);
@@ -64,8 +64,8 @@ function StudentDash({ userId }: { userId: string }) {
         <StatCard label="Live sites / apps" value={liveSites} hint="Deployed projects" icon={<Sparkles className="w-4 h-4 text-primary" />} />
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-6 mt-8">
-        <div className="lg:col-span-2 rounded-2xl border bg-card p-6">
+      <div className="mt-8">
+        <div className="rounded-2xl border bg-card p-6">
           <div className="flex items-center justify-between">
             <h2 className="font-display text-xl font-semibold">Recent submissions</h2>
             <Link to="/portfolio" className="text-sm text-primary hover:underline">Portfolio →</Link>
@@ -90,22 +90,8 @@ function StudentDash({ userId }: { userId: string }) {
           </div>
         </div>
 
-        <div className="rounded-2xl border bg-card p-6">
-          <h2 className="font-display text-xl font-semibold">Your classes</h2>
-          <div className="mt-3 space-y-2">
-            {(classes.data ?? []).map((c: any) => (
-              <div key={c.class_id} className="rounded-lg border p-3">
-                <div className="font-medium">{c.classes?.name}</div>
-                <div className="text-xs text-muted-foreground">{c.classes?.period ?? ""}</div>
-              </div>
-            ))}
-            {(!classes.data || classes.data.length === 0) && (
-              <div className="text-sm text-muted-foreground">Join a class with a code from your teacher.</div>
-            )}
-          </div>
-          <Link to="/classes" className="mt-3 inline-block text-sm text-primary hover:underline">Manage classes →</Link>
-        </div>
       </div>
+
     </div>
   );
 }

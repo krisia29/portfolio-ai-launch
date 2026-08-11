@@ -415,6 +415,10 @@ export type Database = {
       }
       profiles: {
         Row: {
+          access_decided_at: string | null
+          access_decided_by: string | null
+          access_requested_at: string
+          access_status: string
           avatar_url: string | null
           created_at: string
           display_name: string | null
@@ -428,6 +432,10 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          access_decided_at?: string | null
+          access_decided_by?: string | null
+          access_requested_at?: string
+          access_status?: string
           avatar_url?: string | null
           created_at?: string
           display_name?: string | null
@@ -441,6 +449,10 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          access_decided_at?: string | null
+          access_decided_by?: string | null
+          access_requested_at?: string
+          access_status?: string
           avatar_url?: string | null
           created_at?: string
           display_name?: string | null
@@ -709,7 +721,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_staff: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       app_role: "student" | "teacher" | "admin"

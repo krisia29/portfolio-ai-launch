@@ -2,6 +2,7 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { AppHeader } from "@/components/AppHeader";
 import { PreviewModeBanner } from "@/components/PreviewModeBanner";
+import { AccessGate } from "@/components/AccessGate";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -14,7 +15,9 @@ export const Route = createFileRoute("/_authenticated")({
     <div className="min-h-screen bg-background">
       <AppHeader />
       <PreviewModeBanner />
-      <Outlet />
+      <AccessGate>
+        <Outlet />
+      </AccessGate>
     </div>
   ),
 });

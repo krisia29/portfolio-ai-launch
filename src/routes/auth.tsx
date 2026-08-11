@@ -59,7 +59,7 @@ function AuthPage() {
           },
         });
         if (error) throw error;
-        toast.success("Account created. Check your email to confirm, then sign in.");
+        toast.success("Request submitted! Confirm your email, then wait for an instructor to approve your student access.");
         setMode("signin");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -107,7 +107,7 @@ function AuthPage() {
           <p className="text-sm text-muted-foreground mt-1">
             {mode === "signin"
               ? "Sign in to continue building your AI portfolio."
-              : "Start free — no credit card required."}
+              : "Request student access — an instructor will approve your account."}
           </p>
 
           <Button
@@ -141,7 +141,7 @@ function AuthPage() {
               <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Please wait…" : mode === "signin" ? "Sign in" : "Create account"}
+              {loading ? "Please wait…" : mode === "signin" ? "Sign in" : "Request access"}
             </Button>
           </form>
 
