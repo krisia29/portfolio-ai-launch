@@ -103,7 +103,11 @@ function ReviewCard({ sub, onChanged }: { sub: any; onChanged: () => void }) {
     if (error) return toast.error(error.message);
     toast.success(status === "approved" ? "Approved" : "Revision requested");
     onChanged();
+    if (status === "approved") {
+      syncProgressSheet().catch(() => toast.error("Approved, but the progress sheet couldn't be updated."));
+    }
   };
+
 
   const repo = sub.submission_artifacts?.find((a: any) => a.kind === "github_repo");
   const live = sub.submission_artifacts?.find((a: any) => a.kind === "github_pages" || a.kind === "live_url" || a.kind === "replit");
