@@ -145,3 +145,81 @@ function ReviewCard({ sub, onChanged }: { sub: any; onChanged: () => void }) {
     </div>
   );
 }
+
+function AccessRequests() {
+  const qc = useQueryClient();
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const { data: requests = [] } = useQuery({
+    queryKey: ["accessRequests"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, display_name, email, access_status, access_requested_at")
+        .eq("access_status", "pending")
+        .order("access_requested_at", { ascending: true });
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
+  const decide = async (id: string, status: "approved" | "denied") => {
+    setBusyId(id);
+    try {
+      const { data: me } = await supabase.auth.getUser();
+      const { error } = await supabase
+        .from("profiles")
+        .update({
+          access_status: status,
+          access_decided_at: new Date().toISOString(),
+          access_decided_by: me.user?.id ?? null,
+        })
+        .eq("id", id);
+      if (error) throw error;
+      toast.success(status === "approved" ? "Student approved." : "Request denied.");
+      qc.invalidateQueries({ queryKey: ["accessRequests"] });
+      qc.invalidateQueries({ queryKey: ["adminStudentRoster"] });
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not update request");
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  return (
+    <section>
+      <div className="flex items-center gap-3">
+        <h1 className="text-3xl font-display font-semibold">Student access requests</h1>
+        {requests.length > 0 && (
+          <span className="rounded-full bg-warning/15 text-warning-foreground border border-warning/30 px-2 py-0.5 text-xs">
+            {requests.length} pending
+          </span>
+        )}
+      </div>
+      <div className="mt-4 space-y-3">
+        {requests.map((r: any) => (
+          <div key={r.id} className="rounded-2xl border bg-card p-4 flex items-center justify-between gap-4 flex-wrap">
+            <div>
+              <div className="font-medium">{r.display_name ?? "Unnamed student"}</div>
+              <div className="text-xs text-muted-foreground">
+                {r.email} · requested {new Date(r.access_requested_at).toLocaleDateString()}
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Button size="sm" disabled={busyId === r.id} onClick={() => decide(r.id, "approved")}>
+                Approve
+              </Button>
+              <Button size="sm" variant="outline" disabled={busyId === r.id} onClick={() => decide(r.id, "denied")}>
+                Deny
+              </Button>
+            </div>
+          </div>
+        ))}
+        {requests.length === 0 && (
+          <div className="rounded-2xl border border-dashed p-8 text-center text-sm text-muted-foreground">
+            No pending access requests.
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
