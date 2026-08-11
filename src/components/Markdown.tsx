@@ -1,5 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
 
 // Strips HTML comments (including primer sentinels like <!-- primer:readme -->)
 // and normalizes literal escape sequences (e.g. "\n", "\t") that can end up in
@@ -47,7 +48,7 @@ export function Markdown({ text, className }: { text: string | null | undefined;
         (className ? " " + className : "")
       }
     >
-      <ReactMarkdown remarkPlugins={[remarkGfm]}>{cleaned}</ReactMarkdown>
+      <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>{cleaned}</ReactMarkdown>
     </div>
   );
 }
