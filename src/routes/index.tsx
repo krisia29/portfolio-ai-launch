@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppHeader } from "@/components/AppHeader";
 import { Button } from "@/components/ui/button";
 import { Github, Rocket, Award, Sparkles, BookOpen, Users } from "lucide-react";
+import heroAsset from "@/assets/tech-pathways-hero.asset.json";
 
 export const Route = createFileRoute("/")({
   component: Landing,
@@ -23,14 +24,19 @@ function Landing() {
     <div className="min-h-screen bg-background">
       <AppHeader />
 
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,var(--accent)_0%,transparent_45%),radial-gradient(circle_at_80%_60%,color-mix(in_oklab,var(--primary)_15%,transparent)_0%,transparent_50%)] pointer-events-none" />
+      <section className="dark relative overflow-hidden text-foreground">
+        <img
+          src={heroAsset.url}
+          alt="Tech Pathways Academy students with laptops"
+          className="absolute inset-0 h-full w-full object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-background/70 pointer-events-none" />
         <div className="relative mx-auto max-w-6xl px-4 pt-20 pb-24 text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
+          <span className="inline-flex items-center gap-2 rounded-full border bg-card/70 backdrop-blur px-3 py-1 text-xs font-medium text-muted-foreground">
             <Sparkles className="w-3.5 h-3.5 text-primary" /> Student AI curriculum + portfolio
           </span>
           <h1 className="mt-6 text-5xl sm:text-6xl font-display font-bold tracking-tight max-w-3xl mx-auto">
-            Learn AI by building things you can <span className="text-primary">actually share</span>.
+            Learn AI by building things you can <span className="text-accent">actually share</span>.
           </h1>
           <p className="mt-5 text-lg text-muted-foreground max-w-2xl mx-auto">
             Every assignment produces a real project on GitHub. Graduate with a portfolio that stands up
@@ -49,6 +55,7 @@ function Landing() {
           </p>
         </div>
       </section>
+
 
       <section className="mx-auto max-w-6xl px-4 py-14">
         <div className="grid md:grid-cols-3 gap-6">
