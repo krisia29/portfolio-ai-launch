@@ -342,15 +342,18 @@ function AssignmentPage() {
             )}
 
 
-            <div className="mt-4">
-              <Label htmlFor="reflection">Reflection</Label>
-              <Textarea id="reflection" rows={5} value={reflection} onChange={(e) => setReflection(e.target.value)} maxLength={3000} placeholder="What did you learn? What would you do differently?" />
-              {Array.isArray(assignment.reflection_questions) && assignment.reflection_questions.length > 0 && (
-                <ul className="mt-2 text-xs text-muted-foreground list-disc pl-5">
-                  {(assignment.reflection_questions as unknown as string[]).map((q: string) => <li key={q}>{q}</li>)}
-                </ul>
-              )}
-            </div>
+            {!hasEvidenceCheckpoints && (
+              <div className="mt-4">
+                <Label htmlFor="reflection">Reflection</Label>
+                <Textarea id="reflection" rows={5} value={reflection} onChange={(e) => setReflection(e.target.value)} maxLength={3000} placeholder="What did you learn? What would you do differently?" />
+                {Array.isArray(assignment.reflection_questions) && assignment.reflection_questions.length > 0 && (
+                  <ul className="mt-2 text-xs text-muted-foreground list-disc pl-5">
+                    {(assignment.reflection_questions as unknown as string[]).map((q: string) => <li key={q}>{q}</li>)}
+                  </ul>
+                )}
+              </div>
+            )}
+
 
             <div className="mt-5 rounded-lg border border-warning/40 bg-warning/5 p-4">
               <label className="flex items-start gap-3 cursor-pointer text-sm">
