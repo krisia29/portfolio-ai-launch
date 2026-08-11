@@ -7,6 +7,8 @@ export type EvidenceConfig = {
   optional?: boolean;
   acceptedFiles?: string[]; // e.g. ["png","jpg","pdf","docx","pptx","zip"]
   allowLinks?: boolean;
+  allowFiles?: boolean; // default true; false hides the upload dropzone
+  linkRequired?: boolean; // require a project URL to mark complete
   allowComments?: boolean; // reflection
   reflectionPrompt?: string;
   reflectionRequired?: boolean;
