@@ -64,8 +64,8 @@ function StudentDash({ userId }: { userId: string }) {
         <StatCard label="Live sites / apps" value={liveSites} hint="Deployed projects" icon={<Sparkles className="w-4 h-4 text-primary" />} />
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-6 mt-8">
-        <div className="lg:col-span-2 rounded-2xl border bg-card p-6">
+      <div className="mt-8">
+        <div className="rounded-2xl border bg-card p-6">
           <div className="flex items-center justify-between">
             <h2 className="font-display text-xl font-semibold">Recent submissions</h2>
             <Link to="/portfolio" className="text-sm text-primary hover:underline">Portfolio →</Link>
