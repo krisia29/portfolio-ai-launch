@@ -26,7 +26,7 @@ function AssignmentPage() {
   const { data: assignment } = useQuery({
     queryKey: ["assignment", id],
     queryFn: async () => {
-      const { data, error } = await supabase.from("assignments").select("*, modules(title,slug)").eq("id", id).maybeSingle();
+      const { data, error } = await supabase.from("assignments").select("*, modules(title,slug,order_index)").eq("id", id).maybeSingle();
       if (error) throw error;
       return data;
     },
