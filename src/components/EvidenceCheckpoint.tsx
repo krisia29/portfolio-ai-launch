@@ -67,12 +67,16 @@ function computeStatus(
   current: EvidenceStatus,
 ): EvidenceStatus {
   if (current === "needs_revision") return current;
+  const filesAllowed = cfg.allowFiles !== false;
   const hasFile = s.files.length > 0;
   const hasLink = !!s.link?.trim();
   const hasReflection = !!s.reflection?.trim();
   const reflectionOk = cfg.reflectionRequired ? hasReflection : true;
   if (!hasFile && !hasLink && !hasReflection) return "not_started";
-  if ((hasFile || hasLink) && reflectionOk) return "complete";
+  if (cfg.linkRequired) {
+    return hasLink && reflectionOk ? "complete" : "in_progress";
+  }
+  if ((filesAllowed ? hasFile || hasLink : hasLink) && reflectionOk) return "complete";
   return "in_progress";
 }
 
@@ -126,8 +130,14 @@ export function EvidenceCheckpoint({
   const maxFiles = config.maxFiles ?? DEFAULT_MAX_FILES;
   const maxSizeMb = config.maxSizeMb ?? DEFAULT_MAX_SIZE_MB;
   const allowLinks = config.allowLinks ?? true;
+  const allowFiles = config.allowFiles !== false;
+  const linkRequired = !!config.linkRequired;
   const allowComments = config.allowComments ?? true;
-  const title = config.title ?? `Upload Evidence for Step ${stepIndex + 1}`;
+  const title =
+    config.title ??
+    (allowFiles
+      ? `Upload Evidence for Step ${stepIndex + 1}`
+      : `Submit Your Link for Step ${stepIndex + 1}`);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
@@ -258,6 +268,7 @@ export function EvidenceCheckpoint({
       </div>
 
       {/* Dropzone */}
+      {allowFiles && (
       <div
         onDragOver={(e) => {
           e.preventDefault();
@@ -290,6 +301,8 @@ export function EvidenceCheckpoint({
           onChange={(e) => e.target.files && handleFiles(e.target.files)}
         />
       </div>
+      )}
+
 
       {/* Upload progress */}
       {Object.entries(uploads).length > 0 && (
@@ -356,11 +369,16 @@ export function EvidenceCheckpoint({
         </div>
       )}
 
-      {/* Optional link */}
+      {/* Project link */}
       {allowLinks && (
         <div className="mt-3">
           <label className="text-xs font-medium text-muted-foreground flex items-center gap-1">
-            <LinkIcon className="w-3 h-3" /> Project URL (optional)
+            <LinkIcon className="w-3 h-3" /> Project URL{" "}
+            {linkRequired ? (
+              <span className="text-destructive">(required)</span>
+            ) : (
+              "(optional)"
+            )}
           </label>
           <Input
             type="url"
