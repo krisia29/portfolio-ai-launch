@@ -1,31 +1,24 @@
 import os
 import json
-import psycopg2
-from psycopg2.extras import Json
-
-conn = psycopg2.connect(os.environ["DATABASE_URL"])
-cur = conn.cursor()
+import subprocess
 
 # 1. Fetch the lesson JSON for the specific assignment
 assignment_id = 'aa841efa-0f07-4d48-81eb-41a3d7c41ec3'
-cur.execute("SELECT lesson FROM assignments WHERE id = %s", (assignment_id,))
-lesson = cur.fetchone()[0]
+cmd = ["psql", os.environ["DATABASE_URL"], "-t", "-c", f"SELECT lesson FROM assignments WHERE id = '{assignment_id}';"]
+result = subprocess.run(cmd, capture_output=True, text=True)
+lesson_str = result.stdout.strip()
+lesson = json.loads(lesson_str)
 
 # 2. Update the lesson JSON
-# - Change "Upload Evidence" to "Upload Screenshot" in evidence configs
-# - Remove specific lines from Step 7 body (the checklist and its header)
-#   The lines requested for removal are actually the checklist items and the "Submission Checklist" header.
-#   The user wants to replace them with "\n" which effectively removes them but preserves spacing.
-
 if lesson and 'steps' in lesson:
     for step in lesson['steps']:
+        # Point 1: Change "Upload Evidence" to "Upload Screenshot"
         if 'evidence' in step and step['evidence'].get('title') == 'Upload Evidence':
             step['evidence']['title'] = 'Upload Screenshot'
         
+        # Points 2-7: Remove checklist items from step 7 body
         if step['id'] == 'step-7' and 'body' in step:
             body = step['body']
-            
-            # The user wants to change specific lines to "\n"
             lines_to_remove = [
                 "Committed the Week2_AppIdea document to your GitHub repository",
                 "Wrote and uploaded your final app idea section",
@@ -37,22 +30,23 @@ if lesson and 'steps' in lesson:
             
             new_lines = []
             for line in body.split('\n'):
-                # Check if the line (stripped of markdown list markers like "- [ ] ") matches
                 content = line.strip()
-                if content.startswith("- [ ] "):
-                    content = content[6:].strip()
-                elif content.startswith("### "):
-                    content = content[4:].strip()
+                match_found = False
+                for target in lines_to_remove:
+                    if target in content:
+                        match_found = True
+                        break
                 
-                if content in lines_to_remove:
-                    new_lines.append("") # Replace with blank line
+                if match_found:
+                    new_lines.append("")
                 else:
                     new_lines.append(line)
             
             step['body'] = '\n'.join(new_lines)
 
 # 3. Save the updated lesson JSON back to the database
-cur.execute("UPDATE assignments SET lesson = %s WHERE id = %s", (Json(lesson), assignment_id))
-conn.commit()
-cur.close()
-conn.close()
+updated_lesson = json.dumps(lesson)
+# Escape single quotes for SQL
+updated_lesson_escaped = updated_lesson.replace("'", "''")
+cmd = ["psql", os.environ["DATABASE_URL"], "-c", f"UPDATE assignments SET lesson = '{updated_lesson_escaped}' WHERE id = '{assignment_id}';"]
+subprocess.run(cmd, check=True)
