@@ -85,7 +85,12 @@ function AssignmentPage() {
     if (previewAsStudent) {
       return toast.error("Preview mode — submissions are disabled while viewing as a student.");
     }
-    const urlFieldsShown = [1, 7, 8].includes(assignment.modules?.order_index as number);
+    const lessonData = (assignment as any).lesson;
+    const evidenceHasLink =
+      isLesson(lessonData) &&
+      lessonData.steps.some((s: any) => s.evidence && (s.evidence.allowLinks !== false || s.evidence.linkRequired));
+    const urlFieldsShown =
+      [1, 7, 8].includes(assignment.modules?.order_index as number) && !evidenceHasLink;
     if (urlFieldsShown && assignment.requires_github && (!verification || !verification.ok)) {
       return toast.error("Verify your GitHub repo before submitting.");
     }
