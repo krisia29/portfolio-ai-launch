@@ -334,9 +334,13 @@ function AssignmentPage() {
             )}
 
             <div className="mt-4">
-              <Label htmlFor="live">Live URL (GitHub Pages, Replit, or other) — optional</Label>
-              <Input id="live" placeholder="https://yourname.github.io/project" value={liveUrl} onChange={(e) => setLiveUrl(e.target.value)} />
-            </div>
+            {showUrlFields && (
+              <div className="mt-4">
+                <Label htmlFor="live">Live URL (GitHub Pages, Replit, or other) — optional</Label>
+                <Input id="live" placeholder="https://yourname.github.io/project" value={liveUrl} onChange={(e) => setLiveUrl(e.target.value)} />
+              </div>
+            )}
+
 
             <div className="mt-4">
               <Label htmlFor="reflection">Reflection</Label>
