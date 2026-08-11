@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
-import { modulesQO, mySubmissionsQO, myClassesQO, meProfileQO } from "@/lib/queries";
+import { modulesQO, mySubmissionsQO, meProfileQO } from "@/lib/queries";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "@tanstack/react-router";
 import { Github, GraduationCap, CheckCircle2, Clock, Sparkles } from "lucide-react";
