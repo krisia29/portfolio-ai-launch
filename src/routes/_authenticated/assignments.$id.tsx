@@ -333,7 +333,6 @@ function AssignmentPage() {
               </div>
             )}
 
-            <div className="mt-4">
             {showUrlFields && (
               <div className="mt-4">
                 <Label htmlFor="live">Live URL (GitHub Pages, Replit, or other) — optional</Label>
