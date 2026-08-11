@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppHeader } from "@/components/AppHeader";
 import { Button } from "@/components/ui/button";
-import { Github, Rocket, Award, Sparkles, BookOpen, Users } from "lucide-react";
+import { Github, Rocket, Award, BookOpen, Users } from "lucide-react";
 import heroAsset from "@/assets/hero-clean.png.asset.json";
 
 export const Route = createFileRoute("/")({
