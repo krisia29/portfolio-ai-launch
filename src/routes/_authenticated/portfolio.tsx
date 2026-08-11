@@ -80,6 +80,13 @@ export function ProjectCard({ project }: { project: any }) {
     <div className="rounded-2xl border bg-card p-5 flex flex-col">
       <div className="text-xs text-muted-foreground">{project.assignments?.platform} · {project.assignments?.modules?.title}</div>
       <h3 className="font-display font-semibold text-lg mt-1">{project.assignments?.title}</h3>
+      {project.profiles && (
+        <div className="text-xs text-muted-foreground mt-1">
+          {project.profiles.display_name ?? "Student"}
+          {project.profiles.github_username ? ` · @${project.profiles.github_username}` : ""}
+        </div>
+      )}
+
       {snap && (
         <div className="mt-2 text-sm">
           <div className="font-medium">{snap.repo_owner}/{snap.repo_name}</div>
