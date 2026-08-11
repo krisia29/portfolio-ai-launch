@@ -47,7 +47,8 @@ function AdminPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <h1 className="text-3xl font-display font-semibold">Submission review</h1>
+      <AccessRequests />
+      <h1 className="text-3xl font-display font-semibold mt-10">Submission review</h1>
       <div className="mt-4 flex gap-2 text-sm">
         {(["submitted", "revision_requested", "approved", "all"] as const).map((s) => (
           <button
