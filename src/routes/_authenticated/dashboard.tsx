@@ -38,7 +38,7 @@ function StatCard({ label, value, hint, icon }: { label: string; value: string |
 function StudentDash({ userId }: { userId: string }) {
   const modules = useQuery(modulesQO);
   const subs = useQuery(mySubmissionsQO(userId));
-  const classes = useQuery(myClassesQO(userId));
+  
   const profile = useQuery(meProfileQO(userId));
 
   const totalAssignments = (modules.data ?? []).reduce((n, m: any) => n + (m.assignments?.filter((a: any) => a.status === "published").length ?? 0), 0);
