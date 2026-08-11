@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Github, ExternalLink, CheckCircle2, XCircle, RefreshCw, ShieldAlert } from "lucide-react";
+import { Github, ExternalLink, CheckCircle2, XCircle, RefreshCw, ShieldAlert, ChevronDown } from "lucide-react";
 import { Markdown } from "@/components/Markdown";
 import { MarkdownWithEvidence } from "@/components/MarkdownWithEvidence";
 import { LessonView } from "@/components/LessonView";
@@ -26,7 +26,7 @@ function AssignmentPage() {
   const { data: assignment } = useQuery({
     queryKey: ["assignment", id],
     queryFn: async () => {
-      const { data, error } = await supabase.from("assignments").select("*, modules(title,slug)").eq("id", id).maybeSingle();
+      const { data, error } = await supabase.from("assignments").select("*, modules(title,slug,order_index)").eq("id", id).maybeSingle();
       if (error) throw error;
       return data;
     },
@@ -53,6 +53,7 @@ function AssignmentPage() {
   const [verifying, setVerifying] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [privacyConfirmed, setPrivacyConfirmed] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
   const [verification, setVerification] = useState<null | {
     ok: boolean;
     errors: string[];
@@ -169,24 +170,49 @@ function AssignmentPage() {
         )}
       </div>
 
-      <aside className="mt-6 rounded-2xl border border-warning/40 bg-warning/10 p-5">
-        <div className="flex items-start gap-3">
-          <ShieldAlert className="w-5 h-5 mt-0.5 text-warning shrink-0" />
-          <div className="text-sm">
-            <div className="font-display font-semibold text-base">Privacy reminder</div>
-            <p className="mt-1 text-muted-foreground">
-              This portfolio is public. Only include information you would be comfortable
-              sharing with future employers. <strong>Never publish</strong> your school name,
-              school district, school email, graduation year, grade level, age, birth date,
-              home address, phone number, city or neighborhood of residence, class schedule,
-              student ID, parent info, personal social media, or any photo that reveals a
-              school logo, uniform, classroom, or other identifying background. Share only
-              your first and last name, professional personal email, skills, projects,
-              certifications, career interests, portfolio links, GitHub username, and resume.
-            </p>
-          </div>
-        </div>
-      </aside>
+      {(() => {
+        const collapsible = assignment.modules?.order_index !== 1;
+        const body = (
+          <p className="mt-1 text-muted-foreground">
+            This portfolio is public. Only include information you would be comfortable
+            sharing with future employers. <strong>Never publish</strong> your school name,
+            school district, school email, graduation year, grade level, age, birth date,
+            home address, phone number, city or neighborhood of residence, class schedule,
+            student ID, parent info, personal social media, or any photo that reveals a
+            school logo, uniform, classroom, or other identifying background. Share only
+            your first and last name, professional personal email, skills, projects,
+            certifications, career interests, portfolio links, GitHub username, and resume.
+          </p>
+        );
+        return (
+          <aside className="mt-6 rounded-2xl border border-warning/40 bg-warning/10 p-5">
+            <div className="flex items-start gap-3">
+              <ShieldAlert className="w-5 h-5 mt-0.5 text-warning shrink-0" />
+              <div className="text-sm flex-1">
+                {collapsible ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => setPrivacyOpen((o) => !o)}
+                      className="flex w-full items-center justify-between gap-2 text-left"
+                      aria-expanded={privacyOpen}
+                    >
+                      <span className="font-display font-semibold text-base">Privacy reminder</span>
+                      <ChevronDown className={`w-4 h-4 shrink-0 transition-transform ${privacyOpen ? "rotate-180" : ""}`} />
+                    </button>
+                    {privacyOpen && body}
+                  </>
+                ) : (
+                  <>
+                    <div className="font-display font-semibold text-base">Privacy reminder</div>
+                    {body}
+                  </>
+                )}
+              </div>
+            </div>
+          </aside>
+        );
+      })()}
 
 
       {isLesson((assignment as any).lesson) ? (
