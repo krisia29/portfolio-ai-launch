@@ -240,3 +240,57 @@ function AccessRequests() {
     </section>
   );
 }
+
+function ProgressSheetPanel() {
+  const [busy, setBusy] = useState(false);
+  const [result, setResult] = useState<{ url: string; downloadUrl: string; rowCount: number } | null>(null);
+
+  const sync = async () => {
+    setBusy(true);
+    try {
+      const r = (await syncProgressSheet()) as any;
+      setResult(r);
+      toast.success(`Synced ${r.rowCount} approved submission${r.rowCount === 1 ? "" : "s"} to Google Sheets.`);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not sync the progress sheet");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <section className="mt-10 rounded-2xl border bg-card p-5">
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h2 className="text-xl font-display font-semibold inline-flex items-center gap-2">
+            <Sheet className="w-5 h-5 text-primary" /> Student progress export
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground max-w-xl">
+            Every approved submission is written to a private Google Sheet — one row per student per assignment, with
+            scores, dates and project links. Staff only; students never see it.
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button size="sm" onClick={sync} disabled={busy}>
+            <RefreshCw className={`w-4 h-4 mr-1 ${busy ? "animate-spin" : ""}`} />
+            {busy ? "Syncing…" : "Sync now"}
+          </Button>
+          {result && (
+            <>
+              <Button size="sm" variant="outline" asChild>
+                <a href={result.url} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="w-4 h-4 mr-1" /> Open
+                </a>
+              </Button>
+              <Button size="sm" variant="outline" asChild>
+                <a href={result.downloadUrl}>
+                  <Download className="w-4 h-4 mr-1" /> Download
+                </a>
+              </Button>
+            </>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
