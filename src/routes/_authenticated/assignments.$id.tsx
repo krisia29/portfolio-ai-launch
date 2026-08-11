@@ -85,7 +85,8 @@ function AssignmentPage() {
     if (previewAsStudent) {
       return toast.error("Preview mode — submissions are disabled while viewing as a student.");
     }
-    if (assignment.requires_github && (!verification || !verification.ok)) {
+    const urlFieldsShown = [1, 7, 8].includes(assignment.modules?.order_index as number);
+    if (urlFieldsShown && assignment.requires_github && (!verification || !verification.ok)) {
       return toast.error("Verify your GitHub repo before submitting.");
     }
     if (!privacyConfirmed) {
@@ -151,6 +152,7 @@ function AssignmentPage() {
   if (!assignment) return <div className="mx-auto max-w-4xl px-4 py-10 text-muted-foreground">Loading…</div>;
 
   const alreadyApproved = submission?.status === "approved";
+  const showUrlFields = [1, 7, 8].includes(assignment.modules?.order_index as number);
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
@@ -293,7 +295,7 @@ function AssignmentPage() {
               <div className="mt-3 rounded-lg border border-warning/40 bg-warning/10 p-3 text-sm">Submitted. Waiting for instructor review.</div>
             )}
 
-            {assignment.requires_github && (
+            {showUrlFields && assignment.requires_github && (
               <div className="mt-4">
                 <Label htmlFor="repo">GitHub repository URL</Label>
                 <div className="flex gap-2 mt-1">
@@ -332,10 +334,13 @@ function AssignmentPage() {
               </div>
             )}
 
-            <div className="mt-4">
-              <Label htmlFor="live">Live URL (GitHub Pages, Replit, or other) — optional</Label>
-              <Input id="live" placeholder="https://yourname.github.io/project" value={liveUrl} onChange={(e) => setLiveUrl(e.target.value)} />
-            </div>
+            {showUrlFields && (
+              <div className="mt-4">
+                <Label htmlFor="live">Live URL (GitHub Pages, Replit, or other) — optional</Label>
+                <Input id="live" placeholder="https://yourname.github.io/project" value={liveUrl} onChange={(e) => setLiveUrl(e.target.value)} />
+              </div>
+            )}
+
 
             <div className="mt-4">
               <Label htmlFor="reflection">Reflection</Label>
