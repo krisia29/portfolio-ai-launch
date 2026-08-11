@@ -301,6 +301,8 @@ export function EvidenceCheckpoint({
           onChange={(e) => e.target.files && handleFiles(e.target.files)}
         />
       </div>
+      )}
+
 
       {/* Upload progress */}
       {Object.entries(uploads).length > 0 && (
