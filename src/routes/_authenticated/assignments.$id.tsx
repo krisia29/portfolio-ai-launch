@@ -85,7 +85,8 @@ function AssignmentPage() {
     if (previewAsStudent) {
       return toast.error("Preview mode — submissions are disabled while viewing as a student.");
     }
-    if (assignment.requires_github && (!verification || !verification.ok)) {
+    const urlFieldsShown = [1, 7, 8].includes(assignment.modules?.order_index as number);
+    if (urlFieldsShown && assignment.requires_github && (!verification || !verification.ok)) {
       return toast.error("Verify your GitHub repo before submitting.");
     }
     if (!privacyConfirmed) {
