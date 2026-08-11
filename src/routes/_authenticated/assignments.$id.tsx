@@ -293,7 +293,7 @@ function AssignmentPage() {
               <div className="mt-3 rounded-lg border border-warning/40 bg-warning/10 p-3 text-sm">Submitted. Waiting for instructor review.</div>
             )}
 
-            {assignment.requires_github && (
+            {showUrlFields && assignment.requires_github && (
               <div className="mt-4">
                 <Label htmlFor="repo">GitHub repository URL</Label>
                 <div className="flex gap-2 mt-1">
