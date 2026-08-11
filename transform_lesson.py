@@ -1,5 +1,4 @@
 import json
-import sys
 
 with open('lesson.json', 'r') as f:
     lesson = json.load(f)
@@ -25,6 +24,7 @@ if lesson and 'steps' in lesson:
             new_lines = []
             for line in body.split('\n'):
                 content = line.strip()
+                # Check if the line contains any of the target phrases
                 match_found = False
                 for target in lines_to_remove:
                     if target in content:
