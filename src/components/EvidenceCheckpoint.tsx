@@ -268,6 +268,7 @@ export function EvidenceCheckpoint({
       </div>
 
       {/* Dropzone */}
+      {allowFiles && (
       <div
         onDragOver={(e) => {
           e.preventDefault();
