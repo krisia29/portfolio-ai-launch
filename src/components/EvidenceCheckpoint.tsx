@@ -67,12 +67,16 @@ function computeStatus(
   current: EvidenceStatus,
 ): EvidenceStatus {
   if (current === "needs_revision") return current;
+  const filesAllowed = cfg.allowFiles !== false;
   const hasFile = s.files.length > 0;
   const hasLink = !!s.link?.trim();
   const hasReflection = !!s.reflection?.trim();
   const reflectionOk = cfg.reflectionRequired ? hasReflection : true;
   if (!hasFile && !hasLink && !hasReflection) return "not_started";
-  if ((hasFile || hasLink) && reflectionOk) return "complete";
+  if (cfg.linkRequired) {
+    return hasLink && reflectionOk ? "complete" : "in_progress";
+  }
+  if ((filesAllowed ? hasFile || hasLink : hasLink) && reflectionOk) return "complete";
   return "in_progress";
 }
 
