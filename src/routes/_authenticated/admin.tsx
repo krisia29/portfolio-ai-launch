@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Github, ExternalLink, User } from "lucide-react";
+import { Github, ExternalLink, User, Sheet, Download, RefreshCw } from "lucide-react";
+import { syncProgressSheet } from "@/lib/progress-sheet.functions";
+
 
 export const Route = createFileRoute("/_authenticated/admin")({
   beforeLoad: async () => {
