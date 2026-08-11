@@ -32,10 +32,7 @@ function Landing() {
         />
         <div className="absolute inset-0 bg-background/70 pointer-events-none" />
         <div className="relative mx-auto max-w-6xl px-4 pt-20 pb-24 text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border bg-card/70 backdrop-blur px-3 py-1 text-xs font-medium text-muted-foreground">
-            <Sparkles className="w-3.5 h-3.5 text-primary" /> Student AI curriculum + portfolio
-          </span>
-          <h1 className="mt-6 text-5xl sm:text-6xl font-display font-bold tracking-tight max-w-3xl mx-auto">
+          <h1 className="text-5xl sm:text-6xl font-display font-bold tracking-tight max-w-3xl mx-auto">
             Learn AI by building things you can <span className="text-accent">actually share</span>.
           </h1>
           <p className="mt-5 text-lg text-muted-foreground max-w-2xl mx-auto">
