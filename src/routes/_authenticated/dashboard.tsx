@@ -90,22 +90,8 @@ function StudentDash({ userId }: { userId: string }) {
           </div>
         </div>
 
-        <div className="rounded-2xl border bg-card p-6">
-          <h2 className="font-display text-xl font-semibold">Your classes</h2>
-          <div className="mt-3 space-y-2">
-            {(classes.data ?? []).map((c: any) => (
-              <div key={c.class_id} className="rounded-lg border p-3">
-                <div className="font-medium">{c.classes?.name}</div>
-                <div className="text-xs text-muted-foreground">{c.classes?.period ?? ""}</div>
-              </div>
-            ))}
-            {(!classes.data || classes.data.length === 0) && (
-              <div className="text-sm text-muted-foreground">Join a class with a code from your teacher.</div>
-            )}
-          </div>
-          <Link to="/classes" className="mt-3 inline-block text-sm text-primary hover:underline">Manage classes →</Link>
-        </div>
       </div>
+
     </div>
   );
 }
