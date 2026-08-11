@@ -53,6 +53,7 @@ function AssignmentPage() {
   const [verifying, setVerifying] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [privacyConfirmed, setPrivacyConfirmed] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
   const [verification, setVerification] = useState<null | {
     ok: boolean;
     errors: string[];
