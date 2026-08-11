@@ -14,8 +14,12 @@ function ModulesPage() {
     <div className="mx-auto max-w-6xl px-4 py-8">
       <div>
         <h1 className="text-3xl font-display font-semibold">Course modules</h1>
-        <p className="text-muted-foreground mt-1">
-          Pick any module to start — explore in the order that inspires you.
+        <p className="text-muted-foreground mt-1 max-w-3xl">
+          In this course you'll design and pitch your own AI-powered mobile app from start to finish.
+          You'll set up GitHub, plan your idea with ChatGPT and Claude, research it in Gemini Notebook,
+          map it visually in NapkinAI, build your brand in Adobe Firefly and Canva AI, prototype the app
+          in Replit, launch a marketing site in Lovable, and present it all in Gamma — using only free
+          tools, with every step adding a real project to your portfolio.
         </p>
       </div>
 
