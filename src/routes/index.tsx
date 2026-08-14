@@ -24,14 +24,19 @@ function Landing() {
     <div className="min-h-screen bg-background">
       <AppHeader />
 
-      <section className="dark relative overflow-hidden text-foreground">
+      <section
+        className="dark relative overflow-hidden text-foreground min-h-[560px] sm:min-h-[600px] flex items-center"
+        style={{ backgroundColor: "#221244" }}
+      >
         <img
           src={heroAsset.url}
           alt="Tech Pathways Academy students with laptops"
-          className="absolute inset-0 h-full w-full object-cover object-center"
+          className="absolute inset-0 h-full w-full object-contain object-center sm:object-cover"
+          style={{ objectPosition: "50% 42%" }}
         />
         <div className="absolute inset-0 bg-background/70 pointer-events-none" />
         <div className="relative mx-auto max-w-6xl px-4 pt-20 pb-24 text-center">
+
           <h1 className="text-5xl sm:text-6xl font-display font-bold tracking-tight max-w-3xl mx-auto">
             Learn AI by building things you can <span className="text-accent">actually share</span>.
           </h1>
