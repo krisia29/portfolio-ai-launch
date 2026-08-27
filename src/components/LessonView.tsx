@@ -43,7 +43,12 @@ type ProgressRow = {
 
 const BUCKET = "submission-screenshots";
 
+function cleanStepTitle(title: string) {
+  return (title ?? "").replace(/^\s*step\s*\d+\s*[—–:-]\s*/i, "").trim();
+}
+
 function emptyEvidence(): EvidenceState {
+
   return { files: [], status: "not_started" };
 }
 
