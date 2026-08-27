@@ -252,7 +252,7 @@ export function LessonView({ lesson, assignmentId, userId, readOnly }: Props) {
                       <span className="text-xs text-muted-foreground">
                         Step {idx + 1}
                       </span>
-                      <span className="font-medium">{step.title}</span>
+                      <span className="font-medium">{cleanStepTitle(step.title)}</span>
                     </div>
                     {step.body && (
                       <Markdown
