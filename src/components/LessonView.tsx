@@ -43,7 +43,12 @@ type ProgressRow = {
 
 const BUCKET = "submission-screenshots";
 
+function cleanStepTitle(title: string) {
+  return (title ?? "").replace(/^\s*step\s*\d+\s*[—–:-]\s*/i, "").trim();
+}
+
 function emptyEvidence(): EvidenceState {
+
   return { files: [], status: "not_started" };
 }
 
@@ -209,8 +214,9 @@ export function LessonView({ lesson, assignmentId, userId, readOnly }: Props) {
                   className="flex items-center justify-between gap-2 rounded-lg border bg-background p-2"
                 >
                   <span className="text-sm truncate">
-                    Step {idx + 1}. {s.title}
+                    Step {idx + 1}. {cleanStepTitle(s.title)}
                   </span>
+
                   <StatusPill status={state.status} />
                 </li>
               );
@@ -251,7 +257,7 @@ export function LessonView({ lesson, assignmentId, userId, readOnly }: Props) {
                       <span className="text-xs text-muted-foreground">
                         Step {idx + 1}
                       </span>
-                      <span className="font-medium">{step.title}</span>
+                      <span className="font-medium">{cleanStepTitle(step.title)}</span>
                     </div>
                     {step.body && (
                       <Markdown
