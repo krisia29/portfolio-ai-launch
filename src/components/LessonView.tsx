@@ -209,8 +209,9 @@ export function LessonView({ lesson, assignmentId, userId, readOnly }: Props) {
                   className="flex items-center justify-between gap-2 rounded-lg border bg-background p-2"
                 >
                   <span className="text-sm truncate">
-                    Step {idx + 1}. {s.title}
+                    Step {idx + 1}. {cleanStepTitle(s.title)}
                   </span>
+
                   <StatusPill status={state.status} />
                 </li>
               );
