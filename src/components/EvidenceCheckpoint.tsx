@@ -134,10 +134,7 @@ export function EvidenceCheckpoint({
   const linkRequired = !!config.linkRequired;
   const allowComments = config.allowComments ?? true;
   const title =
-    config.title ??
-    (allowFiles
-      ? `Upload Evidence for Step ${stepIndex + 1}`
-      : `Submit Your Link for Step ${stepIndex + 1}`);
+    config.title ?? (allowFiles ? `Upload Screenshot` : `Submit Your Link`);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
