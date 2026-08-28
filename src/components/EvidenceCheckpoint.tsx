@@ -134,10 +134,7 @@ export function EvidenceCheckpoint({
   const linkRequired = !!config.linkRequired;
   const allowComments = config.allowComments ?? true;
   const title =
-    config.title ??
-    (allowFiles
-      ? `Upload Evidence for Step ${stepIndex + 1}`
-      : `Submit Your Link for Step ${stepIndex + 1}`);
+    config.title ?? (allowFiles ? `Upload Screenshot` : `Submit Your Link`);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
@@ -252,7 +249,7 @@ export function EvidenceCheckpoint({
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-2">
           <Paperclip className="w-4 h-4 text-primary" />
-          <span className="font-medium text-sm">Shared Google Drive Link</span>
+          <span className="font-medium text-sm">{title}</span>
           {config.required && (
             <span className="text-xs rounded-full border border-destructive/30 bg-destructive/10 text-destructive px-2 py-0.5">
               required
