@@ -87,7 +87,8 @@ function Icon({ name, className }: { name?: string; className?: string }) {
 
 export function StepVisual({ visual }: { visual?: StepVisualData }) {
   if (!visual || !visual.items?.length) return null;
-  const kind = visual.kind ?? "cards";
+  const kind: string = visual.kind ?? "cards";
+  const items = visual.items;
 
   return (
     <figure className="mt-4 rounded-xl border bg-muted/30 p-4">
@@ -99,7 +100,7 @@ export function StepVisual({ visual }: { visual?: StepVisualData }) {
 
       {kind === "chevrons" && (
         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-          {visual.items.map((it, i) => (
+          {items.map((it, i) => (
             <div
               key={i}
               className="relative rounded-lg border border-primary/25 bg-card p-4 text-center shadow-sm"
@@ -119,7 +120,7 @@ export function StepVisual({ visual }: { visual?: StepVisualData }) {
 
       {kind === "flow" && (
         <ol className="flex flex-col gap-2 sm:flex-row sm:items-stretch">
-          {visual.items.map((it, i) => (
+          {items.map((it, i) => (
             <li key={i} className="flex flex-1 items-center gap-2">
               <div className="flex-1 rounded-lg border bg-card p-3">
                 <div className="flex items-center gap-2">
@@ -130,7 +131,7 @@ export function StepVisual({ visual }: { visual?: StepVisualData }) {
                   <p className="mt-1 text-xs leading-snug text-muted-foreground">{it.body}</p>
                 )}
               </div>
-              {i < visual.items.length - 1 && (
+              {i < items.length - 1 && (
                 <span className="hidden shrink-0 text-primary/50 sm:block" aria-hidden>
                   →
                 </span>
@@ -142,7 +143,7 @@ export function StepVisual({ visual }: { visual?: StepVisualData }) {
 
       {kind === "cards" && (
         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-          {visual.items.map((it, i) => (
+          {items.map((it, i) => (
             <div key={i} className="rounded-lg border bg-card p-3">
               <Icon name={it.icon} className="h-6 w-6 text-primary" />
               <div className="mt-2 text-sm font-semibold">{it.title}</div>
@@ -156,7 +157,7 @@ export function StepVisual({ visual }: { visual?: StepVisualData }) {
 
       {kind === "checklist" && (
         <ul className="grid gap-2 sm:grid-cols-2">
-          {visual.items.map((it, i) => (
+          {items.map((it, i) => (
             <li key={i} className="flex items-start gap-2 rounded-lg border bg-card p-3">
               <Icon name={it.icon} className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
               <div>
