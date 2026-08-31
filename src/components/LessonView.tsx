@@ -266,6 +266,9 @@ export function LessonView({ lesson, assignmentId, userId, readOnly }: Props) {
                       />
                     )}
 
+                    <StepVisual visual={step.visual} />
+
+
                     {/* Evidence Checkpoint */}
                     {step.evidence && userId && (
                       <EvidenceCheckpoint
