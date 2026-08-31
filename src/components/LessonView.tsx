@@ -24,6 +24,9 @@ import type {
   EvidenceStatus,
 } from "@/lib/lesson";
 import { EvidenceCheckpoint, StatusPill } from "@/components/EvidenceCheckpoint";
+import { StepMockup } from "@/components/StepMockup";
+import { getStepMockup } from "@/lib/step-mockups";
+
 
 
 type Props = {
@@ -266,6 +269,10 @@ export function LessonView({ lesson, assignmentId, userId, readOnly }: Props) {
                         className="mt-1"
                       />
                     )}
+
+                    <StepMockup mockup={getStepMockup(assignmentId, idx)} />
+
+
 
                     {/* Evidence Checkpoint */}
                     {step.evidence && userId && (
