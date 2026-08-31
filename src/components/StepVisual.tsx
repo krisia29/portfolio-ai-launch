@@ -118,7 +118,7 @@ export function StepVisual({ visual }: { visual?: StepVisualData }) {
           >
             <div className="flex items-center gap-2">
               <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
-                <Icon name={it.icon} className="h-4.5 w-4.5" />
+                <Icon name={it.icon} className="h-5 w-5" />
               </span>
               {numbered && (
                 <span className="ml-auto text-[11px] font-semibold tabular-nums text-primary/60">
