@@ -24,6 +24,8 @@ import type {
   EvidenceStatus,
 } from "@/lib/lesson";
 import { EvidenceCheckpoint, StatusPill } from "@/components/EvidenceCheckpoint";
+import { StepVisual } from "@/components/StepVisual";
+
 
 type Props = {
   lesson: Lesson;
