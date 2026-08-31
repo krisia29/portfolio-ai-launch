@@ -16,10 +16,24 @@ export type EvidenceConfig = {
   maxSizeMb?: number;
 };
 
+export type StepVisualItem = {
+  icon?: string; // key from StepVisual's ICONS map
+  title: string;
+  body?: string;
+};
+
+export type StepVisual = {
+  kind?: "chevrons" | "flow" | "cards" | "checklist";
+  title?: string;
+  items: StepVisualItem[];
+};
+
 export type LessonStep = {
   id: string;
   title: string;
   body?: string; // markdown; may include an inline "/evidence" token to place checkpoint
+  // Optional illustrated card graphic rendered under the step body.
+  visual?: StepVisual;
   // Legacy single-screenshot slot (kept for backward compatibility).
   screenshot?: {
     required?: boolean;
@@ -29,6 +43,7 @@ export type LessonStep = {
   // New Evidence Checkpoint. Presence of this field renders the checkpoint under the step.
   evidence?: EvidenceConfig;
 };
+
 
 export type LessonResource = { label: string; url: string };
 
