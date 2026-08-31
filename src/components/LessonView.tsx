@@ -24,6 +24,9 @@ import type {
   EvidenceStatus,
 } from "@/lib/lesson";
 import { EvidenceCheckpoint, StatusPill } from "@/components/EvidenceCheckpoint";
+import { StepMockup } from "@/components/StepMockup";
+import { getStepMockup } from "@/lib/step-mockups";
+
 
 
 type Props = {
