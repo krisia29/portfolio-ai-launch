@@ -267,6 +267,10 @@ export function LessonView({ lesson, assignmentId, userId, readOnly }: Props) {
                       />
                     )}
 
+                    <StepMockup mockup={getStepMockup(assignmentId, idx)} />
+
+
+
                     {/* Evidence Checkpoint */}
                     {step.evidence && userId && (
                       <EvidenceCheckpoint
