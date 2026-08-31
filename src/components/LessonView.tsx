@@ -24,8 +24,6 @@ import type {
   EvidenceStatus,
 } from "@/lib/lesson";
 import { EvidenceCheckpoint, StatusPill } from "@/components/EvidenceCheckpoint";
-import { StepVisual } from "@/components/StepVisual";
-import { getStepVisual } from "@/lib/step-visuals";
 
 
 type Props = {
@@ -268,9 +266,6 @@ export function LessonView({ lesson, assignmentId, userId, readOnly }: Props) {
                         className="mt-1"
                       />
                     )}
-
-                    <StepVisual visual={step.visual ?? getStepVisual(assignmentId, idx)} />
-
 
                     {/* Evidence Checkpoint */}
                     {step.evidence && userId && (
