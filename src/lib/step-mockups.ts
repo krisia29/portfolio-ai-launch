@@ -892,9 +892,52 @@ export const STEP_MOCKUPS: Record<string, Record<number, StepMockup>> = {
   },
 };
 
+/** Pull the real prompt text out of a step body (first fenced code block). */
+function extractPrompt(body?: string): string | undefined {
+  if (!body) return undefined;
+  const m = body.match(/```[a-z]*\n([\s\S]*?)```/);
+  const text = m?.[1]?.trim();
+  return text && text.length > 0 ? text : undefined;
+}
+
+/**
+ * Replace placeholder prompt copy in a mockup with the actual prompt from the
+ * step instructions, so students see exactly what to paste into the tool.
+ */
+function applyActualPrompt(mockup: StepMockup, prompt: string): StepMockup {
+  let used = false;
+  const blocks = mockup.blocks.map((b) => {
+    if (used) return b;
+    if (b.type === "prompt") {
+      used = true;
+      return { ...b, value: prompt };
+    }
+    if (b.type === "textarea") {
+      used = true;
+      return { ...b, value: prompt };
+    }
+    if (b.type === "chat") {
+      const i = b.messages.findIndex((m) => m.role === "user");
+      if (i === -1) return b;
+      used = true;
+      const messages = b.messages.map((m, mi) =>
+        mi === i ? { ...m, text: prompt } : m,
+      );
+      return { ...b, messages };
+    }
+    return b;
+  });
+  return used ? { ...mockup, blocks } : mockup;
+}
+
 export function getStepMockup(
   assignmentId: string,
   stepIndex: number,
+  stepBody?: string,
 ): StepMockup | undefined {
-  return STEP_MOCKUPS[assignmentId]?.[stepIndex];
+  const mockup = STEP_MOCKUPS[assignmentId]?.[stepIndex];
+  if (!mockup) return undefined;
+  const prompt = extractPrompt(stepBody);
+  return prompt ? applyActualPrompt(mockup, prompt) : mockup;
 }
+

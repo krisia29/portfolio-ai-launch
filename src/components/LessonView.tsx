@@ -270,7 +270,7 @@ export function LessonView({ lesson, assignmentId, userId, readOnly }: Props) {
                       />
                     )}
 
-                    <StepMockup mockup={getStepMockup(assignmentId, idx)} />
+                    <StepMockup mockup={getStepMockup(assignmentId, idx, step.body)} />
 
 
 
