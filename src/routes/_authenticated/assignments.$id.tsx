@@ -176,8 +176,7 @@ function AssignmentPage() {
 
       <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted-foreground">
         <span className="rounded-full border px-2 py-0.5">{assignment.platform}</span>
-        <span className="rounded-full border px-2 py-0.5">{assignment.difficulty}</span>
-        <span className="rounded-full border px-2 py-0.5">~{assignment.est_minutes} min</span>
+        <span className="rounded-full border px-2 py-0.5">{minutesRange(assignment.est_minutes)}</span>
         <span className="rounded-full border px-2 py-0.5">{assignment.points} pts</span>
         {assignment.requires_github && (
           <span className="rounded-full border border-primary/40 text-primary px-2 py-0.5">GitHub required</span>
