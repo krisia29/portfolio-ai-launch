@@ -97,7 +97,7 @@ export const STEP_MOCKUPS: Record<string, Record<number, StepMockup>> = {
         { type: "heading", text: "New chat" },
         {
           type: "prompt",
-          value: "Give me 3 mobile app ideas that help high school students. Explain each in simple terms.",
+          value: "I want to design an AI-powered mobile app for a school project.\n\nPlease generate three different app ideas.\n\nFor each idea include:\n\nApp name\nProblem it solves\nWho would use it\nHow AI helps users\nThree main features\nWhy people would find it useful\n\nKeep the explanations simple enough for a high school student.",
         },
       ],
     },
