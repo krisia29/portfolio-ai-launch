@@ -161,19 +161,35 @@ function Block({ b }: { b: MockupBlock }) {
         </div>
       );
 
-    case "prompt":
+    case "prompt": {
+      const text = b.value ?? b.placeholder ?? "Ask anything…";
+      const multiline = text.includes("\n") || text.length > 70;
       return (
-        <div className="flex items-center gap-2 rounded-full border bg-background px-3.5 py-2.5">
+        <div
+          className={`flex gap-2 border bg-background ${
+            multiline
+              ? "flex-col rounded-xl px-3.5 py-3"
+              : "items-center rounded-full px-3.5 py-2.5"
+          }`}
+        >
           <span
-            className={`flex-1 truncate text-[12.5px] ${b.value ? "" : "text-muted-foreground"}`}
+            className={`flex-1 text-[12.5px] leading-relaxed ${
+              multiline ? "whitespace-pre-wrap" : "truncate"
+            } ${b.value ? "" : "text-muted-foreground"}`}
           >
-            {b.value ?? b.placeholder ?? "Ask anything…"}
+            {text}
           </span>
-          <span className="rounded-full bg-primary px-2.5 py-1 text-[11px] font-medium text-primary-foreground">
+          <span
+            className={`rounded-full bg-primary px-2.5 py-1 text-[11px] font-medium text-primary-foreground ${
+              multiline ? "self-end" : ""
+            }`}
+          >
             {b.action ?? "Send"}
           </span>
         </div>
       );
+    }
+
 
     case "list":
       return (
