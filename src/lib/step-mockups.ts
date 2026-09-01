@@ -892,13 +892,50 @@ export const STEP_MOCKUPS: Record<string, Record<number, StepMockup>> = {
   },
 };
 
-/** Pull the real prompt text out of a step body (first fenced code block). */
+const TIP_PREFIX = /^\**\s*(helpful tip|tip|note|example|important|reminder)\b/i;
+
+function stripWrappingParens(text: string): string {
+  const t = text.trim();
+  if (t.startsWith("(") && t.endsWith(")")) return t.slice(1, -1).trim();
+  return t;
+}
+
+/**
+ * Pull the exact prompt text out of a step body. Instruction bodies present
+ * prompts in three ways: a fenced code block, a blockquote, or a parenthesized
+ * block of text. Tips, notes and examples are skipped.
+ */
 function extractPrompt(body?: string): string | undefined {
   if (!body) return undefined;
-  const m = body.match(/```[a-z]*\n([\s\S]*?)```/);
-  const text = m?.[1]?.trim();
-  return text && text.length > 0 ? text : undefined;
+
+  // 1. Fenced code block
+  const fenced = body.match(/```[a-z]*\n([\s\S]*?)```/);
+  if (fenced?.[1]?.trim()) return fenced[1].trim();
+
+  // 2. Blockquote (contiguous "> " lines), unless it's a tip/example
+  const lines = body.split("\n");
+  let bq: string[] | null = null;
+  for (const line of lines) {
+    if (/^\s*>/.test(line)) {
+      (bq ??= []).push(line.replace(/^\s*>\s?/, ""));
+    } else if (bq) {
+      if (bq.join("\n").trim() && !TIP_PREFIX.test(bq.join("\n").trim())) break;
+      bq = null;
+    }
+  }
+  if (bq) {
+    const text = stripWrappingParens(bq.join("\n"));
+    if (text && !TIP_PREFIX.test(text)) return text;
+  }
+
+  // 3. Parenthesized block starting at the beginning of a line
+  const paren = body.match(/(?:^|\n)[ \t]*\(([\s\S]*?)\)[ \t]*(?:\n|$)/);
+  if (paren?.[1]?.trim() && paren[1].includes("\n")) return paren[1].trim();
+  if (paren?.[1] && paren[1].trim().length > 60) return paren[1].trim();
+
+  return undefined;
 }
+
 
 /**
  * Replace placeholder prompt copy in a mockup with the actual prompt from the
