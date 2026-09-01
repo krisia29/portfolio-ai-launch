@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ExternalLink } from "lucide-react";
 import { glossary } from "@/lib/glossary";
 import { PlatformLogo } from "@/components/PlatformLogo";
+import { minutesRange } from "@/lib/lesson";
 
 export const Route = createFileRoute("/_authenticated/modules/$slug")({
   component: ModuleDetail,
