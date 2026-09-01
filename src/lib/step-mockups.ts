@@ -605,8 +605,14 @@ export const STEP_MOCKUPS: Record<string, Record<number, StepMockup>> = {
       app: "Replit Agent",
       url: "replit.com",
       caption: "Ask the Agent to add your screens and navigation.",
+      keepSample: true,
       blocks: [
-        { type: "prompt", value: "Add a bottom navigation bar with Home, Explore, and Profile screens.", action: "Send" },
+        {
+          type: "prompt",
+          value:
+            "Expand my existing app StudyBuddy by adding the following screens: Study Timer, Flashcards, and Progress. These screens are based on the user journey and app workflow I created earlier in this project. Keep the existing landing page and its working features. Add a simple navigation system that allows users to move between the screens. The navigation should include: Timer, Flashcards, Progress. Use the same visual style, colors, typography, and branding already established on my landing page. Each screen should have a clear purpose. Use realistic sample content based on my app concept. Make sure the navigation works when users click each item. Make the screens responsive so they work on both desktop and phone-sized screens. Do not remove or break the existing landing page. Do not add unrelated features. After making the changes, show me the updated project in Preview.",
+          action: "Send",
+        },
       ],
     },
     2: {
@@ -904,6 +910,7 @@ export function getStepMockup(
 ): StepMockup | undefined {
   const mockup = STEP_MOCKUPS[assignmentId]?.[stepIndex];
   if (!mockup) return undefined;
+  if (mockup.keepSample) return mockup;
   const prompt = extractPrompt(stepBody);
   return prompt ? applyActualPrompt(mockup, prompt) : mockup;
 }

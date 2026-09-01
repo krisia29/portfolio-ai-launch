@@ -36,5 +36,7 @@ export type StepMockup = {
   app?: string;
   url?: string;
   caption?: string;
+  /** When true, keep the sample prompt below instead of injecting the step's actual prompt text. */
+  keepSample?: boolean;
   blocks: MockupBlock[];
 };
