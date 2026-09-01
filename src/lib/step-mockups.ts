@@ -271,15 +271,6 @@ export const STEP_MOCKUPS: Record<string, Record<number, StepMockup>> = {
         { type: "note", text: "You decide which wording to keep — AI is a helper, not the author." },
       ],
     },
-    2: {
-      app: "Google Docs",
-      url: "docs.google.com",
-      caption: "Save the final description you chose.",
-      blocks: [
-        { type: "heading", text: "Final App Description" },
-        { type: "textarea", value: "[Your final 100-word description goes here]" },
-      ],
-    },
   },
   "54587b3b-4997-4cd0-b9fe-5b7b68bc113e": {
     0: {
