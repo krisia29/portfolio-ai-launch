@@ -309,47 +309,7 @@ export const STEP_MOCKUPS: Record<string, Record<number, StepMockup>> = {
   },
 
   // ────────────────────────── Module 4 · Gemini ──────────────────────────
-  "074e09ee-0881-43e8-8818-1c897a64bbd2": {
-    0: {
-      app: "Gemini",
-      url: "gemini.google.com",
-      caption: "Sign in with your school Google account and start a chat.",
-      blocks: [
-        { type: "heading", text: "Hello — how can I help?" },
-        { type: "prompt", value: "I'm researching apps that help students stay organized." },
-      ],
-    },
-    2: {
-      app: "Gemini",
-      url: "gemini.google.com",
-      caption: "Add your research sources so Gemini can work from them.",
-      blocks: [
-        { type: "heading", text: "Add sources", sub: "Links, notes, or documents you have already collected." },
-        {
-          type: "list",
-          items: [
-            { title: "article-1.pdf", sub: "Added" },
-            { title: "https://example.org/student-study-habits", sub: "Link added" },
-          ],
-        },
-        { type: "button", text: "Add source", secondary: "Cancel" },
-      ],
-    },
-    3: {
-      app: "Gemini",
-      url: "gemini.google.com",
-      caption: "Ask questions about your sources.",
-      blocks: [
-        {
-          type: "chat",
-          messages: [
-            { role: "user", text: "What problems do students say they have with staying organized?" },
-            { role: "ai", text: "Across your sources, three problems repeat: forgetting deadlines, unclear priorities, and no single place to track work." },
-          ],
-        },
-      ],
-    },
-  },
+
   "5cfa7a9a-569b-4a75-a5b8-7d420c86a5ed": {
     0: {
       app: "Gemini",
