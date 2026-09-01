@@ -550,16 +550,7 @@ export const STEP_MOCKUPS: Record<string, Record<number, StepMockup>> = {
     },
   },
   "67ef7587-6445-4b92-9864-642f8910539f": {
-    0: {
-      app: "Canva",
-      url: "canva.com/login",
-      caption: "Sign in to your free Canva account.",
-      blocks: [
-        { type: "heading", text: "Log in to Canva" },
-        { type: "field", label: "Email", value: "you@school.org" },
-        { type: "button", text: "Continue" },
-      ],
-    },
+    2: {
     2: {
       app: "Canva",
       url: "canva.com/design",
