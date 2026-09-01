@@ -30,6 +30,14 @@ export type MockupBlock =
     }
   | { type: "table"; columns: string[]; rows: string[][] }
   | { type: "code"; text: string }
+  | {
+      /** A phone-sized app preview: header, content cards and a bottom nav bar. */
+      type: "phone";
+      title?: string;
+      screen?: string;
+      cards?: { title: string; sub?: string }[];
+      tabs?: { label: string; active?: boolean }[];
+    }
   | { type: "note"; text: string };
 
 export type StepMockup = {

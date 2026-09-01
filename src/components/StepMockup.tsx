@@ -125,6 +125,49 @@ function Block({ b }: { b: MockupBlock }) {
         </div>
       );
 
+    case "phone":
+      return (
+        <div className="flex justify-center py-1">
+          <div className="w-[240px] overflow-hidden rounded-[1.75rem] border-4 border-foreground/80 bg-background shadow-md">
+            <div className="flex items-center justify-between bg-primary px-3 py-2 text-primary-foreground">
+              <span className="text-[12px] font-semibold">
+                {b.title ?? "My App"}
+              </span>
+              <span className="text-[10px] opacity-80">9:41</span>
+            </div>
+            <div className="space-y-2 p-3">
+              {b.screen && (
+                <div className="text-[12px] font-semibold">{b.screen}</div>
+              )}
+              {(b.cards ?? []).map((c, i) => (
+                <div key={i} className="rounded-md border bg-muted/40 p-2">
+                  <div className="text-[11.5px] font-medium">{c.title}</div>
+                  {c.sub && (
+                    <div className="text-[10.5px] text-muted-foreground">
+                      {c.sub}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            <div className="flex border-t">
+              {(b.tabs ?? []).map((t, i) => (
+                <div
+                  key={i}
+                  className={`flex-1 py-2 text-center text-[10.5px] ${
+                    t.active
+                      ? "border-t-2 border-primary font-semibold text-primary"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  {t.label}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+
     case "button":
       return (
         <div className="flex items-center gap-2 pt-1">
