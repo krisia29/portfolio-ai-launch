@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ExternalLink } from "lucide-react";
 import { glossary } from "@/lib/glossary";
 import { PlatformLogo } from "@/components/PlatformLogo";
+import { minutesRange } from "@/lib/lesson";
 
 export const Route = createFileRoute("/_authenticated/modules/$slug")({
   component: ModuleDetail,
@@ -86,9 +87,7 @@ function ModuleDetail() {
                     <h3 className="font-semibold">{a.title}</h3>
                     <p className="text-sm text-muted-foreground mt-1">{a.objectives}</p>
                     <div className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground">
-                      <span>{a.difficulty}</span>
-                      <span>·</span>
-                      <span>~{a.est_minutes} min</span>
+                      <span>{minutesRange(a.est_minutes)}</span>
                       <span>·</span>
                       <span>{a.points} pts</span>
                       {a.requires_github && (<><span>·</span><span className="text-primary">GitHub required</span></>)}

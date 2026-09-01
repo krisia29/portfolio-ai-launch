@@ -53,7 +53,8 @@ export type Lesson = {
   successCriteria?: string[];
   overview?: string;
   estimatedMinutes?: number;
-  difficulty?: "beginner" | "intermediate" | "advanced" | string;
+  estimatedTime?: string;
+  platform?: string;
   steps: LessonStep[];
   checklist?: string[];
   resources?: LessonResource[];
@@ -107,3 +108,12 @@ export type EvidenceState = {
 export const DEFAULT_ACCEPTED = ["png", "jpg", "jpeg", "pdf", "docx", "pptx", "zip"];
 export const DEFAULT_MAX_FILES = 5;
 export const DEFAULT_MAX_SIZE_MB = 50;
+
+// Display an estimated-time range (matches the lesson header format).
+export function minutesRange(minutes?: number | null): string | null {
+  if (!minutes) return null;
+  if (minutes <= 45) return "30–45 minutes";
+  if (minutes <= 60) return "45–60 minutes";
+  if (minutes <= 75) return "60–75 minutes";
+  return "75–90 minutes";
+}

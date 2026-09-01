@@ -168,15 +168,14 @@ export function LessonView({ lesson, assignmentId, userId, readOnly }: Props) {
             </span>
           </div>
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            {lesson.estimatedMinutes && (
+            {(lesson.estimatedTime || lesson.estimatedMinutes) && (
               <span className="rounded-full border px-2 py-0.5 flex items-center gap-1">
-                <Clock className="w-3 h-3" />~{lesson.estimatedMinutes} min
+                <Clock className="w-3 h-3" />
+                {lesson.estimatedTime ?? `~${lesson.estimatedMinutes} min`}
               </span>
             )}
-            {lesson.difficulty && (
-              <span className="rounded-full border px-2 py-0.5 capitalize">
-                {lesson.difficulty}
-              </span>
+            {lesson.platform && (
+              <span className="rounded-full border px-2 py-0.5">{lesson.platform}</span>
             )}
           </div>
         </div>
