@@ -12,7 +12,7 @@ import { Github, ExternalLink, CheckCircle2, XCircle, RefreshCw, ShieldAlert, Ch
 import { Markdown } from "@/components/Markdown";
 import { MarkdownWithEvidence } from "@/components/MarkdownWithEvidence";
 import { LessonView } from "@/components/LessonView";
-import { isLesson } from "@/lib/lesson";
+import { isLesson, normalizeLesson } from "@/lib/lesson";
 
 export const Route = createFileRoute("/_authenticated/assignments/$id")({
   component: AssignmentPage,
@@ -229,9 +229,9 @@ function AssignmentPage() {
       })()}
 
 
-      {isLesson((assignment as any).lesson) ? (
+      {normalizeLesson((assignment as any).lesson) ? (
         <LessonView
-          lesson={(assignment as any).lesson}
+          lesson={normalizeLesson((assignment as any).lesson)!}
           assignmentId={assignment.id}
           userId={user?.id ?? null}
           readOnly={previewAsStudent}

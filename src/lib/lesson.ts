@@ -59,14 +59,27 @@ export type Lesson = {
   resources?: LessonResource[];
 };
 
-export function isLesson(value: unknown): value is Lesson {
-  if (!value || typeof value !== "object") return false;
-  const v = value as Record<string, unknown>;
-  return (
-    typeof v.objective === "string" &&
-    Array.isArray(v.steps)
+// Some lessons were authored with `objectives: string[]` instead of
+// `objective: string`. Normalize so those lessons still render.
+export function normalizeLesson(value: unknown): Lesson | null {
+  if (!value || typeof value !== "object") return null;
+  const v = value as Record<string, any>;
+  if (!Array.isArray(v.steps)) return null;
+  let objective: string | undefined =
+    typeof v.objective === "string" ? v.objective : undefined;
+  if (!objective) {
+    if (Array.isArray(v.objectives)) {
+      objective = v.objectives.filter((o: unknown) => typeof o === "string").join(" ");
+    } else if (typeof v.objectives === "string") {
+      objective = v.objectives;
+    }
+  }
+  if (!objective) return null;
+  return { ...(v as object), objective } as Lesson;
+}
 
-  );
+export function isLesson(value: unknown): value is Lesson {
+  return normalizeLesson(value) !== null;
 }
 
 // Per-step evidence state saved into assignment_progress.evidence JSON
