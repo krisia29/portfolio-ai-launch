@@ -551,7 +551,6 @@ export const STEP_MOCKUPS: Record<string, Record<number, StepMockup>> = {
   },
   "67ef7587-6445-4b92-9864-642f8910539f": {
     2: {
-    2: {
       app: "Canva",
       url: "canva.com/design",
       caption: "Download your graphic as a PNG.",
