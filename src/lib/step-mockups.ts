@@ -560,17 +560,6 @@ export const STEP_MOCKUPS: Record<string, Record<number, StepMockup>> = {
         { type: "button", text: "Continue" },
       ],
     },
-    1: {
-      app: "Canva",
-      url: "canva.com/design",
-      caption: "Add your marketing text to the design.",
-      blocks: [
-        { type: "heading", text: "Editing: Marketing graphic" },
-        { type: "field", label: "Headline", value: "[Your tagline]" },
-        { type: "field", label: "Sub-headline", value: "[One benefit in a short sentence]" },
-        { type: "note", text: "Keep your real name, school name, and photos out of the design." },
-      ],
-    },
     2: {
       app: "Canva",
       url: "canva.com/design",
