@@ -910,6 +910,7 @@ export function getStepMockup(
 ): StepMockup | undefined {
   const mockup = STEP_MOCKUPS[assignmentId]?.[stepIndex];
   if (!mockup) return undefined;
+  if (mockup.keepSample) return mockup;
   const prompt = extractPrompt(stepBody);
   return prompt ? applyActualPrompt(mockup, prompt) : mockup;
 }
