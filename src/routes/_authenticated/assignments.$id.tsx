@@ -229,9 +229,9 @@ function AssignmentPage() {
       })()}
 
 
-      {isLesson((assignment as any).lesson) ? (
+      {normalizeLesson((assignment as any).lesson) ? (
         <LessonView
-          lesson={(assignment as any).lesson}
+          lesson={normalizeLesson((assignment as any).lesson)!}
           assignmentId={assignment.id}
           userId={user?.id ?? null}
           readOnly={previewAsStudent}
