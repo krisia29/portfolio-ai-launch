@@ -53,7 +53,8 @@ export type Lesson = {
   successCriteria?: string[];
   overview?: string;
   estimatedMinutes?: number;
-  difficulty?: "beginner" | "intermediate" | "advanced" | string;
+  estimatedTime?: string;
+  platform?: string;
   steps: LessonStep[];
   checklist?: string[];
   resources?: LessonResource[];
