@@ -618,16 +618,22 @@ export const STEP_MOCKUPS: Record<string, Record<number, StepMockup>> = {
     2: {
       app: "Replit · Preview",
       url: "replit.com",
-      caption: "Tap each tab to confirm navigation works.",
+      caption:
+        "Your Preview panel shows the app with the new screens and working navigation.",
       blocks: [
         {
-          type: "checks",
-          label: "Test each screen:",
-          items: [
-            { text: "Home opens", checked: true },
-            { text: "Explore opens", checked: true },
-            { text: "Profile opens", checked: true },
-            { text: "No error messages" },
+          type: "phone",
+          title: "StudyBuddy",
+          screen: "Study Timer",
+          cards: [
+            { title: "25:00", sub: "Focus session — tap to start" },
+            { title: "Today's goal", sub: "3 of 4 sessions complete" },
+            { title: "Next up", sub: "Biology flashcards" },
+          ],
+          tabs: [
+            { label: "Timer", active: true },
+            { label: "Flashcards" },
+            { label: "Progress" },
           ],
         },
       ],
