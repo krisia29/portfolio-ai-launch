@@ -230,7 +230,9 @@ function WhiteboardCanvas() {
           </Link>
         </Button>
         <div className="flex-1 min-w-[180px]">
-          {editingTitle ? (
+          {!isStaff ? (
+            <div className="font-display font-semibold text-lg">{board.title}</div>
+          ) : editingTitle ? (
             <Input
               autoFocus
               value={titleDraft}
