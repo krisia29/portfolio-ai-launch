@@ -99,7 +99,9 @@ function WhiteboardsIndex() {
         <div className="text-sm text-muted-foreground">Loading…</div>
       ) : filtered.length === 0 ? (
         <div className="rounded-2xl border border-dashed p-10 text-center text-sm text-muted-foreground">
-          No boards yet. Create one and start posting notes.
+          {isStaff
+            ? "No boards yet. Create one and share the link with your class."
+            : "No boards yet. Your teacher will share a board link with you."}
         </div>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
