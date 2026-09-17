@@ -72,13 +72,17 @@ function WhiteboardsIndex() {
         <div>
           <h1 className="text-3xl font-display font-semibold">Whiteboard</h1>
           <p className="text-muted-foreground text-sm mt-1">
-            Shared sticky-note boards. Everyone's comments appear live as they're posted.
+            {isStaff
+              ? "Create a board, share its link, and everyone's notes appear live."
+              : "Open a board your teacher shared and add your notes — they appear live for everyone."}
           </p>
         </div>
-        <Button onClick={() => createBoard.mutate()} disabled={createBoard.isPending}>
-          <Plus className="w-4 h-4 mr-1.5" />
-          New board
-        </Button>
+        {isStaff && (
+          <Button onClick={() => createBoard.mutate()} disabled={createBoard.isPending}>
+            <Plus className="w-4 h-4 mr-1.5" />
+            New board
+          </Button>
+        )}
       </div>
 
       <div className="relative my-6">
