@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Users } from "lucide-react";
+import { BulkStudentUpload } from "@/components/BulkStudentUpload";
 
 export const Route = createFileRoute("/_authenticated/classes")({
   component: ClassesPage,
@@ -78,6 +79,14 @@ function ClassesPage() {
         </div>
       )}
 
+      {isStaff && (mine.data ?? []).length > 0 && (
+        <div className="mt-4">
+          <BulkStudentUpload
+            classes={(mine.data ?? []).map((c: any) => ({ id: c.id, name: c.name }))}
+          />
+        </div>
+      )}
+
       <h2 className="mt-8 font-display text-xl font-semibold">Your classes</h2>
       <div className="mt-3 grid sm:grid-cols-2 gap-3">
         {(mine.data ?? []).map((c: any) => (
@@ -93,6 +102,19 @@ function ClassCard({ cls, isStaff }: { cls: any; isStaff: boolean }) {
   const qc = useQueryClient();
   const importFn = useServerFn(importStudentsToClass);
   const [emails, setEmails] = useState("");
+  const invites = useQuery({
+    queryKey: ["classInvites", cls.id],
+    enabled: isStaff,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("class_invites")
+        .select("id, email")
+        .eq("class_id", cls.id)
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
   const [busy, setBusy] = useState(false);
 
   const doImport = async () => {
@@ -143,6 +165,20 @@ function ClassCard({ cls, isStaff }: { cls: any; isStaff: boolean }) {
               {busy ? "Adding…" : "Add students"}
             </Button>
           </div>
+
+          {(invites.data ?? []).length > 0 && (
+            <div className="mt-3 rounded-lg border bg-muted/30 p-3">
+              <div className="text-[11px] font-medium">
+                Waiting for first sign-in ({invites.data!.length})
+              </div>
+              <ul className="mt-1 space-y-0.5 text-[11px] text-muted-foreground">
+                {invites.data!.slice(0, 8).map((i: any) => (
+                  <li key={i.id} className="font-mono">{i.email}</li>
+                ))}
+                {invites.data!.length > 8 && <li>+{invites.data!.length - 8} more</li>}
+              </ul>
+            </div>
+          )}
         </div>
       )}
     </div>
