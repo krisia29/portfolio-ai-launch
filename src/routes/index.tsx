@@ -31,10 +31,14 @@ function Landing() {
         <img
           src={heroAsset.url}
           alt="Tech Pathways Academy students with laptops"
-          className="absolute inset-0 h-full w-full object-contain object-center sm:object-cover"
-          style={{ objectPosition: "50% 42%" }}
+          width={1920}
+          height={1080}
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
+          className="hero-image absolute inset-0 h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-background/70 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/75 via-background/70 to-background/90 pointer-events-none" />
         <div className="relative mx-auto max-w-6xl px-4 pt-20 pb-24 text-center">
 
           <h1 className="text-5xl sm:text-6xl font-display font-bold tracking-tight max-w-3xl mx-auto">
