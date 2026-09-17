@@ -25,13 +25,15 @@ function makeCode() {
 }
 
 function ClassesPage() {
-  const { user, isStaff } = useAuth();
+  const { user, isStaff, loading, roles } = useAuth();
   const qc = useQueryClient();
   const [className, setClassName] = useState("");
 
   const mine = useQuery({
-    queryKey: ["myClasses", user?.id],
-    enabled: !!user,
+    // roles load asynchronously — keep them in the key so the staff/student
+    // branch below re-runs once they arrive.
+    queryKey: ["myClasses", user?.id, isStaff],
+    enabled: !!user && !loading && roles.length > 0,
     queryFn: async () => {
       if (isStaff) {
         const { data, error } = await supabase.from("classes").select("*, class_members(count)").eq("teacher_id", user!.id).order("created_at", { ascending: false });
@@ -44,6 +46,7 @@ function ClassesPage() {
       }
     },
   });
+
 
   const create = async () => {
     if (!user || !className.trim()) return;
