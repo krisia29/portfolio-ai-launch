@@ -12,7 +12,7 @@ export const Route = createFileRoute("/_authenticated/whiteboards/")({
 });
 
 function WhiteboardsIndex() {
-  const { user } = useAuth();
+  const { user, isStaff } = useAuth();
   const navigate = useNavigate();
   const qc = useQueryClient();
   const [search, setSearch] = useState("");
