@@ -100,3 +100,122 @@ export const importStudentsToClass = createServerFn({ method: "POST" })
     return { added, notFound };
   });
 
+
+const bulkSchema = z.object({
+  defaultClassId: z.string().uuid().optional(),
+  rows: z
+    .array(
+      z.object({
+        email: z.string().trim().toLowerCase().email(),
+        className: z.string().trim().max(100).optional(),
+      }),
+    )
+    .min(1)
+    .max(1000),
+});
+
+/**
+ * Bulk-assign students to classes from an uploaded/pasted list.
+ * Each row may name its own class; rows without one fall back to defaultClassId.
+ * Already-registered students are enrolled immediately; the rest are stored as
+ * pending invites and auto-enrolled by handle_new_user when they first sign in.
+ */
+export const bulkAssignStudents = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => bulkSchema.parse(data))
+  .handler(async ({ data, context }) => {
+    const { data: roleRows } = await context.supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", context.userId);
+    const roles = (roleRows ?? []).map((r) => r.role as string);
+    const isAdmin = roles.includes("admin");
+    if (!isAdmin && !roles.includes("teacher")) throw new Error("Forbidden");
+
+    // Classes the caller may assign into.
+    let q = context.supabase.from("classes").select("id, name, archived");
+    if (!isAdmin) q = q.eq("teacher_id", context.userId);
+    const { data: classes, error: clsErr } = await q;
+    if (clsErr) throw new Error(clsErr.message);
+    const allowed = new Map((classes ?? []).map((c) => [c.id, c]));
+    const byName = new Map(
+      (classes ?? []).map((c) => [String(c.name).trim().toLowerCase(), c.id]),
+    );
+
+    if (data.defaultClassId && !allowed.has(data.defaultClassId)) {
+      throw new Error("Forbidden");
+    }
+
+    const targets = new Map<string, Set<string>>(); // classId -> emails
+    const unknownClasses = new Set<string>();
+    const skipped: string[] = [];
+
+    for (const row of data.rows) {
+      const classId = row.className
+        ? byName.get(row.className.toLowerCase())
+        : data.defaultClassId;
+      if (!classId) {
+        if (row.className) unknownClasses.add(row.className);
+        else skipped.push(row.email);
+        continue;
+      }
+      if (!targets.has(classId)) targets.set(classId, new Set());
+      targets.get(classId)!.add(row.email);
+    }
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const results: { className: string; enrolled: number; invited: number }[] = [];
+
+    for (const [classId, emailSet] of targets) {
+      const emails = Array.from(emailSet);
+      const { data: profs, error: profErr } = await supabaseAdmin
+        .from("profiles")
+        .select("id, email")
+        .in("email", emails);
+      if (profErr) throw new Error(profErr.message);
+
+      const found = new Map<string, string>();
+      for (const p of profs ?? []) if (p.email) found.set(p.email.toLowerCase(), p.id);
+
+      let enrolled = 0;
+      if (found.size > 0) {
+        const rows = Array.from(found.values()).map((student_id) => ({
+          class_id: classId,
+          student_id,
+        }));
+        const { error: insErr } = await supabaseAdmin
+          .from("class_members")
+          .upsert(rows, { onConflict: "class_id,student_id", ignoreDuplicates: true });
+        if (insErr) throw new Error(insErr.message);
+        enrolled = rows.length;
+      }
+
+      const pending = emails.filter((e) => !found.has(e));
+      let invited = 0;
+      if (pending.length > 0) {
+        const rows = pending.map((email) => ({
+          class_id: classId,
+          email,
+          invited_by: context.userId,
+        }));
+        const { error: invErr } = await supabaseAdmin
+          .from("class_invites")
+          .upsert(rows, { onConflict: "class_id,email", ignoreDuplicates: true });
+        if (invErr) throw new Error(invErr.message);
+        invited = pending.length;
+      }
+
+      results.push({
+        className: String(allowed.get(classId)?.name ?? "Class"),
+        enrolled,
+        invited,
+      });
+    }
+
+    return {
+      results,
+      unknownClasses: Array.from(unknownClasses),
+      skipped,
+    };
+  });

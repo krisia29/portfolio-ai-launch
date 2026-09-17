@@ -275,6 +275,38 @@ export type Database = {
           },
         ]
       }
+      class_invites: {
+        Row: {
+          class_id: string
+          created_at: string
+          email: string
+          id: string
+          invited_by: string | null
+        }
+        Insert: {
+          class_id: string
+          created_at?: string
+          email: string
+          id?: string
+          invited_by?: string | null
+        }
+        Update: {
+          class_id?: string
+          created_at?: string
+          email?: string
+          id?: string
+          invited_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_invites_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       class_members: {
         Row: {
           class_id: string
