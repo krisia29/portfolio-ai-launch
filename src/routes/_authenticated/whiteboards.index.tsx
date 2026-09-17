@@ -121,7 +121,7 @@ function WhiteboardsIndex() {
                   </div>
                 </div>
               </Link>
-              {b.owner_id === user?.id && (
+              {isStaff && (
                 <div className="mt-3 opacity-0 group-hover:opacity-100 transition">
                   <Button
                     size="sm"
