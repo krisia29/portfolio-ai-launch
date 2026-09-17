@@ -12,7 +12,7 @@ export const Route = createFileRoute("/_authenticated/whiteboards/")({
 });
 
 function WhiteboardsIndex() {
-  const { user } = useAuth();
+  const { user, isStaff } = useAuth();
   const navigate = useNavigate();
   const qc = useQueryClient();
   const [search, setSearch] = useState("");
@@ -72,13 +72,17 @@ function WhiteboardsIndex() {
         <div>
           <h1 className="text-3xl font-display font-semibold">Whiteboard</h1>
           <p className="text-muted-foreground text-sm mt-1">
-            Shared sticky-note boards. Everyone's comments appear live as they're posted.
+            {isStaff
+              ? "Create a board, share its link, and everyone's notes appear live."
+              : "Open a board your teacher shared and add your notes — they appear live for everyone."}
           </p>
         </div>
-        <Button onClick={() => createBoard.mutate()} disabled={createBoard.isPending}>
-          <Plus className="w-4 h-4 mr-1.5" />
-          New board
-        </Button>
+        {isStaff && (
+          <Button onClick={() => createBoard.mutate()} disabled={createBoard.isPending}>
+            <Plus className="w-4 h-4 mr-1.5" />
+            New board
+          </Button>
+        )}
       </div>
 
       <div className="relative my-6">
@@ -95,7 +99,9 @@ function WhiteboardsIndex() {
         <div className="text-sm text-muted-foreground">Loading…</div>
       ) : filtered.length === 0 ? (
         <div className="rounded-2xl border border-dashed p-10 text-center text-sm text-muted-foreground">
-          No boards yet. Create one and start posting notes.
+          {isStaff
+            ? "No boards yet. Create one and share the link with your class."
+            : "No boards yet. Your teacher will share a board link with you."}
         </div>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -115,7 +121,7 @@ function WhiteboardsIndex() {
                   </div>
                 </div>
               </Link>
-              {b.owner_id === user?.id && (
+              {isStaff && (
                 <div className="mt-3 opacity-0 group-hover:opacity-100 transition">
                   <Button
                     size="sm"
