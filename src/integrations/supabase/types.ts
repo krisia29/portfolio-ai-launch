@@ -671,6 +671,53 @@ export type Database = {
         }
         Relationships: []
       }
+      whiteboard_notes: {
+        Row: {
+          author_id: string
+          author_name: string | null
+          body: string
+          color: string
+          created_at: string
+          id: string
+          updated_at: string
+          whiteboard_id: string
+          x: number
+          y: number
+        }
+        Insert: {
+          author_id?: string
+          author_name?: string | null
+          body?: string
+          color?: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+          whiteboard_id: string
+          x?: number
+          y?: number
+        }
+        Update: {
+          author_id?: string
+          author_name?: string | null
+          body?: string
+          color?: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+          whiteboard_id?: string
+          x?: number
+          y?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "whiteboard_notes_whiteboard_id_fkey"
+            columns: ["whiteboard_id"]
+            isOneToOne: false
+            referencedRelation: "whiteboards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       whiteboards: {
         Row: {
           assignment_id: string | null
