@@ -59,6 +59,7 @@ function AdminPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <AccessRequests />
+      <ManageAdmins />
       <ProgressSheetPanel />
       <h2 className="text-3xl font-display font-semibold mt-10">Submission review</h2>
 
@@ -234,13 +235,11 @@ function AccessRequests() {
               </div>
             </div>
             <div className="flex gap-2">
-              {r.requested_role === "admin" && (
-                <Button size="sm" disabled={busyId === r.id} onClick={() => decide(r.id, "approved", true)}>
-                  Approve as admin
-                </Button>
-              )}
-              <Button size="sm" variant={r.requested_role === "admin" ? "outline" : "default"} disabled={busyId === r.id} onClick={() => decide(r.id, "approved")}>
-                {r.requested_role === "admin" ? "Approve as student" : "Approve"}
+              <Button size="sm" disabled={busyId === r.id} onClick={() => decide(r.id, "approved")}>
+                Approve as student
+              </Button>
+              <Button size="sm" variant="outline" disabled={busyId === r.id} onClick={() => decide(r.id, "approved", true)}>
+                Approve as admin
               </Button>
               <Button size="sm" variant="outline" disabled={busyId === r.id} onClick={() => decide(r.id, "denied")}>
                 Deny
@@ -253,6 +252,64 @@ function AccessRequests() {
             No pending access requests.
           </div>
         )}
+      </div>
+    </section>
+  );
+}
+
+function ManageAdmins() {
+  const qc = useQueryClient();
+  const [search, setSearch] = useState("");
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const { data } = useQuery({
+    queryKey: ["manageAdmins"],
+    queryFn: async () => {
+      const [{ data: people }, { data: roles }] = await Promise.all([
+        supabase.from("profiles").select("id, display_name, email, access_status").order("display_name"),
+        supabase.from("user_roles").select("user_id, role").eq("role", "admin"),
+      ]);
+      const admins = new Set((roles ?? []).map((r: any) => r.user_id));
+      return (people ?? []).map((p: any) => ({ ...p, isAdmin: admins.has(p.id) }));
+    },
+  });
+  const q = search.trim().toLowerCase();
+  const rows = (data ?? []).filter(
+    (p: any) => !q || (p.display_name ?? "").toLowerCase().includes(q) || (p.email ?? "").toLowerCase().includes(q),
+  );
+
+  const makeAdmin = async (id: string, name: string) => {
+    if (!confirm(`Give ${name} full admin access?`)) return;
+    setBusyId(id);
+    const { error } = await (supabase.rpc as any)("approve_admin_request", { _user_id: id });
+    setBusyId(null);
+    if (error) return toast.error(error.message);
+    toast.success(`${name} is now an admin.`);
+    qc.invalidateQueries({ queryKey: ["manageAdmins"] });
+    qc.invalidateQueries({ queryKey: ["accessRequests"] });
+  };
+
+  return (
+    <section className="mt-10">
+      <h2 className="text-2xl font-display font-semibold">Manage admins</h2>
+      <p className="text-sm text-muted-foreground mt-1">Give an existing user admin access.</p>
+      <Input className="mt-3 max-w-sm" placeholder="Search by name or email" value={search} onChange={(e) => setSearch(e.target.value)} />
+      <div className="mt-3 rounded-2xl border bg-card divide-y max-h-96 overflow-y-auto">
+        {rows.map((p: any) => (
+          <div key={p.id} className="p-3 flex items-center justify-between gap-3">
+            <div>
+              <div className="font-medium text-sm">{p.display_name ?? "Unnamed"}</div>
+              <div className="text-xs text-muted-foreground">{p.email}</div>
+            </div>
+            {p.isAdmin ? (
+              <span className="rounded-full border border-primary/40 bg-primary/10 text-primary px-2 py-0.5 text-xs">Admin</span>
+            ) : (
+              <Button size="sm" variant="outline" disabled={busyId === p.id} onClick={() => makeAdmin(p.id, p.display_name ?? p.email ?? "this user")}>
+                Make admin
+              </Button>
+            )}
+          </div>
+        ))}
+        {rows.length === 0 && <div className="p-6 text-center text-sm text-muted-foreground">No users found.</div>}
       </div>
     </section>
   );
