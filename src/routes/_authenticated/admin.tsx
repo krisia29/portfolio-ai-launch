@@ -223,14 +223,24 @@ function AccessRequests() {
         {requests.map((r: any) => (
           <div key={r.id} className="rounded-2xl border bg-card p-4 flex items-center justify-between gap-4 flex-wrap">
             <div>
-              <div className="font-medium">{r.display_name ?? "Unnamed student"}</div>
+              <div className="font-medium inline-flex items-center gap-2">
+                {r.display_name ?? "Unnamed student"}
+                {r.requested_role === "admin" && (
+                  <span className="rounded-full border border-primary/40 bg-primary/10 text-primary px-2 py-0.5 text-xs">Admin request</span>
+                )}
+              </div>
               <div className="text-xs text-muted-foreground">
                 {r.email} · requested {new Date(r.access_requested_at).toLocaleDateString()}
               </div>
             </div>
             <div className="flex gap-2">
-              <Button size="sm" disabled={busyId === r.id} onClick={() => decide(r.id, "approved")}>
-                Approve
+              {r.requested_role === "admin" && (
+                <Button size="sm" disabled={busyId === r.id} onClick={() => decide(r.id, "approved", true)}>
+                  Approve as admin
+                </Button>
+              )}
+              <Button size="sm" variant={r.requested_role === "admin" ? "outline" : "default"} disabled={busyId === r.id} onClick={() => decide(r.id, "approved")}>
+                {r.requested_role === "admin" ? "Approve as student" : "Approve"}
               </Button>
               <Button size="sm" variant="outline" disabled={busyId === r.id} onClick={() => decide(r.id, "denied")}>
                 Deny
