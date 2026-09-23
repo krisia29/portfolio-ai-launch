@@ -171,7 +171,7 @@ function AccessRequests() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, display_name, email, access_status, access_requested_at")
+        .select("id, display_name, email, access_status, access_requested_at, requested_role" as any)
         .eq("access_status", "pending")
         .order("access_requested_at", { ascending: true });
       if (error) throw error;
@@ -179,9 +179,16 @@ function AccessRequests() {
     },
   });
 
-  const decide = async (id: string, status: "approved" | "denied") => {
+  const decide = async (id: string, status: "approved" | "denied", asAdmin = false) => {
     setBusyId(id);
     try {
+      if (asAdmin && status === "approved") {
+        const { error } = await (supabase.rpc as any)("approve_admin_request", { _user_id: id });
+        if (error) throw error;
+        toast.success("Admin access granted.");
+        qc.invalidateQueries({ queryKey: ["accessRequests"] });
+        return;
+      }
       const { data: me } = await supabase.auth.getUser();
       const { error } = await supabase
         .from("profiles")

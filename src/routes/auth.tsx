@@ -23,6 +23,7 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [wantAdmin, setWantAdmin] = useState(false);
 
   const routeAfterLogin = async (userId: string) => {
     const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", userId);
@@ -55,11 +56,15 @@ function AuthPage() {
           password,
           options: {
             emailRedirectTo: window.location.origin,
-            data: { full_name: name || email.split("@")[0] },
+            data: { full_name: name || email.split("@")[0], requested_role: wantAdmin ? "admin" : "student" },
           },
         });
         if (error) throw error;
-        toast.success("Request submitted! Confirm your email, then wait for an instructor to approve your student access.");
+        toast.success(
+          wantAdmin
+            ? "Admin request submitted! Confirm your email, then wait for an existing admin to approve you."
+            : "Request submitted! Confirm your email, then wait for an instructor to approve your student access.",
+        );
         setMode("signin");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -131,6 +136,15 @@ function AuthPage() {
                 <Label htmlFor="name">Name</Label>
                 <Input id="name" value={name} onChange={(e) => setName(e.target.value)} maxLength={100} />
               </div>
+            )}
+            {mode === "signup" && (
+              <label className="flex items-start gap-2 text-sm rounded-lg border p-3 cursor-pointer">
+                <input type="checkbox" className="mt-0.5" checked={wantAdmin} onChange={(e) => setWantAdmin(e.target.checked)} />
+                <span>
+                  <span className="font-medium">I'm requesting admin access</span>
+                  <span className="block text-xs text-muted-foreground">An existing admin must approve you before admin tools unlock.</span>
+                </span>
+              </label>
             )}
             <div>
               <Label htmlFor="email">Email</Label>
