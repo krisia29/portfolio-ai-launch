@@ -481,6 +481,7 @@ export type Database = {
           id: string
           nickname: string | null
           portfolio_public: boolean
+          requested_role: string
           school: string | null
           updated_at: string
         }
@@ -498,6 +499,7 @@ export type Database = {
           id: string
           nickname?: string | null
           portfolio_public?: boolean
+          requested_role?: string
           school?: string | null
           updated_at?: string
         }
@@ -515,6 +517,7 @@ export type Database = {
           id?: string
           nickname?: string | null
           portfolio_public?: boolean
+          requested_role?: string
           school?: string | null
           updated_at?: string
         }
@@ -821,7 +824,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      approve_admin_request: { Args: { _user_id: string }; Returns: undefined }
     }
     Enums: {
       app_role: "student" | "teacher" | "admin"
