@@ -171,7 +171,7 @@ function AccessRequests() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, display_name, email, access_status, access_requested_at")
+        .select("id, display_name, email, access_status, access_requested_at, requested_role" as any)
         .eq("access_status", "pending")
         .order("access_requested_at", { ascending: true });
       if (error) throw error;
@@ -179,9 +179,16 @@ function AccessRequests() {
     },
   });
 
-  const decide = async (id: string, status: "approved" | "denied") => {
+  const decide = async (id: string, status: "approved" | "denied", asAdmin = false) => {
     setBusyId(id);
     try {
+      if (asAdmin && status === "approved") {
+        const { error } = await (supabase.rpc as any)("approve_admin_request", { _user_id: id });
+        if (error) throw error;
+        toast.success("Admin access granted.");
+        qc.invalidateQueries({ queryKey: ["accessRequests"] });
+        return;
+      }
       const { data: me } = await supabase.auth.getUser();
       const { error } = await supabase
         .from("profiles")
@@ -216,14 +223,24 @@ function AccessRequests() {
         {requests.map((r: any) => (
           <div key={r.id} className="rounded-2xl border bg-card p-4 flex items-center justify-between gap-4 flex-wrap">
             <div>
-              <div className="font-medium">{r.display_name ?? "Unnamed student"}</div>
+              <div className="font-medium inline-flex items-center gap-2">
+                {r.display_name ?? "Unnamed student"}
+                {r.requested_role === "admin" && (
+                  <span className="rounded-full border border-primary/40 bg-primary/10 text-primary px-2 py-0.5 text-xs">Admin request</span>
+                )}
+              </div>
               <div className="text-xs text-muted-foreground">
                 {r.email} · requested {new Date(r.access_requested_at).toLocaleDateString()}
               </div>
             </div>
             <div className="flex gap-2">
-              <Button size="sm" disabled={busyId === r.id} onClick={() => decide(r.id, "approved")}>
-                Approve
+              {r.requested_role === "admin" && (
+                <Button size="sm" disabled={busyId === r.id} onClick={() => decide(r.id, "approved", true)}>
+                  Approve as admin
+                </Button>
+              )}
+              <Button size="sm" variant={r.requested_role === "admin" ? "outline" : "default"} disabled={busyId === r.id} onClick={() => decide(r.id, "approved")}>
+                {r.requested_role === "admin" ? "Approve as student" : "Approve"}
               </Button>
               <Button size="sm" variant="outline" disabled={busyId === r.id} onClick={() => decide(r.id, "denied")}>
                 Deny
