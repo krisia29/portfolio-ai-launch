@@ -833,7 +833,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      approve_admin_request: { Args: { _user_id: string }; Returns: undefined }
+      [_ in never]: never
     }
     Enums: {
       app_role: "student" | "teacher" | "admin"
