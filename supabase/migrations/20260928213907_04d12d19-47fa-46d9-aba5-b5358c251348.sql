@@ -1,0 +1,1 @@
+DROP FUNCTION IF EXISTS public.approve_admin_request(uuid);

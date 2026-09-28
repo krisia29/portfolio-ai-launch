@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Github, ExternalLink, User, Sheet, Download, RefreshCw } from "lucide-react";
 import { syncProgressSheet } from "@/lib/progress-sheet.functions";
+import { grantAdminAccess } from "@/lib/admin-roles.functions";
 
 
 export const Route = createFileRoute("/_authenticated/admin")({
@@ -184,8 +185,7 @@ function AccessRequests() {
     setBusyId(id);
     try {
       if (asAdmin && status === "approved") {
-        const { error } = await (supabase.rpc as any)("approve_admin_request", { _user_id: id });
-        if (error) throw error;
+        await grantAdminAccess({ data: { userId: id } });
         toast.success("Admin access granted.");
         qc.invalidateQueries({ queryKey: ["accessRequests"] });
         return;
@@ -280,7 +280,8 @@ function ManageAdmins() {
   const makeAdmin = async (id: string, name: string) => {
     if (!confirm(`Give ${name} full admin access?`)) return;
     setBusyId(id);
-    const { error } = await (supabase.rpc as any)("approve_admin_request", { _user_id: id });
+    let error: any = null;
+    try { await grantAdminAccess({ data: { userId: id } }); } catch (e) { error = e; }
     setBusyId(null);
     if (error) return toast.error(error.message);
     toast.success(`${name} is now an admin.`);
