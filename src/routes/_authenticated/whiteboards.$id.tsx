@@ -3,6 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { useServerFn } from "@tanstack/react-start";
+import { getBoardShareToken } from "@/lib/board-share.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Loader2, Plus, Trash2, Users, StickyNote, Link2 } from "lucide-react";
@@ -34,10 +36,12 @@ const colorClass = (key: string) =>
   COLORS.find((c) => c.key === key)?.bg ?? COLORS[0].bg;
 
 const db = supabase as any;
+const NOTE_COLS = "id,whiteboard_id,author_id,author_name,body,color,x,y,created_at,updated_at";
 
 function WhiteboardCanvas() {
   const { id } = Route.useParams();
   const { user, isStaff } = useAuth();
+  const fetchShareToken = useServerFn(getBoardShareToken);
   const navigate = useNavigate();
   const boardRef = useRef<HTMLDivElement | null>(null);
   const [notes, setNotes] = useState<Note[]>([]);
@@ -55,7 +59,7 @@ function WhiteboardCanvas() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("whiteboards")
-        .select("id,title,owner_id,share_token" as "id,title,owner_id")
+        .select("id,title,owner_id")
         .eq("id", id)
         .single();
       if (error) throw error;
@@ -69,7 +73,7 @@ function WhiteboardCanvas() {
     (async () => {
       const { data } = await db
         .from("whiteboard_notes")
-        .select("*")
+        .select(NOTE_COLS)
         .eq("whiteboard_id", id)
         .order("created_at", { ascending: true });
       if (!active) return;
@@ -140,7 +144,7 @@ function WhiteboardCanvas() {
           x: Math.max(0, nx),
           y: Math.max(0, ny),
         })
-        .select("*")
+        .select(NOTE_COLS)
         .single();
       if (data) {
         setNotes((prev) => (prev.some((p) => p.id === data.id) ? prev : [...prev, data as Note]));
@@ -283,12 +287,14 @@ function WhiteboardCanvas() {
           Add note
         </Button>
 
-        {isStaff && (board as any).share_token && (
+        {isStaff && (
           <Button
             size="sm"
             variant="outline"
             onClick={async () => {
-              const url = `${window.location.origin}/board/${(board as any).share_token}`;
+              const { token } = await fetchShareToken({ data: { boardId: id } });
+              if (!token) return alert("Could not load the share link.");
+              const url = `${window.location.origin}/board/${token}`;
               try {
                 await navigator.clipboard.writeText(url);
                 alert(`Share link copied:\n${url}\n\nAnyone with this link can add notes — no sign-in needed.`);
