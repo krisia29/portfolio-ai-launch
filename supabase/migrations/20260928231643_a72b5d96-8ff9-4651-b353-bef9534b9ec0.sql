@@ -1,0 +1,1 @@
+DROP FUNCTION IF EXISTS public.get_board_share_token(uuid);

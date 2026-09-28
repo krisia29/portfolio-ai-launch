@@ -833,7 +833,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      get_board_share_token: { Args: { _board_id: string }; Returns: string }
+      [_ in never]: never
     }
     Enums: {
       app_role: "student" | "teacher" | "admin"
