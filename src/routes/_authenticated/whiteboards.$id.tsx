@@ -54,8 +54,9 @@ function WhiteboardCanvas() {
   const dragRef = useRef<{ id: string; dx: number; dy: number } | null>(null);
   const saveTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
 
-  const { data: board, isLoading, refetch } = useQuery({
-    queryKey: ["whiteboard", id],
+  const { data: board, isLoading, isError, refetch } = useQuery({
+    queryKey: ["whiteboard", id, user?.id],
+    enabled: !!user,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("whiteboards")
@@ -214,10 +215,18 @@ function WhiteboardCanvas() {
     refetch();
   };
 
-  if (isLoading) {
+  if (!user || isLoading) {
     return (
       <div className="p-8 text-sm text-muted-foreground flex items-center gap-2">
         <Loader2 className="w-4 h-4 animate-spin" /> Loading board…
+      </div>
+    );
+  }
+  if (isError) {
+    return (
+      <div className="p-8 space-y-3">
+        <p className="text-sm text-muted-foreground">The board could not be loaded.</p>
+        <Button onClick={() => refetch()}>Try again</Button>
       </div>
     );
   }
