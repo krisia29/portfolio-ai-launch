@@ -156,7 +156,9 @@ function WhiteboardCanvas() {
     setNotes((prev) => prev.map((p) => (p.id === noteId ? { ...p, body } : p)));
     if (saveTimers.current[noteId]) clearTimeout(saveTimers.current[noteId]);
     saveTimers.current[noteId] = setTimeout(() => {
-      db.from("whiteboard_notes").update({ body }).eq("id", noteId);
+      db.from("whiteboard_notes").update({ body }).eq("id", noteId).then(({ error }: any) => {
+        if (error) console.error("Note save failed", error);
+      });
     }, 400);
   };
 
@@ -191,7 +193,13 @@ function WhiteboardCanvas() {
     dragRef.current = null;
     if (!d) return;
     const n = notes.find((p) => p.id === d.id);
-    if (n) db.from("whiteboard_notes").update({ x: n.x, y: n.y }).eq("id", n.id);
+    if (n)
+      db.from("whiteboard_notes")
+        .update({ x: Math.round(n.x), y: Math.round(n.y) })
+        .eq("id", n.id)
+        .then(({ error }: any) => {
+          if (error) console.error("Note move failed", error);
+        });
   };
 
   const renameBoard = async () => {
