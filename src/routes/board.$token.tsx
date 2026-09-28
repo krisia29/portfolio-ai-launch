@@ -151,8 +151,12 @@ function SharedBoard() {
 
   const persist = (n: Note, patch: { body?: string; x?: number; y?: number; remove?: boolean }) => {
     if (user && n.author_id === user.id) {
-      if (patch.remove) return db.from("whiteboard_notes").delete().eq("id", n.id);
-      return db.from("whiteboard_notes").update(patch).eq("id", n.id);
+      const q = patch.remove
+        ? db.from("whiteboard_notes").delete().eq("id", n.id)
+        : db.from("whiteboard_notes").update(patch).eq("id", n.id);
+      return q.then(({ error }: any) => {
+        if (error) console.error("Note save failed", error);
+      });
     }
     const t = tokens[n.id];
     if (t) return updateGuestNote({ data: { id: n.id, editToken: t, ...patch } });
