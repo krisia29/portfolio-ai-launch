@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, Loader2, Plus, Trash2, Users, StickyNote } from "lucide-react";
+import { ArrowLeft, Loader2, Plus, Trash2, Users, StickyNote, Link2 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/whiteboards/$id")({
   component: WhiteboardCanvas,
@@ -55,7 +55,7 @@ function WhiteboardCanvas() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("whiteboards")
-        .select("id,title,owner_id")
+        .select("id,title,owner_id,share_token" as "id,title,owner_id")
         .eq("id", id)
         .single();
       if (error) throw error;
@@ -274,6 +274,25 @@ function WhiteboardCanvas() {
           <Plus className="w-4 h-4 mr-1.5" />
           Add note
         </Button>
+
+        {isStaff && (board as any).share_token && (
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={async () => {
+              const url = `${window.location.origin}/board/${(board as any).share_token}`;
+              try {
+                await navigator.clipboard.writeText(url);
+                alert(`Share link copied:\n${url}\n\nAnyone with this link can add notes — no sign-in needed.`);
+              } catch {
+                prompt("Copy this share link:", url);
+              }
+            }}
+          >
+            <Link2 className="w-4 h-4 mr-1.5" />
+            Copy share link
+          </Button>
+        )}
 
         <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
           <Users className="w-3.5 h-3.5" /> {online} here
