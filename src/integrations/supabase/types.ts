@@ -708,11 +708,12 @@ export type Database = {
       }
       whiteboard_notes: {
         Row: {
-          author_id: string
+          author_id: string | null
           author_name: string | null
           body: string
           color: string
           created_at: string
+          edit_token_hash: string | null
           id: string
           updated_at: string
           whiteboard_id: string
@@ -720,11 +721,12 @@ export type Database = {
           y: number
         }
         Insert: {
-          author_id?: string
+          author_id?: string | null
           author_name?: string | null
           body?: string
           color?: string
           created_at?: string
+          edit_token_hash?: string | null
           id?: string
           updated_at?: string
           whiteboard_id: string
@@ -732,11 +734,12 @@ export type Database = {
           y?: number
         }
         Update: {
-          author_id?: string
+          author_id?: string | null
           author_name?: string | null
           body?: string
           color?: string
           created_at?: string
+          edit_token_hash?: string | null
           id?: string
           updated_at?: string
           whiteboard_id?: string
@@ -765,6 +768,8 @@ export type Database = {
           last_edited_at: string
           last_edited_by: string | null
           owner_id: string
+          share_enabled: boolean
+          share_token: string
           snapshot: Json | null
           thumbnail: string | null
           title: string
@@ -781,6 +786,8 @@ export type Database = {
           last_edited_at?: string
           last_edited_by?: string | null
           owner_id: string
+          share_enabled?: boolean
+          share_token?: string
           snapshot?: Json | null
           thumbnail?: string | null
           title?: string
@@ -797,6 +804,8 @@ export type Database = {
           last_edited_at?: string
           last_edited_by?: string | null
           owner_id?: string
+          share_enabled?: boolean
+          share_token?: string
           snapshot?: Json | null
           thumbnail?: string | null
           title?: string
