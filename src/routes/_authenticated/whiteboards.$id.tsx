@@ -303,7 +303,10 @@ function WhiteboardCanvas() {
             onClick={async () => {
               const { token } = await fetchShareToken({ data: { boardId: id } });
               if (!token) return alert("Could not load the share link.");
-              const url = `${window.location.origin}/board/${token}`;
+              const origin = /id-preview--|lovableproject\.com|localhost/.test(window.location.host)
+                ? "https://portfolio-ai-launch.lovable.app"
+                : window.location.origin;
+              const url = `${origin}/board/${token}`;
               try {
                 await navigator.clipboard.writeText(url);
                 alert(`Share link copied:\n${url}\n\nAnyone with this link can add notes — no sign-in needed.`);
