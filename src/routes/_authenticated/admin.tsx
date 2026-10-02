@@ -47,12 +47,22 @@ function AdminPage() {
       const rows = data ?? [];
       const ids = [...new Set(rows.map((r: any) => r.student_id))];
       if (ids.length === 0) return rows;
-      const { data: people } = await supabase
-        .from("profiles")
-        .select("id, display_name, github_username, email")
-        .in("id", ids);
+      const aIds = [...new Set(rows.map((r: any) => r.assignment_id))];
+      const [{ data: people }, { data: progress }] = await Promise.all([
+        supabase.from("profiles").select("id, display_name, github_username, email").in("id", ids),
+        supabase
+          .from("assignment_progress")
+          .select("student_id, assignment_id, evidence")
+          .in("student_id", ids)
+          .in("assignment_id", aIds),
+      ]);
       const byId = new Map((people ?? []).map((p: any) => [p.id, p]));
-      return rows.map((r: any) => ({ ...r, profiles: byId.get(r.student_id) ?? null }));
+      const prog = new Map((progress ?? []).map((p: any) => [`${p.student_id}:${p.assignment_id}`, p.evidence]));
+      return rows.map((r: any) => ({
+        ...r,
+        profiles: byId.get(r.student_id) ?? null,
+        evidence: prog.get(`${r.student_id}:${r.assignment_id}`) ?? {},
+      }));
     },
   });
 
@@ -146,6 +156,8 @@ function ReviewCard({ sub, onChanged }: { sub: any; onChanged: () => void }) {
         {live?.url && <a href={live.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 hover:bg-muted"><ExternalLink className="w-3 h-3" /> Live</a>}
       </div>
 
+      <SubmissionEvidence evidence={sub.evidence} />
+
       {sub.reflection_md && (
         <div className="mt-3 text-sm">
           <div className="text-xs font-semibold text-muted-foreground">Reflection</div>
@@ -161,6 +173,43 @@ function ReviewCard({ sub, onChanged }: { sub: any; onChanged: () => void }) {
           <Button size="sm" variant="outline" onClick={() => act("revision_requested")} disabled={busy}>Request revision</Button>
         </div>
       </div>
+    </div>
+  );
+}
+
+function SubmissionEvidence({ evidence }: { evidence: any }) {
+  const entries = Object.entries(evidence ?? {}) as [string, any][];
+  const items = entries.filter(([, v]) => v && (v.link || v.files?.length || v.reflection || v.text));
+  const openFile = async (path: string) => {
+    const { data, error } = await supabase.storage.from("submission-screenshots").createSignedUrl(path, 300);
+    if (error || !data?.signedUrl) return toast.error("Could not open file");
+    window.open(data.signedUrl, "_blank", "noopener,noreferrer");
+  };
+  return (
+    <div className="mt-4 rounded-lg border bg-muted/40 p-3 text-sm">
+      <div className="text-xs font-semibold text-muted-foreground">Submitted work</div>
+      {items.length === 0 ? (
+        <div className="mt-1 text-muted-foreground">No links, files or answers were attached.</div>
+      ) : (
+        <div className="mt-2 space-y-3">
+          {items.map(([step, v]) => (
+            <div key={step}>
+              <div className="text-xs text-muted-foreground capitalize">{step.replace(/[-_]/g, " ")}</div>
+              {v.link && (
+                <a href={v.link} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline break-all inline-flex items-center gap-1">
+                  <ExternalLink className="w-3 h-3 shrink-0" /> {v.link}
+                </a>
+              )}
+              {v.files?.map((f: any) => (
+                <button key={f.path} onClick={() => openFile(f.path)} className="block text-primary hover:underline text-left">
+                  {f.name}
+                </button>
+              ))}
+              {(v.reflection || v.text) && <div className="whitespace-pre-wrap mt-1">{v.reflection || v.text}</div>}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
