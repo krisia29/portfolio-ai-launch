@@ -9,33 +9,32 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
-import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as UUsernameRouteImport } from './routes/u.$username'
-import { Route as BoardTokenRouteImport } from './routes/board.$token'
-import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
-import { Route as AuthenticatedPortfolioRouteImport } from './routes/_authenticated/portfolio'
-import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as AuthenticatedClassesRouteImport } from './routes/_authenticated/classes'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
-import { Route as AuthenticatedWhiteboardsIndexRouteImport } from './routes/_authenticated/whiteboards.index'
-import { Route as AuthenticatedModulesIndexRouteImport } from './routes/_authenticated/modules.index'
-import { Route as ApiPublicVerifyGithubRouteImport } from './routes/api/public/verify-github'
-import { Route as AuthenticatedWhiteboardsIdRouteImport } from './routes/_authenticated/whiteboards.$id'
-import { Route as AuthenticatedModulesSlugRouteImport } from './routes/_authenticated/modules.$slug'
+import { Route as AuthenticatedClassesRouteImport } from './routes/_authenticated/classes'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedPortfolioRouteImport } from './routes/_authenticated/portfolio'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as BoardTokenRouteImport } from './routes/board.$token'
+import { Route as UUsernameRouteImport } from './routes/u.$username'
 import { Route as AuthenticatedAssignmentsIdRouteImport } from './routes/_authenticated/assignments.$id'
+import { Route as AuthenticatedModulesIndexRouteImport } from './routes/_authenticated/modules.index'
+import { Route as AuthenticatedModulesSlugRouteImport } from './routes/_authenticated/modules.$slug'
+import { Route as AuthenticatedWhiteboardsIndexRouteImport } from './routes/_authenticated/whiteboards.index'
+import { Route as AuthenticatedWhiteboardsIdRouteImport } from './routes/_authenticated/whiteboards.$id'
+import { Route as ApiPublicVerifyGithubRouteImport } from './routes/api/public/verify-github'
 
-const UnauthorizedRoute = UnauthorizedRouteImport.update({
-  id: '/unauthorized',
-  path: '/unauthorized',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ResetPasswordRoute = ResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -43,38 +42,19 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const UnauthorizedRoute = UnauthorizedRouteImport.update({
+  id: '/unauthorized',
+  path: '/unauthorized',
   getParentRoute: () => rootRouteImport,
 } as any)
-const UUsernameRoute = UUsernameRouteImport.update({
-  id: '/u/$username',
-  path: '/u/$username',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BoardTokenRoute = BoardTokenRouteImport.update({
-  id: '/board/$token',
-  path: '/board/$token',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedPortfolioRoute = AuthenticatedPortfolioRouteImport.update({
-  id: '/portfolio',
-  path: '/portfolio',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedClassesRoute = AuthenticatedClassesRouteImport.update({
@@ -82,15 +62,35 @@ const AuthenticatedClassesRoute = AuthenticatedClassesRouteImport.update({
   path: '/classes',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedWhiteboardsIndexRoute =
-  AuthenticatedWhiteboardsIndexRouteImport.update({
-    id: '/whiteboards/',
-    path: '/whiteboards/',
+const AuthenticatedPortfolioRoute = AuthenticatedPortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const BoardTokenRoute = BoardTokenRouteImport.update({
+  id: '/board/$token',
+  path: '/board/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UUsernameRoute = UUsernameRouteImport.update({
+  id: '/u/$username',
+  path: '/u/$username',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAssignmentsIdRoute =
+  AuthenticatedAssignmentsIdRouteImport.update({
+    id: '/assignments/$id',
+    path: '/assignments/$id',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedModulesIndexRoute =
@@ -99,29 +99,29 @@ const AuthenticatedModulesIndexRoute =
     path: '/modules/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const ApiPublicVerifyGithubRoute = ApiPublicVerifyGithubRouteImport.update({
-  id: '/api/public/verify-github',
-  path: '/api/public/verify-github',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedWhiteboardsIdRoute =
-  AuthenticatedWhiteboardsIdRouteImport.update({
-    id: '/whiteboards/$id',
-    path: '/whiteboards/$id',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
 const AuthenticatedModulesSlugRoute =
   AuthenticatedModulesSlugRouteImport.update({
     id: '/modules/$slug',
     path: '/modules/$slug',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedAssignmentsIdRoute =
-  AuthenticatedAssignmentsIdRouteImport.update({
-    id: '/assignments/$id',
-    path: '/assignments/$id',
+const AuthenticatedWhiteboardsIndexRoute =
+  AuthenticatedWhiteboardsIndexRouteImport.update({
+    id: '/whiteboards/',
+    path: '/whiteboards/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedWhiteboardsIdRoute =
+  AuthenticatedWhiteboardsIdRouteImport.update({
+    id: '/whiteboards/$id',
+    path: '/whiteboards/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const ApiPublicVerifyGithubRoute = ApiPublicVerifyGithubRouteImport.update({
+  id: '/api/public/verify-github',
+  path: '/api/public/verify-github',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -256,25 +256,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/unauthorized': {
-      id: '/unauthorized'
-      path: '/unauthorized'
-      fullPath: '/unauthorized'
-      preLoaderRoute: typeof UnauthorizedRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reset-password': {
-      id: '/reset-password'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof ResetPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -284,46 +270,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/u/$username': {
-      id: '/u/$username'
-      path: '/u/$username'
-      fullPath: '/u/$username'
-      preLoaderRoute: typeof UUsernameRouteImport
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/board/$token': {
-      id: '/board/$token'
-      path: '/board/$token'
-      fullPath: '/board/$token'
-      preLoaderRoute: typeof BoardTokenRouteImport
+    '/unauthorized': {
+      id: '/unauthorized'
+      path: '/unauthorized'
+      fullPath: '/unauthorized'
+      preLoaderRoute: typeof UnauthorizedRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/profile': {
-      id: '/_authenticated/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof AuthenticatedProfileRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/portfolio': {
-      id: '/_authenticated/portfolio'
-      path: '/portfolio'
-      fullPath: '/portfolio'
-      preLoaderRoute: typeof AuthenticatedPortfolioRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/dashboard': {
-      id: '/_authenticated/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/classes': {
@@ -333,18 +305,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedClassesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/admin': {
-      id: '/_authenticated/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/whiteboards/': {
-      id: '/_authenticated/whiteboards/'
-      path: '/whiteboards'
-      fullPath: '/whiteboards/'
-      preLoaderRoute: typeof AuthenticatedWhiteboardsIndexRouteImport
+    '/_authenticated/portfolio': {
+      id: '/_authenticated/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof AuthenticatedPortfolioRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/board/$token': {
+      id: '/board/$token'
+      path: '/board/$token'
+      fullPath: '/board/$token'
+      preLoaderRoute: typeof BoardTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/u/$username': {
+      id: '/u/$username'
+      path: '/u/$username'
+      fullPath: '/u/$username'
+      preLoaderRoute: typeof UUsernameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/assignments/$id': {
+      id: '/_authenticated/assignments/$id'
+      path: '/assignments/$id'
+      fullPath: '/assignments/$id'
+      preLoaderRoute: typeof AuthenticatedAssignmentsIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/modules/': {
@@ -354,12 +354,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedModulesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/api/public/verify-github': {
-      id: '/api/public/verify-github'
-      path: '/api/public/verify-github'
-      fullPath: '/api/public/verify-github'
-      preLoaderRoute: typeof ApiPublicVerifyGithubRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_authenticated/modules/$slug': {
+      id: '/_authenticated/modules/$slug'
+      path: '/modules/$slug'
+      fullPath: '/modules/$slug'
+      preLoaderRoute: typeof AuthenticatedModulesSlugRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/whiteboards/': {
+      id: '/_authenticated/whiteboards/'
+      path: '/whiteboards'
+      fullPath: '/whiteboards/'
+      preLoaderRoute: typeof AuthenticatedWhiteboardsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/whiteboards/$id': {
       id: '/_authenticated/whiteboards/$id'
@@ -368,19 +375,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWhiteboardsIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/modules/$slug': {
-      id: '/_authenticated/modules/$slug'
-      path: '/modules/$slug'
-      fullPath: '/modules/$slug'
-      preLoaderRoute: typeof AuthenticatedModulesSlugRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/assignments/$id': {
-      id: '/_authenticated/assignments/$id'
-      path: '/assignments/$id'
-      fullPath: '/assignments/$id'
-      preLoaderRoute: typeof AuthenticatedAssignmentsIdRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/api/public/verify-github': {
+      id: '/api/public/verify-github'
+      path: '/api/public/verify-github'
+      fullPath: '/api/public/verify-github'
+      preLoaderRoute: typeof ApiPublicVerifyGithubRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
