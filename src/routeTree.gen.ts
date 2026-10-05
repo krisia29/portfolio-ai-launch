@@ -24,6 +24,7 @@ import { Route as UUsernameRouteImport } from './routes/u.$username'
 import { Route as AuthenticatedAssignmentsIdRouteImport } from './routes/_authenticated/assignments.$id'
 import { Route as AuthenticatedModulesIndexRouteImport } from './routes/_authenticated/modules.index'
 import { Route as AuthenticatedModulesSlugRouteImport } from './routes/_authenticated/modules.$slug'
+import { Route as AuthenticatedSubmissionsIdRouteImport } from './routes/_authenticated/submissions.$id'
 import { Route as AuthenticatedWhiteboardsIndexRouteImport } from './routes/_authenticated/whiteboards.index'
 import { Route as AuthenticatedWhiteboardsIdRouteImport } from './routes/_authenticated/whiteboards.$id'
 import { Route as ApiPublicVerifyGithubRouteImport } from './routes/api/public/verify-github'
@@ -105,6 +106,12 @@ const AuthenticatedModulesSlugRoute =
     path: '/modules/$slug',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedSubmissionsIdRoute =
+  AuthenticatedSubmissionsIdRouteImport.update({
+    id: '/submissions/$id',
+    path: '/submissions/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedWhiteboardsIndexRoute =
   AuthenticatedWhiteboardsIndexRouteImport.update({
     id: '/whiteboards/',
@@ -137,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/u/$username': typeof UUsernameRoute
   '/assignments/$id': typeof AuthenticatedAssignmentsIdRoute
   '/modules/$slug': typeof AuthenticatedModulesSlugRoute
+  '/submissions/$id': typeof AuthenticatedSubmissionsIdRoute
   '/whiteboards/$id': typeof AuthenticatedWhiteboardsIdRoute
   '/api/public/verify-github': typeof ApiPublicVerifyGithubRoute
   '/modules/': typeof AuthenticatedModulesIndexRoute
@@ -156,6 +164,7 @@ export interface FileRoutesByTo {
   '/u/$username': typeof UUsernameRoute
   '/assignments/$id': typeof AuthenticatedAssignmentsIdRoute
   '/modules/$slug': typeof AuthenticatedModulesSlugRoute
+  '/submissions/$id': typeof AuthenticatedSubmissionsIdRoute
   '/whiteboards/$id': typeof AuthenticatedWhiteboardsIdRoute
   '/api/public/verify-github': typeof ApiPublicVerifyGithubRoute
   '/modules': typeof AuthenticatedModulesIndexRoute
@@ -177,6 +186,7 @@ export interface FileRoutesById {
   '/u/$username': typeof UUsernameRoute
   '/_authenticated/assignments/$id': typeof AuthenticatedAssignmentsIdRoute
   '/_authenticated/modules/$slug': typeof AuthenticatedModulesSlugRoute
+  '/_authenticated/submissions/$id': typeof AuthenticatedSubmissionsIdRoute
   '/_authenticated/whiteboards/$id': typeof AuthenticatedWhiteboardsIdRoute
   '/api/public/verify-github': typeof ApiPublicVerifyGithubRoute
   '/_authenticated/modules/': typeof AuthenticatedModulesIndexRoute
@@ -198,6 +208,7 @@ export interface FileRouteTypes {
     | '/u/$username'
     | '/assignments/$id'
     | '/modules/$slug'
+    | '/submissions/$id'
     | '/whiteboards/$id'
     | '/api/public/verify-github'
     | '/modules/'
@@ -217,6 +228,7 @@ export interface FileRouteTypes {
     | '/u/$username'
     | '/assignments/$id'
     | '/modules/$slug'
+    | '/submissions/$id'
     | '/whiteboards/$id'
     | '/api/public/verify-github'
     | '/modules'
@@ -237,6 +249,7 @@ export interface FileRouteTypes {
     | '/u/$username'
     | '/_authenticated/assignments/$id'
     | '/_authenticated/modules/$slug'
+    | '/_authenticated/submissions/$id'
     | '/_authenticated/whiteboards/$id'
     | '/api/public/verify-github'
     | '/_authenticated/modules/'
@@ -361,6 +374,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedModulesSlugRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/submissions/$id': {
+      id: '/_authenticated/submissions/$id'
+      path: '/submissions/$id'
+      fullPath: '/submissions/$id'
+      preLoaderRoute: typeof AuthenticatedSubmissionsIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/whiteboards/': {
       id: '/_authenticated/whiteboards/'
       path: '/whiteboards'
@@ -393,6 +413,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedAssignmentsIdRoute: typeof AuthenticatedAssignmentsIdRoute
   AuthenticatedModulesSlugRoute: typeof AuthenticatedModulesSlugRoute
+  AuthenticatedSubmissionsIdRoute: typeof AuthenticatedSubmissionsIdRoute
   AuthenticatedWhiteboardsIdRoute: typeof AuthenticatedWhiteboardsIdRoute
   AuthenticatedModulesIndexRoute: typeof AuthenticatedModulesIndexRoute
   AuthenticatedWhiteboardsIndexRoute: typeof AuthenticatedWhiteboardsIndexRoute
@@ -406,6 +427,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedAssignmentsIdRoute: AuthenticatedAssignmentsIdRoute,
   AuthenticatedModulesSlugRoute: AuthenticatedModulesSlugRoute,
+  AuthenticatedSubmissionsIdRoute: AuthenticatedSubmissionsIdRoute,
   AuthenticatedWhiteboardsIdRoute: AuthenticatedWhiteboardsIdRoute,
   AuthenticatedModulesIndexRoute: AuthenticatedModulesIndexRoute,
   AuthenticatedWhiteboardsIndexRoute: AuthenticatedWhiteboardsIndexRoute,
