@@ -145,6 +145,7 @@ function AssignmentPage() {
       }
 
       toast.success("Submitted for review!");
+      syncAfterSubmit().catch(() => {});
       qc.invalidateQueries({ queryKey: ["mySubmission", id] });
       qc.invalidateQueries({ queryKey: ["mySubmissions"] });
     } catch (e) {
