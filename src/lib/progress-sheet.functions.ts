@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-/** Rebuild the admin-only Google Sheet of approved student progress. */
+/** Rebuild the admin-only Google Sheet of student submissions. */
 export const syncProgressSheet = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
@@ -15,4 +15,13 @@ export const syncProgressSheet = createServerFn({ method: "POST" })
 
     const { syncApprovedProgress } = await import("./progress-sheet.server");
     return await syncApprovedProgress();
+  });
+
+/** Called after a student submits, so the report updates right away. Returns nothing. */
+export const syncAfterSubmit = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async () => {
+    const { syncApprovedProgress } = await import("./progress-sheet.server");
+    await syncApprovedProgress();
+    return { ok: true };
   });

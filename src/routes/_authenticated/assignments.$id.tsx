@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { syncAfterSubmit } from "@/lib/progress-sheet.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
@@ -145,6 +146,7 @@ function AssignmentPage() {
       }
 
       toast.success("Submitted for review!");
+      syncAfterSubmit().catch(() => {});
       qc.invalidateQueries({ queryKey: ["mySubmission", id] });
       qc.invalidateQueries({ queryKey: ["mySubmissions"] });
     } catch (e) {
