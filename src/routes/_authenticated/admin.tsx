@@ -111,7 +111,7 @@ function ReviewCard({ sub, onChanged }: { sub: any; onChanged: () => void }) {
     const { error } = await supabase.from("submissions").update({
       status,
       feedback_md: feedback || null,
-      score: status === "approved" ? Number(score) || 0 : null,
+      score: status === "approved" && sub.assignments?.points !== 0 ? Number(score) || 0 : null,
       reviewed_at: new Date().toISOString(),
     }).eq("id", sub.id);
     setBusy(false);
@@ -167,7 +167,7 @@ function ReviewCard({ sub, onChanged }: { sub: any; onChanged: () => void }) {
       <div className="mt-4 grid sm:grid-cols-[1fr_auto] gap-3">
         <Textarea placeholder="Feedback for the student" value={feedback} onChange={(e) => setFeedback(e.target.value)} rows={3} />
         <div className="flex sm:flex-col gap-2 items-stretch">
-          <Input type="number" className="sm:w-24" value={score} onChange={(e) => setScore(e.target.value)} placeholder="Score" />
+          {sub.assignments?.points !== 0 && <Input type="number" className="sm:w-24" value={score} onChange={(e) => setScore(e.target.value)} placeholder="Score" />}
           <Button size="sm" onClick={() => act("approved")} disabled={busy}>Approve</Button>
           <Button size="sm" variant="outline" onClick={() => act("revision_requested")} disabled={busy}>Request revision</Button>
         </div>
