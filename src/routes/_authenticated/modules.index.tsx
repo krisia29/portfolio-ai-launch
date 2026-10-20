@@ -63,7 +63,8 @@ function ModulesPage() {
               {m.assignments?.length ?? 0} assignments
             </div>
           </Link>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
