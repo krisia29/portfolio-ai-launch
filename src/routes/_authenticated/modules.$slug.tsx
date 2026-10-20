@@ -89,7 +89,7 @@ function ModuleDetail() {
                     <div className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground">
                       <span>{minutesRange(a.est_minutes)}</span>
                       <span>·</span>
-                      <span>{a.points} pts</span>
+                      <span>{a.points === 0 ? "Optional · Extra credit" : `${a.points} pts`}</span>
                       {a.requires_github && (<><span>·</span><span className="text-primary">GitHub required</span></>)}
                     </div>
                   </div>

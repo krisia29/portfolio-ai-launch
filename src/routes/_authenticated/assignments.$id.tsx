@@ -179,7 +179,7 @@ function AssignmentPage() {
       <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted-foreground">
         <span className="rounded-full border px-2 py-0.5">{assignment.platform}</span>
         <span className="rounded-full border px-2 py-0.5">{minutesRange(assignment.est_minutes)}</span>
-        <span className="rounded-full border px-2 py-0.5">{assignment.points} pts</span>
+        <span className="rounded-full border px-2 py-0.5">{assignment.points === 0 ? "Optional · Extra credit" : `${assignment.points} pts`}</span>
         {assignment.requires_github && (
           <span className="rounded-full border border-primary/40 text-primary px-2 py-0.5">GitHub required</span>
         )}
@@ -301,7 +301,7 @@ function AssignmentPage() {
         {alreadyApproved ? (
           <div className="mt-3 rounded-lg border border-success/40 bg-success/10 p-4 text-sm">
             <div className="font-medium text-success flex items-center gap-2"><CheckCircle2 className="w-4 h-4" /> Approved</div>
-            {submission?.score != null && <div className="mt-1">Score: {submission.score}/{assignment.points}</div>}
+            {submission?.score != null && assignment.points > 0 && <div className="mt-1">Score: {submission.score}/{assignment.points}</div>}
             {submission?.feedback_md && <div className="mt-2 whitespace-pre-wrap">{submission.feedback_md}</div>}
           </div>
         ) : (
