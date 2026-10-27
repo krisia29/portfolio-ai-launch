@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useSubmissionFile } from "@/hooks/use-submission-file";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -172,12 +173,7 @@ export function EvidenceCheckpoint({
     if (data?.signedUrl) setPreviews((p) => ({ ...p, [f.path]: data.signedUrl }));
   }, [previews]);
 
-  const openFile = async (f: EvidenceFile) => {
-    const { data } = await supabase.storage
-      .from(BUCKET)
-      .createSignedUrl(f.path, 300);
-    if (data?.signedUrl) window.open(data.signedUrl, "_blank");
-  };
+  const { openFile, opening } = useSubmissionFile();
 
   const handleFiles = async (fileList: FileList | File[]) => {
     if (readOnly) return;
@@ -340,16 +336,18 @@ export function EvidenceCheckpoint({
                     <Icon className="w-5 h-5 text-muted-foreground" />
                   )}
                 </div>
-                <button
+                <Button
                   type="button"
-                  onClick={() => openFile(f)}
-                  className="flex-1 min-w-0 text-left"
+                  variant="ghost"
+                  disabled={opening}
+                  onClick={() => openFile({ path: f.path, name: f.name })}
+                  className="block h-auto flex-1 min-w-0 text-left"
                 >
                   <div className="text-sm font-medium truncate">{f.name}</div>
                   <div className="text-xs text-muted-foreground">
                     {humanSize(f.size)}
                   </div>
-                </button>
+                </Button>
                 {!readOnly && (
                   <button
                     type="button"

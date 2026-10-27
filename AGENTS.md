@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Open submitted files through the authenticated read-only download function and shared hook, never by navigating to storage signed URLs; this avoids browser-blocked external navigation while preserving storage access policies and uploads.
