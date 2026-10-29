@@ -28,7 +28,9 @@ function ModuleDetail() {
   if (!module) return <div className="mx-auto max-w-4xl px-4 py-10 text-muted-foreground">Loading…</div>;
 
   const isGlossary = module.slug === "glossary";
-  const assignments = (module.assignments ?? []).filter((a: any) => a.status === "published");
+  const assignments = (module.assignments ?? [])
+    .filter((a: any) => a.status === "published")
+    .sort((a: any, b: any) => String(a.created_at).localeCompare(String(b.created_at)));
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
