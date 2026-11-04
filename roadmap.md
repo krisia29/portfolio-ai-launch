@@ -1,0 +1,4 @@
+- [ ] Add admin-only class renaming.
+- [ ] Add admin-only student stage/date controls.
+- [ ] Support combining existing student class assignments without altering submissions.
+- [ ] Verify saving and admin-only enforcement.
