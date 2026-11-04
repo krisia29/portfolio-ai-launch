@@ -12,8 +12,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Users } from "lucide-react";
 import { BulkStudentUpload } from "@/components/BulkStudentUpload";
+import { ClassManagement } from "@/components/ClassManagement";
 
 export const Route = createFileRoute("/_authenticated/classes")({
+  head: () => ({ meta: [
+    { title: "Classes | Tech Pathways Academy" },
+    { name: "description", content: "Manage Tech Pathways Academy classes and student enrollment." },
+    { property: "og:title", content: "Classes | Tech Pathways Academy" },
+    { property: "og:description", content: "Manage classes and student enrollment at Tech Pathways Academy." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
+  ] }),
   component: ClassesPage,
 });
 
@@ -25,22 +34,25 @@ function makeCode() {
 }
 
 function ClassesPage() {
-  const { user, isStaff, loading, roles } = useAuth();
+  const { user, isStaff, isAdmin, loading, roles } = useAuth();
   const qc = useQueryClient();
   const [className, setClassName] = useState("");
 
   const mine = useQuery({
     // roles load asynchronously — keep them in the key so the staff/student
     // branch below re-runs once they arrive.
-    queryKey: ["myClasses", user?.id, isStaff],
+    queryKey: ["myClasses", user?.id, isStaff, isAdmin],
     enabled: !!user && !loading && roles.length > 0,
     queryFn: async () => {
+      if (!user) return [];
       if (isStaff) {
-        const { data, error } = await supabase.from("classes").select("*, class_members(count)").eq("teacher_id", user!.id).order("created_at", { ascending: false });
+        let query = supabase.from("classes").select("*, class_members(count)").order("created_at", { ascending: false });
+        if (!isAdmin) query = query.eq("teacher_id", user.id);
+        const { data, error } = await query;
         if (error) throw error;
         return data ?? [];
       } else {
-        const { data, error } = await supabase.from("class_members").select("class_id, classes(*)").eq("student_id", user!.id);
+        const { data, error } = await supabase.from("class_members").select("class_id, classes(*)").eq("student_id", user.id);
         if (error) throw error;
         return (data ?? []).map((r: any) => r.classes);
       }
@@ -93,7 +105,7 @@ function ClassesPage() {
       <h2 className="mt-8 font-display text-xl font-semibold">Your classes</h2>
       <div className="mt-3 grid sm:grid-cols-2 gap-3">
         {(mine.data ?? []).map((c: any) => (
-          <ClassCard key={c.id} cls={c} isStaff={isStaff} />
+          <ClassCard key={c.id} cls={c} isStaff={isStaff} isAdmin={isAdmin} />
         ))}
         {(!mine.data || mine.data.length === 0) && <div className="text-sm text-muted-foreground">None yet.</div>}
       </div>
@@ -101,7 +113,7 @@ function ClassesPage() {
   );
 }
 
-function ClassCard({ cls, isStaff }: { cls: any; isStaff: boolean }) {
+function ClassCard({ cls, isStaff, isAdmin }: { cls: any; isStaff: boolean; isAdmin: boolean }) {
   const qc = useQueryClient();
   const importFn = useServerFn(importStudentsToClass);
   const [emails, setEmails] = useState("");
@@ -149,6 +161,7 @@ function ClassCard({ cls, isStaff }: { cls: any; isStaff: boolean }) {
   return (
     <div className="rounded-xl border bg-card p-4">
       <div className="font-semibold">{cls.name}</div>
+      {isAdmin && <ClassManagement classId={cls.id} name={cls.name} />}
 
       {isStaff && (
         <div className="mt-3">

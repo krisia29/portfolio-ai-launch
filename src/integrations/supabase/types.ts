@@ -311,16 +311,22 @@ export type Database = {
         Row: {
           class_id: string
           joined_at: string
+          stage: string
+          stage_changed_on: string | null
           student_id: string
         }
         Insert: {
           class_id: string
           joined_at?: string
+          stage?: string
+          stage_changed_on?: string | null
           student_id: string
         }
         Update: {
           class_id?: string
           joined_at?: string
+          stage?: string
+          stage_changed_on?: string | null
           student_id?: string
         }
         Relationships: [

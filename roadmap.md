@@ -1,4 +1,4 @@
-- [ ] Add admin-only class renaming.
-- [ ] Add admin-only student stage/date controls.
-- [ ] Support combining existing student class assignments without altering submissions.
-- [ ] Verify saving and admin-only enforcement.
+- [x] Add admin-only class renaming.
+- [x] Add admin-only student stage/date controls.
+- [x] Assign all 24 existing students to Fall 2026 and rename the empty duplicate Spring 2026, as approved; leave submissions unchanged.
+- [x] Verify saving after refresh, restore test stage to Active, and verify admin role rules.
