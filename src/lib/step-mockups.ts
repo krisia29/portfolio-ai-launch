@@ -659,59 +659,7 @@ export const STEP_MOCKUPS: Record<string, Record<number, StepMockup>> = {
     },
   },
 
-  // ───────────────────── Module 8 · Team project (Lovable) ─────────────────────
-  "9a7306ea-5c82-4ec5-9d20-7d58b382a85f": {
-    2: {
-      app: "Google Docs",
-      url: "docs.google.com",
-      caption: "Assign one website section per teammate.",
-      blocks: [
-        {
-          type: "table",
-          columns: ["Teammate", "Role", "Website section"],
-          rows: [
-            ["Student 1", "Team lead", "Home"],
-            ["Student 2", "Design lead", "Features"],
-            ["Student 3", "Content lead", "About"],
-          ],
-        },
-      ],
-    },
-    4: {
-      app: "Google Docs",
-      url: "docs.google.com",
-      caption: "Your team role assignment table.",
-      blocks: [
-        { type: "heading", text: "Team Role Assignment Table" },
-        {
-          type: "table",
-          columns: ["Role", "Responsibility", "Owner"],
-          rows: [
-            ["Team lead", "Keeps the group on schedule", "Student 1"],
-            ["Design lead", "Colors, images, layout", "Student 2"],
-            ["Content lead", "Writing and proofreading", "Student 3"],
-          ],
-        },
-      ],
-    },
-    6: {
-      app: "Google Drive",
-      url: "drive.google.com",
-      caption: "Save team materials in one shared folder.",
-      blocks: [
-        {
-          type: "list",
-          label: "Team folder",
-          items: [
-            { title: "team-roles.pdf" },
-            { title: "contribution-plan.pdf" },
-            { title: "master-prompt.txt" },
-          ],
-        },
-        { type: "button", text: "Share", secondary: "Copy link" },
-      ],
-    },
-  },
+  // ───────────────────── Module 8 · Lovable ─────────────────────
   "9fa501c7-4091-456a-b02b-cc9592c72007": {
     1: {
       app: "Google Docs",
