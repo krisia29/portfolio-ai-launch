@@ -266,6 +266,7 @@ export function LessonView({ lesson, assignmentId, userId, readOnly }: Props) {
                       <Markdown
                         text={step.body.replace(/\/evidence\b/gi, "")}
                         className="mt-1"
+                        promptApp={assignmentId === "9a7306ea-5c82-4ec5-9d20-7d58b382a85f" ? { name: "Lovable", url: "lovable.dev" } : undefined}
                       />
                     )}
 

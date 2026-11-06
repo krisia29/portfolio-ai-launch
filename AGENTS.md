@@ -11,3 +11,4 @@
 
 - Open submitted files through the authenticated read-only download function and shared hook, never by navigating to storage signed URLs; this avoids browser-blocked external navigation while preserving storage access policies and uploads.
 - Store student lifecycle stage and its date on class membership; class-management server functions verify the admin role and database triggers guard direct edits so existing submission records remain independent.
+- Scope lesson prompt previews through the Markdown renderer's optional platform setting and reuse StepMockup; this preserves stored instruction text and other modules' presentation.
