@@ -178,7 +178,7 @@ function AssignmentPage() {
 
       <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted-foreground">
         <span className="rounded-full border px-2 py-0.5">{assignment.platform}</span>
-        <span className="rounded-full border px-2 py-0.5">{assignment.id === "9a7306ea-5c82-4ec5-9d20-7d58b382a85f" ? "60–90 minutes" : minutesRange(assignment.est_minutes)}</span>
+        <span className="rounded-full border px-2 py-0.5">{["9a7306ea-5c82-4ec5-9d20-7d58b382a85f", "9fa501c7-4091-456a-b02b-cc9592c72007"].includes(assignment.id) ? "60–90 minutes" : minutesRange(assignment.est_minutes)}</span>
         <span className="rounded-full border px-2 py-0.5">{assignment.points === 0 ? "Optional · Extra credit" : `${assignment.points} pts`}</span>
         {assignment.requires_github && (
           <span className="rounded-full border border-primary/40 text-primary px-2 py-0.5">GitHub required</span>

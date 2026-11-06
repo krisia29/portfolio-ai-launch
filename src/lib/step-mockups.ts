@@ -660,41 +660,6 @@ export const STEP_MOCKUPS: Record<string, Record<number, StepMockup>> = {
   },
 
   // ───────────────────── Module 8 · Lovable ─────────────────────
-  "9fa501c7-4091-456a-b02b-cc9592c72007": {
-    1: {
-      app: "Google Docs",
-      url: "docs.google.com",
-      caption: "Combine every teammate's section into one master prompt.",
-      blocks: [
-        { type: "heading", text: "Team Master Prompt" },
-        { type: "textarea", value: "Build a marketing website for [product]. Sections: Home, Features, About, Contact. Style: [colors and tone]." },
-      ],
-    },
-    2: {
-      app: "Lovable",
-      url: "lovable.dev",
-      caption: "Paste the master prompt to generate the first version.",
-      blocks: [
-        { type: "prompt", value: "Build a marketing website for [product] with Home, Features, About, and Contact sections.", action: "Build" },
-      ],
-    },
-    3: {
-      app: "Google Docs",
-      url: "docs.google.com",
-      caption: "Agree on three improvements before editing again.",
-      blocks: [
-        {
-          type: "checks",
-          label: "Priority improvements",
-          items: [
-            { text: "1. Clearer headline", checked: true },
-            { text: "2. Better colors and spacing", checked: true },
-            { text: "3. Fix mobile layout", checked: true },
-          ],
-        },
-      ],
-    },
-  },
   "867feaad-d3df-4605-99ae-b142515dc737": {
     0: {
       app: "Lovable",

@@ -89,7 +89,7 @@ function ModuleDetail() {
                     <h3 className="font-semibold">{a.title}</h3>
                     <p className="text-sm text-muted-foreground mt-1">{a.objectives}</p>
                     <div className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground">
-                      <span>{a.id === "9a7306ea-5c82-4ec5-9d20-7d58b382a85f" ? "60–90 minutes" : minutesRange(a.est_minutes)}</span>
+                      <span>{["9a7306ea-5c82-4ec5-9d20-7d58b382a85f", "9fa501c7-4091-456a-b02b-cc9592c72007"].includes(a.id) ? "60–90 minutes" : minutesRange(a.est_minutes)}</span>
                       <span>·</span>
                       <span>{a.points === 0 ? "Optional · Extra credit" : `${a.points} pts`}</span>
                       {a.requires_github && (<><span>·</span><span className="text-primary">GitHub required</span></>)}
