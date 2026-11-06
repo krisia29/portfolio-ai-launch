@@ -4,3 +4,4 @@
 - [x] Verify saving after refresh, restore test stage to Active, and verify admin role rules.
 - [x] Replace only the Module 8 Team Marketing Challenge with the supplied individual website activity and matching checkpoints; preserve previous submissions and verify the page.
 - [x] Replace only Module 8 Team Marketing Challenge Pt2 with the supplied features/screenshots activity, matching prompt previews and upload checkpoint; verify submitted work remains unchanged.
+- [ ] Replace only the final Module 8 team activity with the supplied Polish the Website instructions, matching visual prompts and checkpoints; verify existing submissions remain unchanged.

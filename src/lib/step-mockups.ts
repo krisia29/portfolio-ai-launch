@@ -660,42 +660,6 @@ export const STEP_MOCKUPS: Record<string, Record<number, StepMockup>> = {
   },
 
   // ───────────────────── Module 8 · Lovable ─────────────────────
-  "867feaad-d3df-4605-99ae-b142515dc737": {
-    0: {
-      app: "Lovable",
-      url: "lovable.dev",
-      caption: "Send one improvement prompt at a time.",
-      blocks: [
-        { type: "prompt", value: "Update the headline, make the buttons easier to see, and fix spacing on the About section.", action: "Send" },
-      ],
-    },
-    2: {
-      app: "Lovable · Preview",
-      url: "lovable.dev",
-      caption: "Check the desktop layout before publishing.",
-      blocks: [
-        {
-          type: "checks",
-          label: "Desktop check",
-          items: [
-            { text: "Nothing overlaps", checked: true },
-            { text: "Text is readable", checked: true },
-            { text: "All links work" },
-          ],
-        },
-      ],
-    },
-    4: {
-      app: "Lovable",
-      url: "lovable.dev",
-      caption: "Publish, then copy your live website link.",
-      blocks: [
-        { type: "heading", text: "Publish your site" },
-        { type: "field", label: "Live URL", value: "https://your-team-site.lovable.app" },
-        { type: "button", text: "Publish", secondary: "Copy link" },
-      ],
-    },
-  },
 
   // ─────────────────────────── Module 9 · Gamma ───────────────────────────
   "a1886a36-6db6-4b96-ba55-83e6430114da": {
