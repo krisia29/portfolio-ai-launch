@@ -1,6 +1,8 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
+import { isValidElement, type ReactNode } from "react";
+import { StepMockup } from "@/components/StepMockup";
 
 // Strips HTML comments (including primer sentinels like <!-- primer:readme -->)
 // and normalizes literal escape sequences (e.g. "\n", "\t") that can end up in
@@ -29,7 +31,7 @@ function stripComments(md: string) {
 }
 
 
-export function Markdown({ text, className }: { text: string | null | undefined; className?: string }) {
+export function Markdown({ text, className, promptApp }: { text: string | null | undefined; className?: string; promptApp?: { name: string; url: string } }) {
   if (!text) return null;
   const cleaned = stripComments(text);
   return (
@@ -48,7 +50,25 @@ export function Markdown({ text, className }: { text: string | null | undefined;
         (className ? " " + className : "")
       }
     >
-      <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>{cleaned}</ReactMarkdown>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm, remarkBreaks]}
+        components={promptApp ? {
+          pre: ({ children }) => {
+            const code = isValidElement<{ children?: ReactNode }>(children)
+              ? children.props.children
+              : children;
+            return (
+              <div className="not-prose">
+                <StepMockup mockup={{
+                  app: promptApp.name,
+                  url: promptApp.url,
+                  blocks: [{ type: "prompt", value: String(code ?? "").replace(/\n$/, ""), action: "Send" }],
+                }} />
+              </div>
+            );
+          },
+        } : undefined}
+      >{cleaned}</ReactMarkdown>
     </div>
   );
 }
