@@ -2,4 +2,4 @@
 - [x] Add admin-only student stage/date controls.
 - [x] Assign all 24 existing students to Fall 2026 and rename the empty duplicate Spring 2026, as approved; leave submissions unchanged.
 - [x] Verify saving after refresh, restore test stage to Active, and verify admin role rules.
-- [ ] Replace only the Module 8 Team Marketing Challenge with the supplied individual website activity and matching checkpoints; preserve previous submissions and verify the page.
+- [x] Replace only the Module 8 Team Marketing Challenge with the supplied individual website activity and matching checkpoints; preserve previous submissions and verify the page.
