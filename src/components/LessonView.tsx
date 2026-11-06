@@ -266,7 +266,7 @@ export function LessonView({ lesson, assignmentId, userId, readOnly }: Props) {
                       <Markdown
                         text={step.body.replace(/\/evidence\b/gi, "")}
                         className="mt-1"
-                        promptApp={["9a7306ea-5c82-4ec5-9d20-7d58b382a85f", "9fa501c7-4091-456a-b02b-cc9592c72007"].includes(assignmentId) ? { name: "Lovable", url: "lovable.dev" } : undefined}
+                        promptApp={["9a7306ea-5c82-4ec5-9d20-7d58b382a85f", "9fa501c7-4091-456a-b02b-cc9592c72007", "867feaad-d3df-4605-99ae-b142515dc737"].includes(assignmentId) ? { name: "Lovable", url: "lovable.dev" } : undefined}
                       />
                     )}
 
