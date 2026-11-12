@@ -10,8 +10,8 @@ export const syncProgressSheet = createServerFn({ method: "POST" })
       .select("role")
       .eq("user_id", context.userId);
     if (error) throw new Error(error.message);
-    const isStaff = (roles ?? []).some((r) => r.role === "teacher" || r.role === "admin");
-    if (!isStaff) throw new Error("Only instructors and admins can export student progress.");
+    const isAdmin = (roles ?? []).some((r) => r.role === "admin");
+    if (!isAdmin) throw new Error("Only admins can generate the progress report.");
 
     const { syncApprovedProgress } = await import("./progress-sheet.server");
     return await syncApprovedProgress();
