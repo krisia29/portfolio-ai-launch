@@ -28,6 +28,12 @@ function AuthPage() {
   const routeAfterLogin = async (userId: string) => {
     const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", userId);
     const isStaff = (roles ?? []).some((r) => r.role === "teacher" || r.role === "admin");
+    const returnTo = sessionStorage.getItem("tpa:returnTo");
+    if (returnTo && /^\/submissions\/[\w-]+$/.test(returnTo)) {
+      sessionStorage.removeItem("tpa:returnTo");
+      window.location.assign(returnTo);
+      return;
+    }
     navigate({ to: isStaff ? "/admin" : "/dashboard" });
   };
 

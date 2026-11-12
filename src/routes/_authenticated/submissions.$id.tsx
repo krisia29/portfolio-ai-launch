@@ -21,10 +21,10 @@ export const Route = createFileRoute("/_authenticated/submissions/$id")({
 
 function SubmissionPage() {
   const { id } = Route.useParams();
-  const { isStaff, loading } = useAuth() as any;
+  const { user, isStaff, loading } = useAuth() as any;
   const { data, isLoading } = useQuery({
-    queryKey: ["submission", id],
-    enabled: !loading,
+    queryKey: ["submission", id, user?.id],
+    enabled: !loading && !!user,
     queryFn: async () => {
       const { data: s, error } = await supabase
         .from("submissions")
@@ -46,7 +46,7 @@ function SubmissionPage() {
     },
   });
 
-  if (isLoading || loading) return <div className="p-10 text-sm text-muted-foreground">Loading…</div>;
+  if (isLoading || loading || !user) return <div className="p-10 text-sm text-muted-foreground">Loading…</div>;
   if (!data) return <div className="p-10 text-sm text-muted-foreground">This submission isn't available.</div>;
 
   return (

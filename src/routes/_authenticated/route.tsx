@@ -6,9 +6,15 @@ import { AccessGate } from "@/components/AccessGate";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
-  beforeLoad: async () => {
+  beforeLoad: async ({ location }) => {
     const { data } = await supabase.auth.getUser();
-    if (!data.user) throw redirect({ to: "/auth" });
+    if (!data.user) {
+      // Report links open a specific submission; return there after sign-in.
+      if (location.pathname.startsWith("/submissions/")) {
+        sessionStorage.setItem("tpa:returnTo", location.pathname);
+      }
+      throw redirect({ to: "/auth" });
+    }
     return { user: data.user };
   },
   component: () => (
