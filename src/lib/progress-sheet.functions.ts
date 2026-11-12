@@ -20,7 +20,17 @@ export const syncProgressSheet = createServerFn({ method: "POST" })
 /** Called after a student submits, so the report updates right away. Returns nothing. */
 export const syncAfterSubmit = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .handler(async () => {
+  .handler(async ({ context }) => {
+    // Only run for a caller who actually just submitted work.
+    const since = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+    const { data: recent } = await context.supabase
+      .from("submissions")
+      .select("id")
+      .eq("student_id", context.userId)
+      .eq("status", "submitted")
+      .gte("submitted_at", since)
+      .limit(1);
+    if (!recent?.length) return { ok: false };
     const { syncApprovedProgress } = await import("./progress-sheet.server");
     await syncApprovedProgress();
     return { ok: true };

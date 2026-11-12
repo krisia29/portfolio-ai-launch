@@ -86,6 +86,15 @@ export const updateGuestNote = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const db = await admin();
     const hash = await sha256(data.editToken);
+    const { data: note } = await db
+      .from("whiteboard_notes")
+      .select("id, whiteboards!inner(share_enabled)")
+      .eq("id", data.id)
+      .eq("edit_token_hash", hash)
+      .maybeSingle();
+    if (!note || !(note as any).whiteboards?.share_enabled) {
+      throw new Error("This board link is not available.");
+    }
     const q = db.from("whiteboard_notes");
     if (data.remove) {
       await q.delete().eq("id", data.id).eq("edit_token_hash", hash);
